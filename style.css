@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  --bg-color: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --accent: #4a90e2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* WebGL Canvas */
+#webgl-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* behind text */
+  pointer-events: none; /* Let clicks pass through */
+}
+
+/* Scroll Container */
+.scroll-container {
+  position: relative;
+  z-index: 2; /* above canvas */
+}
+
+.section {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5vw;
+}
+
+.about-us {
+  height: 60vh;
+  background: linear-gradient(to top, #111111, transparent);
+  align-items: center;
+}
+
+.content-wrapper {
+  min-width: max-content;
+  z-index: 2;
+  opacity: 0; /* Hidden initially for GSAP */
+  
+  /* Fixed to the center of the viewport */
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero .content-wrapper {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: translateY(20px); /* Initial state for fadeUp */
+  text-align: center;
+  margin-top: -30vh;
+  max-width: 100%;
+  animation: fadeUp 1s ease forwards 0.5s;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #fff, #888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Alignments for fixed positioning */
+.align-left, .split-left {
+  left: 10vw;
+}
+
+.align-right, .split-right {
+  right: 10vw;
+}
+
+.align-center {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .title { font-size: 3rem; }
+  .section { padding: 8vw; }
+}
