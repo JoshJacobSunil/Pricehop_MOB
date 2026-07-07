@@ -50,9 +50,12 @@ scene.add(fillLight);
 
 // 5. Load Model & Setup Animations
 const gltfLoader = new GLTFLoader();
+let interactiveGroup = new THREE.Group();
+scene.add(interactiveGroup);
+
 let phoneGroup = new THREE.Group();
 let extraPhones = [];
-scene.add(phoneGroup);
+interactiveGroup.add(phoneGroup);
 
 gltfLoader.load('/iphone_17.glb', (gltf) => {
   const model = gltf.scene;
@@ -134,12 +137,14 @@ gltfLoader.load('/iphone_17.glb', (gltf) => {
   setupScrollAnimations();
 });
 
+let mainTimeline;
+
 function setupScrollAnimations() {
   // We have 6 sections. 
   // Hero (0) -> Section 2 (1) -> Section 3 (2) -> Section 4 (3) -> Section 5 (4) -> Section 6 (5)
   const isMobile = window.innerWidth < 768;
 
-  const timeline = gsap.timeline({
+  mainTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: '.scroll-container',
       start: 'top top',
@@ -151,33 +156,32 @@ function setupScrollAnimations() {
   // --- SIZE EDITING: Modify the 'scale' values in the timelines below (x, y, z must be equal) ---
 
   // Section 2: Minimizes, moves to left side, turned to right, full phone visible
-  timeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, y: 0, z: 0, ease: 'power1.inOut' }, 0)
+  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, y: 0, z: 0, ease: 'power1.inOut' }, 0)
     .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 0) // was 3.5
     .to(phoneGroup.rotation, { x: 0, y: Math.PI + Math.PI / 6, z: 0, ease: 'power1.inOut' }, 0);
 
   // Section 3: Zooms back in to center, top 40% seen
-  timeline.to(phoneGroup.position, { x: 0, y: -2.2, z: 0, ease: 'power1.inOut' }, 1)
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -2.2, z: 0, ease: 'power1.inOut' }, 1)
     .to(phoneGroup.scale, { x: 36.5, y: 36.5, z: 36.5, ease: 'power1.inOut' }, 1) // was 7.5
     .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 1);
 
-  // Section 4: 360-Degree Spinning Spiral Staircase (Carousel)
+  // Section 4: 360-Degree Spinning Circle (Carousel)
   // Scale down so all 5 phones fit on screen, and shift Y slightly to center vertically
-  timeline.to(phoneGroup.position, { x: 0, y: -0.6, z: 0, ease: 'power1.inOut' }, 2)
-    .to(phoneGroup.scale, { x: 7.0, y: 7.0, z: 7.0, ease: 'power1.inOut' }, 2)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 2); 
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -0.9, z: 0, ease: 'power1.inOut' }, 2)
+    .to(phoneGroup.scale, { x: 11.7, y: 11.7, z: 11.7, ease: 'power1.inOut' }, 2);
 
   const radius = 0.143; // Brought phones 35% closer (was 0.22)
 
   // Move the main phone (index 0) to the rim of the circle
   const mainPhone = phoneGroup.children[0];
-  timeline.to(mainPhone.position, {
+  mainTimeline.to(mainPhone.position, {
     x: Math.sin(0) * radius,
-    y: 0, 
+    y: 0,
     z: -Math.cos(0) * radius,
     ease: 'power1.inOut'
   }, 2);
-  timeline.to(mainPhone.rotation, {
-    y: 0, 
+  mainTimeline.to(mainPhone.rotation, {
+    y: 0,
     ease: 'power1.inOut'
   }, 2);
 
@@ -185,78 +189,65 @@ function setupScrollAnimations() {
   extraPhones.forEach((phone, i) => {
     const index = i + 1; // 1 to 4
     // Negative angle to make them appear to the right since rotation is anticlockwise
-    const angle = -index * (Math.PI * 2 / 5); 
-    
+    const angle = -index * (Math.PI * 2 / 5);
+
     // Stagger their emergence slightly so they appear from behind each other gracefully
-    const startTime = 2 + (i * 0.1); 
-    
-    // Show them and start at center, animate scale from 0 to 1 for smoothness
-    timeline.set(phone, { visible: true }, startTime);
-    timeline.set(phone.scale, { x: 0.001, y: 0.001, z: 0.001 }, startTime); 
-    timeline.set(phone.position, { x: 0, y: 0, z: 0 }, startTime); 
-    timeline.set(phone.rotation, { x: 0, y: 0, z: 0 }, startTime);
-    
-    timeline.to(phone.scale, {
+    const startTime = 2 + (i * 0.1);
+
+    // Show them and scale up directly in their target positions to avoid overlap with main phone
+    const targetX = Math.sin(angle) * radius;
+    const targetZ = -Math.cos(angle) * radius;
+
+    phone.position.set(targetX, 0, targetZ);
+    phone.rotation.set(0, -angle, 0);
+
+    mainTimeline.set(phone, { visible: true }, startTime);
+
+    mainTimeline.fromTo(phone.scale, {
+      x: 0.001, y: 0.001, z: 0.001
+    }, {
       x: 1, y: 1, z: 1,
       ease: 'power2.out'
     }, startTime);
-    
-    timeline.to(phone.position, {
-      x: Math.sin(angle) * radius,
-      y: index * 0.08, // step up to form spiral stair
-      z: -Math.cos(angle) * radius,
-      ease: 'power2.out'
-    }, startTime);
-    
-    timeline.to(phone.rotation, {
-      y: -angle, // face outward
-      ease: 'power1.inOut'
-    }, startTime);
-
-    // After half of the circle spin (spin is 2.5 to 3.0), flatten the stairs into a complete circle
-    // So starting at 2.75, bring all phones to y = 0
-    timeline.to(phone.position, {
-      y: 0,
-      ease: 'power1.inOut',
-      duration: 0.25
-    }, 2.75);
   });
 
-  // After they reach their perfect positions, spin the whole group 360 degrees!
-  // This happens from time 2.5 to 3.0
-  timeline.to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, ease: 'power1.inOut' }, 2.5);
+  // After they reach their perfect positions, spin the whole group exactly 360 degrees
+  // Starts earlier at 2.2 and takes longer (duration 0.8) to make it slower
+  mainTimeline.to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, duration: 0.8, ease: 'power1.inOut' }, 2.2);
+
+  // Auto-snap the interactive group rotation when scrolling past the circle section
+  // This ensures the main phone aligns perfectly before they fly away.
+  mainTimeline.call(() => {
+    targetRotation = Math.round(targetRotation / (Math.PI * 2)) * (Math.PI * 2);
+  }, null, 2.9);
 
   // Section 5: Extra phones go up and disappear, main phone back to normal center
-  // Restored y: -0.2 so the phone fits normally like before and isn't cut off
-  timeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, y: -0.2, z: 0, ease: 'power1.inOut' }, 3)
-    .to(phoneGroup.scale, { x: 18.0, y: 18.0, z: 18.0, ease: 'power1.inOut' }, 3)
-    // Keep the Math.PI * 3 rotation so it doesn't spin backwards!
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, ease: 'power1.inOut' }, 3);
+  // Lowered y to -1.0 so it moves center-down and the top is completely visible
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 3)
+    .to(phoneGroup.scale, { x: 18.0, y: 18.0, z: 18.0, ease: 'power1.inOut' }, 3);
 
   // Return main phone to local center
-  timeline.to(mainPhone.position, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 3);
-  timeline.to(mainPhone.rotation, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 3);
+  mainTimeline.to(mainPhone.position, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 3);
+  mainTimeline.to(mainPhone.rotation, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 3);
 
   extraPhones.forEach((phone, i) => {
     // Fly up gracefully and out of screen, while scaling down
-    timeline.to(phone.position, {
+    mainTimeline.to(phone.position, {
       y: 1.5, // fly high up
       x: Math.sin(-i * Math.PI) * 0.5, // spread them slightly as they fly up
       ease: 'power2.inOut'
     }, 3);
-    timeline.to(phone.scale, {
+    mainTimeline.to(phone.scale, {
       x: 0.001, y: 0.001, z: 0.001,
       ease: 'power2.inOut'
     }, 3);
     // Hide them after they shrink
-    timeline.set(phone, { visible: false }, 4);
+    mainTimeline.set(phone, { visible: false }, 4);
   });
 
-  // Section 6: Moves to left, turned a bit to right (final motion)
-  timeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, y: 0, z: 0, ease: 'power1.inOut' }, 4)
-    .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 4)
-    // Keep continuous rotation direction
-    .to(phoneGroup.rotation, { x: 0, y: (Math.PI * 3) + Math.PI / 6, z: 0, ease: 'power1.inOut' }, 4);
+  // Section 6: Moves to left center, turns/tilts slightly
+  mainTimeline.to(phoneGroup.position, { x: window.innerWidth < 768 ? 0 : -1.5, y: -1.5, z: 0, ease: 'power1.inOut' }, 4)
+    .to(phoneGroup.rotation, { x: 0, y: (Math.PI * 3) + Math.PI / 12, z: -0.05, ease: 'power1.inOut' }, 4);
 
   // Grab specific text wrappers
   const text2 = document.querySelector('#section-2 .content-wrapper');
@@ -264,6 +255,7 @@ function setupScrollAnimations() {
   const text3Right = document.querySelector('#section-3 .split-right');
   const text4 = document.querySelector('#section-4 .content-wrapper');
   const text5 = document.querySelector('#section-5 .content-wrapper');
+  const text6 = document.querySelector('#section-6 .content-wrapper');
 
   // Link text fading perfectly to the 3D model's timeline
   // The phone animations happen from time T to T+0.5
@@ -271,29 +263,62 @@ function setupScrollAnimations() {
   // We fade IN new text from T+0.25 to T+0.5
 
   // Time 0: Phone moves left. Text 2 fades in.
-  timeline.to(text2, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 0.25);
+  mainTimeline.to(text2, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 0.25);
 
   // Time 1: Phone moves center. Text 2 out, Text 3 in.
-  timeline.to(text2, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 1.0);
-  timeline.to([text3Left, text3Right], { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 1.25);
+  mainTimeline.to(text2, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 1.0);
+  mainTimeline.to([text3Left, text3Right], { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 1.25);
 
   // Time 2: Phone moves right. Text 3 out, Text 4 in.
-  timeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 2.0);
-  timeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 2.25);
+  mainTimeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 2.0);
+  mainTimeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 2.25);
 
   // Time 3: Phone moves center. Text 4 out, Text 5 in.
-  timeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 3.0);
-  timeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 3.25);
+  mainTimeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 3.0);
+  mainTimeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 3.25);
 
-  // Time 4: Phone moves left. Text 5 out.
-  timeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 4.0);
+  // Time 4: Phone moves left. Text 5 out, Text 6 in.
+  mainTimeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 4.0);
+  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 4.25);
 
-  // About Us (Footer) - keeps the phone mostly there but faded slightly or just statically there
-  timeline.to(phoneGroup.position, { y: 1.0, ease: 'power1.inOut' }, 5)
-    .to(phoneGroup.rotation, { y: Math.PI + Math.PI / 4, ease: 'power1.inOut' }, 5);
+  // Time 5: Footer. Text 6 out. (Phone animation stops completely here)
+  mainTimeline.to(text6, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 5.0);
 }
 
-// 6. Resize Handler
+// 6. Interaction Logic for Dragging
+let isDragging = false;
+let previousMousePosition = { x: 0 };
+let targetRotation = 0;
+let currentRotation = 0;
+
+window.addEventListener('pointerdown', (e) => {
+  if (mainTimeline) {
+    const t = mainTimeline.time();
+    // Allow drag only during the circle animation (Time 2.0 to 3.0)
+    if (t >= 2.0 && t < 3.0) {
+      isDragging = true;
+      previousMousePosition.x = e.clientX;
+    }
+  }
+});
+
+window.addEventListener('pointerup', () => {
+  isDragging = false;
+});
+
+window.addEventListener('pointercancel', () => {
+  isDragging = false;
+});
+
+window.addEventListener('pointermove', (e) => {
+  if (isDragging) {
+    const deltaX = e.clientX - previousMousePosition.x;
+    previousMousePosition.x = e.clientX;
+    targetRotation += deltaX * 0.005; // Drag sensitivity
+  }
+});
+
+// 7. Resize Handler
 window.addEventListener('resize', () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
@@ -305,10 +330,16 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// 7. Animation Loop
+// 8. Animation Loop
 const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Smooth out the manual rotation (momentum)
+  currentRotation += (targetRotation - currentRotation) * 0.05;
+  if (interactiveGroup) {
+    interactiveGroup.rotation.y = currentRotation;
+  }
 
   // Very subtle floating animation (optional, only if ScrollTrigger isn't aggressively pinning it)
   // if(phoneGroup) {
