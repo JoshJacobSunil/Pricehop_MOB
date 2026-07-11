@@ -12,6 +12,8 @@
 <body>
   <!-- The WebGL Canvas for 3D Model -->
   <canvas id="webgl-canvas"></canvas>
+  <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
+  <img id="popup-image" src="/src/assets/shoe_card.png" alt="Popup Image" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
 
   <!-- Scrollable content sections -->
   <main class="scroll-container">
@@ -25,6 +27,13 @@
     <section class="section" id="section-2">
       <div class="content-wrapper align-right">
         <h1 class="title" style="font-size: 3rem;">Your shortcut to the best price.</h1>
+      </div>
+    </section>
+
+    <!-- NEW SECTION for middle screen and blur popup -->
+    <section class="section" id="section-2b">
+      <div class="content-wrapper">
+        <h2 class="title" style="font-size: 3rem;">Focus on what matters.</h2>
       </div>
     </section>
 
