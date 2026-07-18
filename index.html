@@ -13,7 +13,14 @@
   <!-- The WebGL Canvas for 3D Model -->
   <canvas id="webgl-canvas"></canvas>
   <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
-  <img id="popup-image" src="/src/assets/shoe_card.png" alt="Popup Image" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="popup-image" src="/src/assets/shoe_card.png" alt="Popup Image"
+    style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="dealsrow-popup" src="/src/assets/dealsrow_poput.png" alt="Dealsrow Popup"
+    style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="popout-1" src="/src/assets/pop out 1.png" alt="Popout 1"
+    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="popout-2" src="/src/assets/pop out 2.png" alt="Popout 2"
+    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
 
   <!-- Scrollable content sections -->
   <main class="scroll-container">
@@ -26,50 +33,44 @@
 
     <section class="section" id="section-2">
       <div class="content-wrapper align-right">
-        <h1 class="title" style="font-size: 3rem;">Your shortcut to the best price.</h1>
       </div>
     </section>
 
     <!-- NEW SECTION for middle screen and blur popup -->
     <section class="section" id="section-2b">
       <div class="content-wrapper">
-        <h2 class="title" style="font-size: 3rem;">Focus on what matters.</h2>
       </div>
     </section>
 
     <section class="section split-section" id="section-3">
       <div class="content-wrapper split-left">
-        <h2 class="title" style="font-size: 2.5rem;">You Search</h2>
       </div>
       <div class="content-wrapper split-right">
-        <h2 class="title" style="font-size: 2.5rem;">We will Sort</h2>
       </div>
     </section>
 
     <section class="section" id="section-4" style="height: 200vh;">
       <div class="content-wrapper align-left" style="margin-left: 10vw;">
-        <h2 class="title" style="font-size: 3.5rem; line-height: 1.2;">One Search<br>Every Store</h2>
       </div>
     </section>
 
     <section class="section" id="section-5" style="height: 200vh;">
       <div class="content-wrapper align-right">
-        <h2 class="title" style="font-size: 3rem;">Never overpay again.</h2>
       </div>
     </section>
 
     <section class="section" id="section-6">
       <div class="content-wrapper align-right">
-        <!-- Optional final text before footer, keeping empty or default -->
-        <h2 class="title" style="font-size: 3rem;">Ready to shop smarter?</h2>
-        <p>Join Pricehop today and discover the true value of your purchases.</p>
+      </div>
+    </section>
+
+    <section class="section" id="section-7" style="height: 150vh;">
+      <div class="content-wrapper">
       </div>
     </section>
 
     <footer class="section about-us" id="section-about">
       <div class="content-wrapper">
-        <h2>About Us</h2>
-        <p>Pricehop is dedicated to bringing you the best digital experiences.</p>
       </div>
     </footer>
   </main>
