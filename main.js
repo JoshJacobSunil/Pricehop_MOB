@@ -51,8 +51,7 @@ const scene = new THREE.Scene();
 // 1.5 Lenis Smooth Scrolling Setup
 const lenis = new Lenis({
   autoBind: true,
-  duration: 10, // Adjust this value to control overall scroll speed/smoothness
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  lerp: 0.1, // Modern standard for smooth, responsive scrolling
   smoothWheel: true,
   wheelMultiplier: 1,
 });
@@ -248,7 +247,7 @@ function setupScrollAnimations() {
       trigger: '.scroll-container',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 2, // Reduced from 4 since Lenis now handles page-level smoothing
+      scrub: true, // Let Lenis handle the smoothing natively
     }
   });
 
@@ -263,39 +262,27 @@ function setupScrollAnimations() {
   gsap.set(['#popup-image', '#popout-1', '#popout-2'], { xPercent: -50, yPercent: -50 });
 
   // --- NEW DEALSROW POPOUT ---
-  gsap.set('#dealsrow-popup', {
+  gsap.set('#drow-popup', {
     xPercent: -50,
     yPercent: -50,
     left: '50%',
-    x: 10, // Shifted 10px right as requested
-    scale: 0.2, // Hidden behind the phone
+    x: -65, // Shifted 5 pixels further right
+    y: 35,
+    scale: 0.35, // Decreased size by 75%
     opacity: 0, // Initially hidden
     zIndex: -1
   });
 
-  // Slight blur before popout
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power1.inOut' }, 0.3);
-
-  mainTimeline.to('#dealsrow-popup', { opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 0.4);
-  
-  // Pop out with a slight bounce/overshoot for life (Total 0.5s duration)
-  mainTimeline.to('#dealsrow-popup', { scale: 1.35, duration: 0.35, ease: 'power2.out' }, 0.4);
-  mainTimeline.to('#dealsrow-popup', { scale: 1.24, duration: 0.15, ease: 'power1.inOut' }, 0.75);
-  mainTimeline.set('#dealsrow-popup', { zIndex: 10 }, 0.65); // Bring to front exactly 0.25s after start, matching other popouts
-
-  // Remove blur right before it starts moving left
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.25, ease: 'power2.inOut' }, 1.0);
-
-  // Move right and scale up
-  mainTimeline.to('#dealsrow-popup', { x: '35vw', scale: 1.6, duration: 0.5, ease: 'power2.inOut' }, 1.25);
-  
-  // Fade out
-  mainTimeline.to('#dealsrow-popup', { y: '-30vh', opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 3.0);
-  mainTimeline.set('#dealsrow-popup', { zIndex: -1 }, 3.5);
-
-  // Phone moves to left side and turns (Synced with popup moving right)
-  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, y: 0, z: 0, duration: 0.5, ease: 'power1.inOut' }, 1.25)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI + Math.PI / 6, z: 0, duration: 0.5, ease: 'power1.inOut' }, 1.25);
+  gsap.set('#dday-popup', {
+    xPercent: -50,
+    yPercent: -50,
+    left: '50%',
+    x: 8,
+    y: 40, // Bring entirely down 10 pixels initially
+    scale: 0.43, // Scaled up 30% larger than DROW
+    opacity: 0,
+    zIndex: -1
+  });
 
   let screenAnim = { frame: 0 };
 
@@ -313,16 +300,53 @@ function setupScrollAnimations() {
     }
   };
 
+  // --- DROW POPUP ---
+  // Screen Anim to 5
+  mainTimeline.to(screenAnim, { frame: 5, ease: "none", duration: 0.1, onUpdate: updateScreenShader }, 0.5);
+
+  // Pop out drow popup
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 0.6);
+  mainTimeline.to('#drow-popup', { scale: 0.38, opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 0.6);
+  mainTimeline.set('#drow-popup', { zIndex: 10 }, 0.75);
+
+  // Shift phone left, drow popup moves right
+  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, ease: 'power1.inOut', duration: 0.3 }, 0.9);
+  mainTimeline.to(phoneGroup.rotation, { y: Math.PI + Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 0.9);
+  mainTimeline.to('#drow-popup', { x: '25vw', scale: 0.42, ease: 'power2.inOut', duration: 0.3 }, 0.9);
+
+  // Slide drow popup out to the right, phone returns to center
+  mainTimeline.to('#drow-popup', { x: '100vw', scale: 0.35, opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.3);
+  mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 1.3);
+  mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 1.3);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 1.3);
+
+  // --- DDAY POPUP ---
+  // Screen Anim to 225
+  mainTimeline.to(screenAnim, { frame: 225, ease: "none", duration: 0.4, onUpdate: updateScreenShader }, 1.7);
+
+  // Pop out dday popup
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 2.1);
+  mainTimeline.to('#dday-popup', { scale: 0.49, opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 2.1);
+  mainTimeline.set('#dday-popup', { zIndex: 10 }, 2.25);
+
+  // Shift phone right, dday popup moves left
+  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : 1.5, ease: 'power1.inOut', duration: 0.3 }, 2.5);
+  mainTimeline.to(phoneGroup.rotation, { y: Math.PI - Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 2.5);
+  mainTimeline.to('#dday-popup', { x: '-25vw', scale: 0.55, ease: 'power2.inOut', duration: 0.3 }, 2.5);
+
+  // Slide dday popup out to the left, phone returns to center
+  mainTimeline.to('#dday-popup', { x: '-100vw', scale: 0.45, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.9);
+  mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 2.9);
+  mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 2.9);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 2.9);
+
+  // Finish screen animation
   mainTimeline.to(screenAnim, {
     frame: seqUrls.length,
     ease: "none",
+    duration: 0.2,
     onUpdate: updateScreenShader
-  }, 2.45);
-
-  // NEW Section 2b: Move to center, fully visible
-  mainTimeline.to(phoneGroup.position, { x: 0, y: 0, z: 0, ease: 'power1.inOut' }, 3)
-    .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 3)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 3);
+  }, 3.3);
 
   // Blur canvas and show popup image
   mainTimeline.to('#webgl-canvas', { filter: 'blur(6px)', duration: 0.5, ease: 'power2.inOut' }, 3.5);
@@ -458,25 +482,34 @@ function setupScrollAnimations() {
   const text4 = document.querySelector('#section-4 .content-wrapper');
   const text5 = document.querySelector('#section-5 .content-wrapper');
   const text6 = document.querySelector('#section-6 .content-wrapper');
+  const text7Left = document.querySelector('#section-7 .split-left');
+  const text7Right = document.querySelector('#section-7 .split-right');
 
-  mainTimeline.to(text2, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 0.25);
+  // Text 2: Fade in and float slightly, then sweep up and out right as the popup moves right (t=2.45)
+  mainTimeline.fromTo(text2, { opacity: 0, y: -80 }, { opacity: 1, y: -95, duration: 0.5, ease: 'power1.out' }, 0.25);
+  mainTimeline.to(text2, { y: -105, duration: 1.7, ease: 'none' }, 0.75);
+  mainTimeline.to(text2, { opacity: 0, y: -255, duration: 0.5, ease: 'power2.inOut' }, 2.45);
 
-  mainTimeline.to(text2, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 3.0);
   if (text2b) mainTimeline.to(text2b, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 3.25);
-
   if (text2b) mainTimeline.to(text2b, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 4.5);
-  mainTimeline.to([text3Left, text3Right], { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 4.75);
 
+  // Text 3: Slide in from the sides
+  mainTimeline.fromTo(text3Left, { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 4.75);
+  mainTimeline.fromTo(text3Right, { opacity: 0, x: 100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 4.75);
   mainTimeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 5.5);
+
   mainTimeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 5.75);
-
   mainTimeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 6.5);
+
   mainTimeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 6.75);
-
   mainTimeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 7.5);
-  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 7.75);
 
+  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 7.75);
   mainTimeline.to(text6, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 8.5);
+
+  // Text 7: Fade in text blocks
+  if (text7Left) mainTimeline.fromTo(text7Left, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.0);
+  if (text7Right) mainTimeline.fromTo(text7Right, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.0);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)

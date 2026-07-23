@@ -15,8 +15,10 @@
   <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
   <img id="popup-image" src="/src/assets/shoe_card.png" alt="Popup Image"
     style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <img id="dealsrow-popup" src="/src/assets/dealsrow_poput.png" alt="Dealsrow Popup"
-    style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="drow-popup" src="/src/assets/drow.png" alt="Drow Popup"
+    style="position: fixed; top: 50%; left: 50%; transform: scale(0.26); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <img id="dday-popup" src="/src/assets/dday.png" alt="Dday Popup"
+    style="position: fixed; top: 50%; left: 50%; transform: scale(0.35); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
   <img id="popout-1" src="/src/assets/pop out 1.png" alt="Popout 1"
     style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
   <img id="popout-2" src="/src/assets/pop out 2.png" alt="Popout 2"
@@ -32,7 +34,12 @@
     </section>
 
     <section class="section" id="section-2">
-      <div class="content-wrapper align-right">
+      <div class="content-wrapper align-left"
+        style="left: 10vw; min-width: auto; width: 28vw; word-wrap: break-word; margin-top: - 5px;">
+        <!-- <p class="eyebrow">HOME FEED</p> -->
+        <h2 class="main-headline">The Best Deals, All in One Feed.</h2>
+        <!-- <h3 class="sub-headline">No searching through countless websites.</h3>
+        <p class="body-text">Your home feed brings together trending products, hot deals, and the latest price drops in one continuously updated experience. Fresh discoveries are always waiting.</p> -->
       </div>
     </section>
 
@@ -44,8 +51,17 @@
 
     <section class="section split-section" id="section-3">
       <div class="content-wrapper split-left">
+        <h2 class="main-headline">Everything Starts With a Search.</h2>
+        <h3 class="sub-headline">One search gives you access to products, prices, and better choices.</h3>
       </div>
       <div class="content-wrapper split-right">
+        <p class="impact-statement gradient-text">Never Pay More Than You Have To.</p>
+        <ul class="rapid-fire-list">
+          <li>The same product. Different prices.</li>
+          <li>No switching tabs.</li>
+          <li>No second-guessing.</li>
+          <li>Just the best price.</li>
+        </ul>
       </div>
     </section>
 
@@ -64,8 +80,12 @@
       </div>
     </section>
 
-    <section class="section" id="section-7" style="height: 150vh;">
-      <div class="content-wrapper">
+    <section class="section split-section" id="section-7" style="height: 150vh;">
+      <div class="content-wrapper split-left" style="top: 75%; max-width: 350px;">
+        <p style="font-size: 1.5rem; font-weight: 500; line-height: 1.5; color: var(--text-primary);">One Tap Away From a Better Price.</p>
+      </div>
+      <div class="content-wrapper split-right" style="top: 25%; max-width: 350px;">
+        <p style="font-size: 1.5rem; font-weight: 500; line-height: 1.5; color: var(--text-primary);">Enable price alerts and let PriceHop monitor the price for you. When the price drops, we'll let you know instantly.</p>
       </div>
     </section>
 

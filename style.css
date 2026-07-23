@@ -112,6 +112,10 @@ p {
   right: 10vw;
 }
 
+.split-left, .split-right {
+  top: 25%;
+}
+
 .align-center {
   left: 50%;
   transform: translate(-50%, -50%);
@@ -147,4 +151,120 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+/* Typography Enhancements */
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.main-headline {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.sub-headline {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #cccccc;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.body-text {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.impact-statement {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #4a90e2, #9013fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rapid-fire-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rapid-fire-list li {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.rapid-fire-list li::before {
+  content: '→';
+  color: var(--accent);
+  margin-right: 10px;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .main-headline { font-size: 2.5rem; }
+  .sub-headline { font-size: 1.2rem; }
+  .impact-statement { font-size: 2rem; }
+}
+
+/* Glass Box for Popouts */
+.glass-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 40vw;
+  height: 60vh;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  z-index: 9;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .glass-box {
+    width: 80vw;
+    height: 50vh;
+  }
+}
+
+/* Glassy Window */
+.glass-background {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: backdrop-filter 0.5s ease;
+}
+
+.carousel-track {
+  transition: transform 0.5s ease;
 }
