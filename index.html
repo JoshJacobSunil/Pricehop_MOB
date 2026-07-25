@@ -17,6 +17,12 @@
     style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
   <img id="drow-popup" src="/src/assets/drow.png" alt="Drow Popup"
     style="position: fixed; top: 50%; left: 50%; transform: scale(0.26); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
+  <div id="drow-text"
+    style="position: fixed; top: 28%; left: 50%; opacity: 0; z-index: 10; pointer-events: none; text-align: center; width: max-content;">
+    <h2 class="main-headline" style="font-size: 2rem; line-height: 1.2;">See Best Deals<br>in Best Platforms</h2>
+  </div>
+  <img id="logo-strip" src="/src/assets/logo strip.png" alt="Logo Strip"
+    style="position: fixed; top: calc(72% + 60px); left: 50%; width: 12vw; opacity: 0; z-index: 10; pointer-events: none;" />
   <img id="dday-popup" src="/src/assets/dday.png" alt="Dday Popup"
     style="position: fixed; top: 50%; left: 50%; transform: scale(0.35); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
   <img id="popout-1" src="/src/assets/pop out 1.png" alt="Popout 1"
@@ -44,24 +50,29 @@
     </section>
 
     <!-- NEW SECTION for middle screen and blur popup -->
-    <section class="section" id="section-2b">
-      <div class="content-wrapper">
+    <section class="section split-section" id="section-2b">
+      <div class="content-wrapper split-left"
+        style="top: 50%; left: 8vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
+        <h2 class="main-headline" style="font-size: 2.8rem; line-height: 1.2;">Discover More,<br>Spend Less on<br>Items
+          You Like.</h2>
+      </div>
+      <div class="content-wrapper split-right"
+        style="top: 50%; right: 8vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
+        <p class="impact-statement gradient-text" style="font-size: 2.8rem; line-height: 1.2;">Swipe right to
+          like,<br>left to pass.</p>
+        <button class="glowing-btn" style="margin-top: 40px;">Try this Feature</button>
       </div>
     </section>
 
     <section class="section split-section" id="section-3">
-      <div class="content-wrapper split-left">
-        <h2 class="main-headline">Everything Starts With a Search.</h2>
-        <h3 class="sub-headline">One search gives you access to products, prices, and better choices.</h3>
+      <div class="content-wrapper split-left"
+        style="top: 50%; left: 5vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
+        <h2 class="main-headline" style="font-size: 2.2rem; line-height: 1.2;">Everything Starts<br>With a Search.</h2>
       </div>
-      <div class="content-wrapper split-right">
-        <p class="impact-statement gradient-text">Never Pay More Than You Have To.</p>
-        <ul class="rapid-fire-list">
-          <li>The same product. Different prices.</li>
-          <li>No switching tabs.</li>
-          <li>No second-guessing.</li>
-          <li>Just the best price.</li>
-        </ul>
+      <div class="content-wrapper split-right"
+        style="top: 50%; right: 5vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
+        <p class="impact-statement gradient-text" style="font-size: 2.2rem; line-height: 1.2;">Never Pay More<br>Than
+          You Have To.</p>
       </div>
     </section>
 
@@ -81,11 +92,28 @@
     </section>
 
     <section class="section split-section" id="section-7" style="height: 150vh;">
-      <div class="content-wrapper split-left" style="top: 75%; max-width: 350px;">
-        <p style="font-size: 1.5rem; font-weight: 500; line-height: 1.5; color: var(--text-primary);">One Tap Away From a Better Price.</p>
+      <div class="content-wrapper split-left"
+        style="top: 65%; left: calc(50% - 400px); transform: translate(-50%, -50%); max-width: 25vw; text-align: center;">
+        <div class="arrow-down">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </div>
+        <h2 class="main-headline" style="font-size: 1.8rem; line-height: 1.2;">One Tap Away<br>From a Better Price.</h2>
       </div>
-      <div class="content-wrapper split-right" style="top: 25%; max-width: 350px;">
-        <p style="font-size: 1.5rem; font-weight: 500; line-height: 1.5; color: var(--text-primary);">Enable price alerts and let PriceHop monitor the price for you. When the price drops, we'll let you know instantly.</p>
+      <div class="content-wrapper split-right"
+        style="top: 35%; left: calc(50% + 400px); transform: translate(-50%, -50%); max-width: 25vw; text-align: center;">
+        <p class="impact-statement gradient-text" style="font-size: 1.8rem; line-height: 1.2;">Enable price
+          alerts<br>and let Pricehop<br>monitor the price for you.</p>
+        <div class="arrow-up">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </div>
       </div>
     </section>
 

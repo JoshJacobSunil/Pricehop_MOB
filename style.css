@@ -57,6 +57,7 @@ body {
   min-width: max-content;
   z-index: 2;
   opacity: 0; /* Hidden initially for GSAP */
+  text-align: center;
   
   /* Fixed to the center of the viewport */
   position: fixed;
@@ -247,6 +248,29 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
+/* Glowing Button */
+.glowing-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px rgba(144, 19, 254, 0.4), 0 0 5px rgba(74, 144, 226, 0.4);
+  transition: all 0.3s ease;
+  display: inline-block;
+  pointer-events: auto;
+}
+
+.glowing-btn:hover {
+  box-shadow: 0 0 25px rgba(144, 19, 254, 0.8), 0 0 10px rgba(74, 144, 226, 0.8);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 @media (max-width: 768px) {
   .glass-box {
     width: 80vw;
@@ -267,4 +291,32 @@ html.lenis, html.lenis body {
 
 .carousel-track {
   transition: transform 0.5s ease;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+
+@keyframes bounceUp {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}
+
+.arrow-down {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent);
+  animation: bounceDown 2s infinite ease-in-out;
+}
+
+.arrow-up {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent);
+  animation: bounceUp 2s infinite ease-in-out;
 }

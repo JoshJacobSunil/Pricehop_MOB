@@ -260,7 +260,8 @@ function setupScrollAnimations() {
 
   // Fix initial positioning for all popups so GSAP handles centering correctly
   gsap.set(['#popup-image', '#popout-1', '#popout-2'], { xPercent: -50, yPercent: -50 });
-
+  gsap.set('#drow-text', { xPercent: -50, yPercent: -50 });
+  gsap.set('#logo-strip', { xPercent: -50, yPercent: -50 });
   // --- NEW DEALSROW POPOUT ---
   gsap.set('#drow-popup', {
     xPercent: -50,
@@ -277,8 +278,8 @@ function setupScrollAnimations() {
     xPercent: -50,
     yPercent: -50,
     left: '50%',
-    x: 8,
-    y: 40, // Bring entirely down 10 pixels initially
+    x: 0,
+    y: 45, // Bring entirely down 10 pixels initially
     scale: 0.43, // Scaled up 30% larger than DROW
     opacity: 0,
     zIndex: -1
@@ -313,9 +314,22 @@ function setupScrollAnimations() {
   mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, ease: 'power1.inOut', duration: 0.3 }, 0.9);
   mainTimeline.to(phoneGroup.rotation, { y: Math.PI + Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 0.9);
   mainTimeline.to('#drow-popup', { x: '25vw', scale: 0.42, ease: 'power2.inOut', duration: 0.3 }, 0.9);
+  // Slide text and logo strip in from right
+  mainTimeline.fromTo('#drow-text', 
+    { opacity: 0, x: '75vw', y: 0 }, 
+    { opacity: 1, x: '25vw', y: 0, ease: 'power2.out', duration: 0.3 }, 
+    0.9
+  );
+  mainTimeline.fromTo('#logo-strip', 
+    { opacity: 0, x: '75vw', y: 0 }, 
+    { opacity: 1, x: '25vw', y: 0, ease: 'power2.out', duration: 0.3 }, 
+    0.9
+  );
 
-  // Slide drow popup out to the right, phone returns to center
+  // Slide drow popup, text, and logo strip out to the right, phone returns to center
   mainTimeline.to('#drow-popup', { x: '100vw', scale: 0.35, opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.3);
+  mainTimeline.to('#drow-text', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
+  mainTimeline.to('#logo-strip', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
   mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 1.3);
   mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 1.3);
   mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 1.3);
@@ -354,36 +368,36 @@ function setupScrollAnimations() {
   mainTimeline.set('#popup-image', { zIndex: 10 }, 3.75);
 
   // Undo blur and hide popup when moving to next section
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.5, ease: 'power2.inOut' }, 4);
-  mainTimeline.to('#popup-image', { scale: 1.15, duration: 0.5, ease: 'power2.inOut' }, 4);
-  mainTimeline.set('#popup-image', { zIndex: 0 }, 4.25);
-  mainTimeline.set('#popup-image', { opacity: 0 }, 4.5);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.5, ease: 'power2.inOut' }, 5.0);
+  mainTimeline.to('#popup-image', { scale: 1.15, duration: 0.5, ease: 'power2.inOut' }, 5.0);
+  mainTimeline.set('#popup-image', { zIndex: 0 }, 5.25);
+  mainTimeline.set('#popup-image', { opacity: 0 }, 5.5);
 
   // Section 3: Zooms back in to center, top 40% seen (Old T=1)
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -2.2, z: 0, ease: 'power1.inOut' }, 4.5)
-    .to(phoneGroup.scale, { x: 36.5, y: 36.5, z: 36.5, ease: 'power1.inOut' }, 4.5)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 4.5);
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -2.2, z: 0, ease: 'power1.inOut' }, 5.5)
+    .to(phoneGroup.scale, { x: 36.5, y: 36.5, z: 36.5, ease: 'power1.inOut' }, 5.5)
+    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 5.5);
 
   mainTimeline.to(screenAnim, {
     frame: seqUrls.length + 161,
     ease: "none",
     onUpdate: updateScreenShader
-  }, 4.95);
+  }, 5.95);
 
   mainTimeline.to(screenAnim, {
     frame: seqUrls.length + secondSeqUrls.length,
     ease: "none",
     duration: 0.8,
     onUpdate: updateScreenShader
-  }, 5.7);
+  }, 6.7);
 
   mainTimeline.call(() => {
     targetRotation = Math.round(targetRotation / (Math.PI * 2)) * (Math.PI * 2);
-  }, null, 5.5);
+  }, null, 6.5);
 
   // Section 4: 360-Degree Spinning Circle (Carousel)
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -0.9, z: 0, ease: 'power1.inOut' }, 5.5)
-    .to(phoneGroup.scale, { x: 11.7, y: 11.7, z: 11.7, ease: 'power1.inOut' }, 5.5);
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -0.9, z: 0, ease: 'power1.inOut' }, 6.5)
+    .to(phoneGroup.scale, { x: 11.7, y: 11.7, z: 11.7, ease: 'power1.inOut' }, 6.5);
 
   const radius = 0.143;
 
@@ -393,16 +407,16 @@ function setupScrollAnimations() {
     y: 0,
     z: -Math.cos(0) * radius,
     ease: 'power1.inOut'
-  }, 5.5);
+  }, 6.5);
   mainTimeline.to(mainPhone.rotation, {
     y: 0,
     ease: 'power1.inOut'
-  }, 5.5);
+  }, 6.5);
 
   extraPhones.forEach((phone, i) => {
     const index = i + 1;
     const angle = -index * (Math.PI * 2 / 5);
-    const startTime = 5.5 + (i * 0.1);
+    const startTime = 6.5 + (i * 0.1);
 
     const targetX = Math.sin(angle) * radius;
     const targetZ = -Math.cos(angle) * radius;
@@ -420,63 +434,64 @@ function setupScrollAnimations() {
     }, startTime);
   });
 
-  mainTimeline.to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, duration: 0.8, ease: 'power1.inOut' }, 5.7);
+  mainTimeline.to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, duration: 0.8, ease: 'power1.inOut' }, 6.7);
 
   mainTimeline.call(() => {
     targetRotation = Math.round(targetRotation / (Math.PI * 2)) * (Math.PI * 2);
-  }, null, 6.5);
+  }, null, 7.5);
 
   // Section 5: Extra phones go up and disappear, main phone back to normal center
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 6.5)
-    .to(phoneGroup.scale, { x: 18.0, y: 18.0, z: 18.0, ease: 'power1.inOut' }, 6.5);
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 7.5)
+    .to(phoneGroup.scale, { x: 18.0, y: 18.0, z: 18.0, ease: 'power1.inOut' }, 7.5);
 
   mainTimeline.to(screenAnim, {
     frame: allSeqUrls.length - fourthSeqUrls.length,
     ease: "none",
     duration: 1.0,
     onUpdate: updateScreenShader
-  }, 6.5);
+  }, 7.5);
 
-  mainTimeline.to(mainPhone.position, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 6.5);
-  mainTimeline.to(mainPhone.rotation, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 6.5);
+  mainTimeline.to(mainPhone.position, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 7.5);
+  mainTimeline.to(mainPhone.rotation, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 7.5);
 
   extraPhones.forEach((phone, i) => {
     mainTimeline.to(phone.position, {
       y: 1.5,
       x: Math.sin(-i * Math.PI) * 0.5,
       ease: 'power2.inOut'
-    }, 6.5);
+    }, 7.5);
     mainTimeline.to(phone.scale, {
       x: 0.001, y: 0.001, z: 0.001,
       ease: 'power2.inOut'
-    }, 6.5);
-    mainTimeline.set(phone, { visible: false }, 7.5);
+    }, 7.5);
+    mainTimeline.set(phone, { visible: false }, 8.5);
   });
 
   // Section 6: Keep at center, straight and front facing
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 7.5)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, ease: 'power1.inOut' }, 7.5);
+  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 8.5)
+    .to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, ease: 'power1.inOut' }, 8.5);
 
   mainTimeline.to(screenAnim, {
     frame: allSeqUrls.length,
     ease: "none",
     duration: 1.0,
     onUpdate: updateScreenShader
-  }, 7.5);
+  }, 8.5);
 
   // Section 7: Popout images split
   // Blur canvas and show popup images
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(4.8px)', duration: 0.5, ease: 'power2.inOut' }, 8.5);
-  mainTimeline.to(['#popout-1', '#popout-2'], { scale: 1.3, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 8.5);
-  mainTimeline.set(['#popout-1', '#popout-2'], { zIndex: 10 }, 8.75);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(4.8px)', duration: 0.5, ease: 'power2.inOut' }, 9.5);
+  mainTimeline.to(['#popout-1', '#popout-2'], { scale: 1.3, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 9.5);
+  mainTimeline.set(['#popout-1', '#popout-2'], { zIndex: 10 }, 9.75);
 
   // Split left and right
-  mainTimeline.to('#popout-1', { x: -400, duration: 0.5, ease: 'power2.inOut' }, 9.0);
-  mainTimeline.to('#popout-2', { x: 400, duration: 0.5, ease: 'power2.inOut' }, 9.0);
+  mainTimeline.to('#popout-1', { x: -400, duration: 0.5, ease: 'power2.inOut' }, 10.0);
+  mainTimeline.to('#popout-2', { x: 400, duration: 0.5, ease: 'power2.inOut' }, 10.0);
 
   // Grab specific text wrappers
   const text2 = document.querySelector('#section-2 .content-wrapper');
-  const text2b = document.querySelector('#section-2b .content-wrapper');
+  const text2bLeft = document.querySelector('#section-2b .split-left');
+  const text2bRight = document.querySelector('#section-2b .split-right');
   const text3Left = document.querySelector('#section-3 .split-left');
   const text3Right = document.querySelector('#section-3 .split-right');
   const text4 = document.querySelector('#section-4 .content-wrapper');
@@ -485,31 +500,41 @@ function setupScrollAnimations() {
   const text7Left = document.querySelector('#section-7 .split-left');
   const text7Right = document.querySelector('#section-7 .split-right');
 
-  // Text 2: Fade in and float slightly, then sweep up and out right as the popup moves right (t=2.45)
-  mainTimeline.fromTo(text2, { opacity: 0, y: -80 }, { opacity: 1, y: -95, duration: 0.5, ease: 'power1.out' }, 0.25);
-  mainTimeline.to(text2, { y: -105, duration: 1.7, ease: 'none' }, 0.75);
-  mainTimeline.to(text2, { opacity: 0, y: -255, duration: 0.5, ease: 'power2.inOut' }, 2.45);
+  // Text 2: Fade in and float slightly, then slide out left as the phone moves left (t=0.9)
+  mainTimeline.fromTo(text2, { opacity: 0, y: -80, x: 0 }, { opacity: 1, y: -95, x: 0, duration: 0.5, ease: 'power1.out' }, 0.25);
+  mainTimeline.to(text2, { y: -100, duration: 0.65, ease: 'none' }, 0.75);
+  mainTimeline.to(text2, { opacity: 0, x: -500, duration: 0.3, ease: 'power2.inOut' }, 0.9);
 
-  if (text2b) mainTimeline.to(text2b, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 3.25);
-  if (text2b) mainTimeline.to(text2b, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 4.5);
+  const glowingBtn = document.querySelector('.glowing-btn');
+  if (glowingBtn) {
+    mainTimeline.set(glowingBtn, { opacity: 0 }, 0);
+    mainTimeline.set(glowingBtn, { opacity: 1 }, 3.98); // Appear at completely popped out state
+    mainTimeline.set(glowingBtn, { opacity: 0 }, 5.01); // Disappear if it goes back in even by a pixel
+  }
+
+  if (text2bLeft) mainTimeline.fromTo(text2bLeft, { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 3.5);
+  if (text2bRight) mainTimeline.fromTo(text2bRight, { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 3.5);
+  
+  if (text2bLeft) mainTimeline.to(text2bLeft, { opacity: 0, x: -300, duration: 0.5, ease: 'power2.in' }, 5.0);
+  if (text2bRight) mainTimeline.to(text2bRight, { opacity: 0, x: 300, duration: 0.5, ease: 'power2.in' }, 5.0);
 
   // Text 3: Slide in from the sides
-  mainTimeline.fromTo(text3Left, { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 4.75);
-  mainTimeline.fromTo(text3Right, { opacity: 0, x: 100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 4.75);
-  mainTimeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 5.5);
+  mainTimeline.fromTo(text3Left, { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 5.75);
+  mainTimeline.fromTo(text3Right, { opacity: 0, x: 100 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 5.75);
+  mainTimeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 6.5);
 
-  mainTimeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 5.75);
-  mainTimeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 6.5);
+  mainTimeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 6.75);
+  mainTimeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 7.5);
 
-  mainTimeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 6.75);
-  mainTimeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 7.5);
+  mainTimeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 7.75);
+  mainTimeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 8.5);
 
-  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 7.75);
-  mainTimeline.to(text6, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 8.5);
+  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 8.75);
+  mainTimeline.to(text6, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 9.5);
 
   // Text 7: Fade in text blocks
-  if (text7Left) mainTimeline.fromTo(text7Left, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.0);
-  if (text7Right) mainTimeline.fromTo(text7Right, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.0);
+  if (text7Left) mainTimeline.fromTo(text7Left, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
+  if (text7Right) mainTimeline.fromTo(text7Right, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
