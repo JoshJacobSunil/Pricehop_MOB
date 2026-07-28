@@ -258,10 +258,11 @@ function setupScrollAnimations() {
     .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 0)
     .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 0);
 
-  // Fix initial positioning for all popups so GSAP handles centering correctly
   gsap.set(['#popup-image', '#popout-1', '#popout-2'], { xPercent: -50, yPercent: -50 });
   gsap.set('#drow-text', { xPercent: -50, yPercent: -50 });
   gsap.set('#logo-strip', { xPercent: -50, yPercent: -50 });
+  gsap.set('#dday-text', { xPercent: -50, yPercent: -50 });
+  gsap.set('#logo-strip-2', { xPercent: -50, yPercent: -50 });
   // --- NEW DEALSROW POPOUT ---
   gsap.set('#drow-popup', {
     xPercent: -50,
@@ -347,9 +348,23 @@ function setupScrollAnimations() {
   mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : 1.5, ease: 'power1.inOut', duration: 0.3 }, 2.5);
   mainTimeline.to(phoneGroup.rotation, { y: Math.PI - Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 2.5);
   mainTimeline.to('#dday-popup', { x: '-25vw', scale: 0.55, ease: 'power2.inOut', duration: 0.3 }, 2.5);
+  
+  // Slide text and logo strip 2 in from left
+  mainTimeline.fromTo('#dday-text', 
+    { opacity: 0, x: '-75vw', y: 0 }, 
+    { opacity: 1, x: '-25vw', y: 0, ease: 'power2.out', duration: 0.3 }, 
+    2.5
+  );
+  mainTimeline.fromTo('#logo-strip-2', 
+    { opacity: 0, x: '-75vw', y: 0 }, 
+    { opacity: 1, x: '-25vw', y: 0, ease: 'power2.out', duration: 0.3 }, 
+    2.5
+  );
 
-  // Slide dday popup out to the left, phone returns to center
+  // Slide dday popup, text, and logo strip 2 out to the left, phone returns to center
   mainTimeline.to('#dday-popup', { x: '-100vw', scale: 0.45, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.9);
+  mainTimeline.to('#dday-text', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
+  mainTimeline.to('#logo-strip-2', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
   mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 2.9);
   mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 2.9);
   mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 2.9);
@@ -559,7 +574,7 @@ window.addEventListener('pointermove', (e) => {
 
     // Allow rotation only when completely in the circle group and fully aligned
     const arePhonesAligned = extraPhones.length > 0 && extraPhones.every(p => p.scale.x >= 0.99 && p.visible);
-    if (t >= 5.5 && t < 6.5 && arePhonesAligned && isOverCarousel) {
+    if (t >= 6.5 && t < 7.5 && arePhonesAligned && isOverCarousel) {
       targetRotation += deltaX * 0.005; // Hover sensitivity
     }
   }
