@@ -557,10 +557,59 @@ let previousMousePosition = { x: window.innerWidth / 2 };
 let targetRotation = 0;
 let currentRotation = 0;
 
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+window.isExclusionZoneHovered = false;
+
 window.addEventListener('pointermove', (e) => {
   // Always track the delta so there are no massive jumps when entering the section
   const deltaX = e.clientX - previousMousePosition.x;
   previousMousePosition.x = e.clientX;
+
+  // --- Raycast GLB Hitbox Detection ---
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(phoneGroup.children, true);
+  
+  let isHoveringGLB = false;
+  if (intersects.length > 0) {
+     for (let i = 0; i < intersects.length; i++) {
+        let obj = intersects[i].object;
+        let visible = true;
+        let curr = obj;
+        while(curr) {
+          if (!curr.visible) { visible = false; break; }
+          curr = curr.parent;
+        }
+        if (visible && obj.material.opacity > 0.05) {
+           isHoveringGLB = true;
+           break;
+        }
+     }
+  }
+
+  // --- DOM Pop-out Hitbox Detection ---
+  let isHoveringPopout = false;
+  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2'];
+  for (let selector of popouts) {
+    const el = document.querySelector(selector);
+    if (el) {
+      const style = window.getComputedStyle(el);
+      const opacity = parseFloat(style.opacity);
+      if (opacity > 0.1) {
+        const rect = el.getBoundingClientRect();
+        if (e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom) {
+           isHoveringPopout = true;
+           break;
+        }
+      }
+    }
+  }
+
+  window.isExclusionZoneHovered = isHoveringGLB || isHoveringPopout;
 
   if (mainTimeline) {
     const t = mainTimeline.time();
