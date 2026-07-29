@@ -26,7 +26,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 1024px) {
-    font-size: 16px;
+    font-size: 14.4px;
   }
 }
 
@@ -62,21 +62,21 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 50.4px;
   letter-spacing: -1.68px;
   margin: 32px 0;
   @media (max-width: 1024px) {
-    font-size: 36px;
+    font-size: 32.4px;
     margin: 20px 0;
   }
 }
 h2 {
-  font-size: 24px;
+  font-size: 21.6px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
   @media (max-width: 1024px) {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 p {
@@ -92,14 +92,14 @@ code,
 }
 
 code {
-  font-size: 15px;
+  font-size: 13.5px;
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
 }
 
 .counter {
-  font-size: 16px;
+  font-size: 14.4px;
   padding: 5px 10px;
   border-radius: 5px;
   color: var(--accent);
@@ -229,7 +229,7 @@ code {
 
   a {
     color: var(--text-h);
-    font-size: 16px;
+    font-size: 14.4px;
     border-radius: 6px;
     background: var(--social-bg);
     display: flex;

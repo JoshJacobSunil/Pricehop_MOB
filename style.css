@@ -76,7 +76,7 @@ body {
 }
 
 .title {
-  font-size: 5rem;
+  font-size: 4.5rem;
   font-weight: 800;
   letter-spacing: -2px;
   background: linear-gradient(135deg, #fff, #888);
@@ -86,19 +86,19 @@ body {
 }
 
 .subtitle {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 300;
   color: var(--text-secondary);
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
 p {
-  font-size: 1.1rem;
+  font-size: 0.99rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -129,7 +129,7 @@ p {
 }
 
 @media (max-width: 768px) {
-  .title { font-size: 3rem; }
+  .title { font-size: 2.7rem; }
 }
 
 /* Lenis Recommended CSS */
@@ -155,7 +155,7 @@ html.lenis, html.lenis body {
 
 /* Typography Enhancements */
 .eyebrow {
-  font-size: 0.85rem;
+  font-size: 0.765rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -164,7 +164,7 @@ html.lenis, html.lenis body {
 }
 
 .main-headline {
-  font-size: 3.5rem;
+  font-size: 3.15rem;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -1px;
@@ -173,7 +173,7 @@ html.lenis, html.lenis body {
 }
 
 .sub-headline {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 400;
   color: #444444;
   margin-bottom: 1.5rem;
@@ -181,14 +181,14 @@ html.lenis, html.lenis body {
 }
 
 .body-text {
-  font-size: 1.1rem;
+  font-size: 0.99rem;
   font-weight: 300;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .impact-statement {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1.5rem;
@@ -207,7 +207,7 @@ html.lenis, html.lenis body {
 }
 
 .rapid-fire-list li {
-  font-size: 1.2rem;
+  font-size: 1.08rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.75rem;
@@ -223,9 +223,9 @@ html.lenis, html.lenis body {
 }
 
 @media (max-width: 768px) {
-  .main-headline { font-size: 2.5rem; }
-  .sub-headline { font-size: 1.2rem; }
-  .impact-statement { font-size: 2rem; }
+  .main-headline { font-size: 2.25rem; }
+  .sub-headline { font-size: 1.08rem; }
+  .impact-statement { font-size: 1.8rem; }
 }
 
 /* Glass Box for Popouts */
@@ -252,7 +252,7 @@ html.lenis, html.lenis body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   padding: 12px 24px;
   border-radius: 999px;
