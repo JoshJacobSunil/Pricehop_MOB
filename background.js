@@ -54,8 +54,13 @@
   let holeTargetRadius = baseRadius;
   let currentHoleRadius = baseRadius;
   
-  let bunnyPopProgress = 0; // 0 to 1
-  let bunnyTargetProgress = 0;
+  let pawPopProgress = 0; // 0 to 1
+  let pawTargetProgress = 0;
+  let headPopProgress = 0; // 0 to 1
+  let headTargetProgress = 0;
+  let headPopStartTime = 0;
+  let earShakeStartTime = 0;
+  let pawRetractStartTime = 0;
 
   let pathQueue = [];
   let currentTarget = null;
@@ -91,54 +96,190 @@
     
     if (state === 'POPPING_UP' || state === 'EXPANDING') {
       state = 'RETRACTING';
-      holeTargetRadius = baseRadius;
-      bunnyTargetProgress = 0;
+      holeTargetRadius = currentHoleRadius; // Wait to shrink until paws retract
+      headTargetProgress = 0; // Head retracts first
+      pawRetractStartTime = Date.now() + 500; // Paws delay
+      headPopStartTime = 0;
+      earShakeStartTime = 0;
     }
   });
 
   // ── Procedural Bunny Rendering ───────────────────────────────────────────────
-  function drawBunny(ctx, x, y, scale, progress) {
-    if (progress <= 0.01) return;
+  function drawBunny(ctx, x, y, scale, pawProgress, headProgress, earAngle) {
+    if (pawProgress <= 0.01 && headProgress <= 0.01) return;
     
-    ctx.save();
-    // Clip to the hole so bunny doesn't render outside the black circle
-    ctx.beginPath();
-    ctx.arc(x, y, currentHoleRadius, 0, Math.PI * 2);
-    ctx.clip();
-    
-    // Transform
-    ctx.translate(x, y + 100 - (progress * 110)); // Slide up
-    ctx.scale(scale, scale);
-    
-    // Draw polygon helper
-    const poly = (pts, color) => {
-      ctx.fillStyle = color;
+    // Head logic
+    if (headProgress > 0.01) {
+      // Bunny origin rests near the bottom edge of the hole when fully popped
+      const yOffset = currentHoleRadius + 30 - (headProgress * 60); 
+      
+      ctx.save();
+      // Clip to the hole so bunny body/head doesn't render outside the black circle
       ctx.beginPath();
-      ctx.moveTo(pts[0], pts[1]);
-      for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i+1]);
-      ctx.closePath();
-      ctx.fill();
-    };
+      ctx.arc(x, y, currentHoleRadius, 0, Math.PI * 2);
+      ctx.clip();
+      
+      // Transform
+      ctx.translate(x, y + yOffset);
+      ctx.scale(scale * 0.77, scale * 0.77); // Decreased size by 30% from 1.1 (1.1 * 0.7 = 0.77)
+      
+      // Helper for soft bezier origami shapes
+      const shape = (color, drawFn) => {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color; // Soften seams to prevent gaps
+        ctx.lineWidth = 1.5;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        drawFn();
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      };
 
-    // Origami Shapes (centered around 0,0)
-    // Left Ear
-    poly([-20, -30, -10, -70, 0, -30], '#ffffff');
-    poly([-10, -70, -15, -35, -5, -35], '#ffcccc'); // Inner pink
-    // Right Ear
-    poly([20, -30, 10, -70, 0, -30], '#f0f0f0');
-    poly([10, -70, 5, -35, 15, -35], '#ffe0e0'); // Inner pink
-    // Head left
-    poly([0, 10, -30, -30, 0, -30], '#ffffff');
-    // Head right
-    poly([0, 10, 30, -30, 0, -30], '#e0e0e0');
-    // Nose/Mouth area
-    poly([-10, 5, 10, 5, 0, 20], '#d0d0d0');
-    // Body left
-    poly([-30, 20, -50, 70, 0, 80, 0, 10], '#ffffff');
-    // Body right
-    poly([30, 20, 50, 70, 0, 80, 0, 10], '#f0f0f0');
-    
-    ctx.restore();
+      // --- EARS (realistic spoon shape) ---
+      ctx.save();
+      ctx.rotate(earAngle); // Shake side-to-side
+      // Left Ear
+      shape('#ffffff', () => {
+        ctx.moveTo(-15, -15);
+        ctx.quadraticCurveTo(-45, -30, -40, -80); // Outer left edge
+        ctx.quadraticCurveTo(-35, -95, -25, -85); // Soft tip
+        ctx.quadraticCurveTo(-10, -50, -5, -20);  // Inner right edge
+      });
+      // Left Ear Inner Pink
+      shape('#ffcccc', () => {
+        ctx.moveTo(-15, -25);
+        ctx.quadraticCurveTo(-35, -35, -30, -75);
+        ctx.quadraticCurveTo(-26, -85, -22, -75);
+        ctx.quadraticCurveTo(-10, -45, -8, -25);
+      });
+      ctx.restore();
+
+      ctx.save();
+      ctx.rotate(earAngle); // Shake side-to-side together
+      // Right Ear
+      shape('#f0f0f0', () => {
+        ctx.moveTo(15, -15);
+        ctx.quadraticCurveTo(45, -30, 40, -80); 
+        ctx.quadraticCurveTo(35, -95, 25, -85); 
+        ctx.quadraticCurveTo(10, -50, 5, -20);
+      });
+      // Right Ear Inner Pink
+      shape('#ffe0e0', () => {
+        ctx.moveTo(15, -25);
+        ctx.quadraticCurveTo(35, -35, 30, -75);
+        ctx.quadraticCurveTo(26, -85, 22, -75);
+        ctx.quadraticCurveTo(10, -45, 8, -25);
+      });
+      ctx.restore();
+
+      // --- HEAD (fuller cheeks) ---
+      // Head left
+      shape('#ffffff', () => {
+        ctx.moveTo(0, 20);
+        ctx.quadraticCurveTo(-45, 10, -35, -15); // Full cheek
+        ctx.quadraticCurveTo(-25, -40, 0, -35);  // Top curve
+        ctx.lineTo(0, 20);                       // Center seam
+      });
+      // Head right
+      shape('#e0e0e0', () => {
+        ctx.moveTo(0, 20);
+        ctx.quadraticCurveTo(45, 10, 35, -15);
+        ctx.quadraticCurveTo(25, -40, 0, -35);
+        ctx.lineTo(0, 20);
+      });
+
+      // --- NECK (small part) ---
+      shape('#ffffff', () => {
+        ctx.moveTo(0, 15);
+        ctx.lineTo(-25, 25); // Neck left
+        ctx.quadraticCurveTo(-15, 45, 0, 45); // Bottom curve
+        ctx.lineTo(0, 15);
+      });
+      shape('#f0f0f0', () => {
+        ctx.moveTo(0, 15);
+        ctx.lineTo(25, 25); // Neck right
+        ctx.quadraticCurveTo(15, 45, 0, 45); // Bottom curve
+        ctx.lineTo(0, 15);
+      });
+
+      // --- FACE ---
+      // Eyes
+      ctx.fillStyle = '#333';
+      ctx.beginPath();
+      ctx.arc(-12, -5, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(12, -5, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Nose
+      shape('#ffcccc', () => {
+        ctx.moveTo(-3, 6);
+        ctx.quadraticCurveTo(0, 4, 3, 6);
+        ctx.quadraticCurveTo(0, 10, -3, 6);
+      });
+
+      // Mouth
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-6, 12);
+      ctx.quadraticCurveTo(-3, 15, 0, 10);
+      ctx.quadraticCurveTo(3, 15, 6, 12);
+      ctx.stroke();
+
+      ctx.restore(); // END CLIP
+    }
+
+    // --- HANDS (drawn outside clip so they overlap the edge) ---
+    if (pawProgress > 0.01) {
+      const handScale = pawProgress * scale * 0.7; // Decreased size by 30%
+      ctx.save();
+      ctx.translate(x, y);
+      
+      const drawHand = (hx, hy, rot, color) => {
+        ctx.save();
+        ctx.translate(hx, hy);
+        ctx.rotate(rot);
+        ctx.scale(handScale, handScale);
+        
+        // Hand shape (paw)
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#d0d0d0';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // Full ellipse for the paw, centered on the edge
+        ctx.ellipse(0, 0, 12, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Fingers
+        ctx.strokeStyle = '#aaa';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-5, -2); ctx.lineTo(-5, -12);
+        ctx.moveTo(0, 0);   ctx.lineTo(0, -14);
+        ctx.moveTo(5, -2);  ctx.lineTo(5, -12);
+        ctx.stroke();
+        
+        ctx.restore();
+      };
+
+      const handDist = currentHoleRadius;
+      
+      // Left hand at ~20 degrees left of bottom center
+      const leftAngle = Math.PI * 0.65;
+      drawHand(Math.cos(leftAngle) * handDist, Math.sin(leftAngle) * handDist, leftAngle - Math.PI/2, '#ffffff');
+
+      // Right hand at ~20 degrees right of bottom center
+      const rightAngle = Math.PI * 0.35;
+      drawHand(Math.cos(rightAngle) * handDist, Math.sin(rightAngle) * handDist, rightAngle - Math.PI/2, '#f0f0f0');
+
+      ctx.restore();
+    }
   }
 
   // ── Main Animation Loop ──────────────────────────────────────────────────────
@@ -239,7 +380,7 @@
         const nx = Math.round(entityX / gap) * gap;
         const ny = Math.round(entityY / gap) * gap;
         holeDot = { x: nx, y: ny };
-        holeTargetRadius = 100; // max radius for hole
+        holeTargetRadius = 60; // reduced by 40% (was 100)
       }
     }
     
@@ -247,19 +388,40 @@
     currentHoleRadius += (holeTargetRadius - currentHoleRadius) * 0.08;
     
     // Transition to popping up when hole is wide enough
-    if (state === 'EXPANDING' && currentHoleRadius > 80) {
+    if (state === 'EXPANDING' && currentHoleRadius > 48) { // 80% of 60
       state = 'POPPING_UP';
-      bunnyTargetProgress = 1;
+      pawTargetProgress = 1; // Paws emerge first
+      headPopStartTime = now + 500; // 0.5s delay before head
+    }
+    
+    // Head emergence logic
+    if (state === 'POPPING_UP') {
+      if (now >= headPopStartTime && headPopStartTime !== 0) {
+        headTargetProgress = 1;
+      }
+      if (headPopProgress > 0.99 && headTargetProgress === 1) {
+        if (!earShakeStartTime) earShakeStartTime = now;
+      }
+    }
+
+    // Retraction sequence
+    if (state === 'RETRACTING') {
+      if (now >= pawRetractStartTime && pawRetractStartTime !== 0) {
+        pawTargetProgress = 0;
+        holeTargetRadius = baseRadius;
+        pawRetractStartTime = 0;
+      }
     }
     
     // Transition back to moving when fully retracted
-    if (state === 'RETRACTING' && currentHoleRadius < baseRadius + 1) {
+    if (state === 'RETRACTING' && currentHoleRadius < baseRadius + 1 && pawTargetProgress === 0) {
       state = 'MOVING';
       holeDot = null;
     }
 
-    // Animate bunny progress
-    bunnyPopProgress += (bunnyTargetProgress - bunnyPopProgress) * 0.1;
+    // Animate pop progress
+    pawPopProgress += (pawTargetProgress - pawPopProgress) * 0.1;
+    headPopProgress += (headTargetProgress - headPopProgress) * 0.1;
 
     // Clear canvas
     canvas.width = W; // also clears
@@ -294,7 +456,7 @@
           isHole = true;
           ctx.fillStyle = '#111'; // Dark void
         } else {
-          ctx.fillStyle = 'rgba(165,165,170,0.5)';
+          ctx.fillStyle = 'rgba(145,145,150,0.5)'; // 10% darker default
           
           // If a hole exists, push dots away
           if (holeDot && currentHoleRadius > baseRadius) {
@@ -319,6 +481,9 @@
             drawX += (bdx / bDist) * force * maxDistortion;
             drawY += (bdy / bDist) * force * maxDistortion;
             radius = baseRadius + (force * 1.5); // scale up slightly on bump
+            
+            // 20-30% darker for dots in the ripple/cursor interaction area
+            ctx.fillStyle = `rgba(110,110,115,${0.5 + (force * 0.3)})`;
           }
         }
         
@@ -331,7 +496,11 @@
     
     // Draw Bunny
     if (holeDot) {
-      drawBunny(ctx, holeDot.x, holeDot.y, 1.0, bunnyPopProgress);
+      let earAngle = 0;
+      if (earShakeStartTime > 0 && now - earShakeStartTime < 1000) {
+        earAngle = Math.sin((now - earShakeStartTime) * 0.03) * 0.15;
+      }
+      drawBunny(ctx, holeDot.x, holeDot.y, 1.0, pawPopProgress, headPopProgress, earAngle);
     }
 
     requestAnimationFrame(draw);
