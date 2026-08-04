@@ -8,6 +8,8 @@ import ip1Image from './src/assets/ip1.png';
 import ip2Image from './src/assets/ip2.png';
 import ip3Image from './src/assets/ip3.png';
 import ip4Image from './src/assets/ip4.png';
+import pCompImage from './src/assets/Pr_comp/P_comp.png';
+import pAlertImage from './src/assets/Pr_alert/P_alert.png';
 const seqUrlsGlob = import.meta.glob('./src/assets/First_phone_mesh/*.jpg', { eager: true, query: '?url', import: 'default' });
 const sortedSeqKeys = Object.keys(seqUrlsGlob).sort((a, b) => {
   const numA = parseInt(a.match(/(\d+)\.jpg$/)[1], 10);
@@ -106,6 +108,7 @@ scene.add(interactiveGroup);
 
 let phoneGroup = new THREE.Group();
 let extraPhones = [];
+let endPhones = [];
 let screenMaterial = null;
 let seqTextures = [];
 interactiveGroup.add(phoneGroup);
@@ -151,6 +154,16 @@ gltfLoader.load('/iphone_17.glb', (gltf) => {
     t.offset.y = -Y_OFFSET;
   });
 
+  const endTextures = [
+    textureLoader.load(pCompImage),
+    textureLoader.load(pAlertImage),
+  ];
+  endTextures.forEach(t => {
+    t.flipY = false;
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.offset.y = -Y_OFFSET;
+  });
+
   model.traverse((child) => {
     if (child.isMesh) {
       // Remove apple logo completely
@@ -164,6 +177,7 @@ gltfLoader.load('/iphone_17.glb', (gltf) => {
 
       if (child.material.name.includes('Screen') || child.material.name === '17ProMax_Screen') {
         screenMaterial = new THREE.ShaderMaterial({
+          name: '17ProMax_Screen',
           uniforms: {
             tex1: { value: screenTexture },
             tex2: { value: screenTexture },
@@ -220,6 +234,23 @@ gltfLoader.load('/iphone_17.glb', (gltf) => {
     extraPhones.push(clone);
   }
 
+  for (let i = 0; i < 2; i++) {
+    const clone = model.clone();
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        if (child.material.name.includes('Screen') || child.material.name === '17ProMax_Screen') {
+          child.material = new THREE.MeshBasicMaterial({
+            map: endTextures[i]
+          });
+        }
+      }
+    });
+    clone.visible = false;
+    clone.scale.set(0.897, 0.897, 0.897); // Size 15% larger than original 0.78 scale
+    phoneGroup.add(clone);
+    endPhones.push(clone);
+  }
+
   // Setup Initial State (Hero)
   // Big, front-facing, top 20% visible
   // To show top 20%, we shift it up relative to the camera
@@ -258,7 +289,7 @@ function setupScrollAnimations() {
     .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 0)
     .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 0);
 
-  gsap.set(['#popup-image', '#popout-1', '#popout-2'], { xPercent: -50, yPercent: -50 });
+  gsap.set(['#popup-image', '#popout-1', '#popout-2', '#alert-popout', '#cmp-popout'], { xPercent: -50, yPercent: -50 });
   gsap.set('#drow-text', { xPercent: -50, yPercent: -50 });
   gsap.set('#logo-strip', { xPercent: -50, yPercent: -50 });
   gsap.set('#dday-text', { xPercent: -50, yPercent: -50 });
@@ -494,8 +525,7 @@ function setupScrollAnimations() {
   }, 8.5);
 
   // Section 7: Popout images split
-  // Blur canvas and show popup images
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(4.8px)', duration: 0.5, ease: 'power2.inOut' }, 9.5);
+  // Show popup images (no blur)
   mainTimeline.to(['#popout-1', '#popout-2'], { scale: 1.3, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 9.5);
   mainTimeline.set(['#popout-1', '#popout-2'], { zIndex: 10 }, 9.75);
 
@@ -550,6 +580,71 @@ function setupScrollAnimations() {
   // Text 7: Fade in text blocks
   if (text7Left) mainTimeline.fromTo(text7Left, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
   if (text7Right) mainTimeline.fromTo(text7Right, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
+
+  // Calculate exact X position to center on popout1 and popout2 (which are at +/- 440px)
+  // View height at camera z=5, fov=45 is approx 4.142
+  const viewHeight = 2 * 5 * Math.tan((45 * Math.PI) / 360);
+  // Decrease horizontal distance by 10% (multiplier 0.9)
+  const targetPhoneX = ((440 / window.innerHeight) * viewHeight / 18.0) * 0.9;
+  // Left phone: Top-Left to Middle-Left (Strictly vertical)
+  mainTimeline.set(endPhones[0], { visible: true }, 10.6);
+  mainTimeline.fromTo(endPhones[0].position,
+    { x: -targetPhoneX, y: 0.3, z: 0 },
+    { x: -targetPhoneX, y: 0, z: 0, duration: 0.5, ease: 'power2.out' },
+    10.6
+  );
+  // Phone enters front-facing
+  mainTimeline.set(endPhones[0].rotation, { x: 0, y: 0, z: 0 }, 10.6);
+
+  // Right phone: Bottom-Right to Middle-Right (Strictly vertical)
+  mainTimeline.set(endPhones[1], { visible: true }, 10.6);
+  mainTimeline.fromTo(endPhones[1].position,
+    { x: targetPhoneX, y: -0.3, z: 0 },
+    { x: targetPhoneX, y: 0, z: 0, duration: 0.5, ease: 'power2.out' },
+    10.6
+  );
+  // Phone enters front-facing
+  mainTimeline.set(endPhones[1].rotation, { x: 0, y: 0, z: 0 }, 10.6);
+
+  // Slide main phone completely DOWN and off-screen
+  mainTimeline.to(phoneGroup.children[0].position, { y: -3.0, duration: 0.5, ease: 'power2.out' }, 10.6);
+
+  // Left elements slide UP (Reversed)
+  mainTimeline.to('#popout-1', { y: -window.innerHeight * 0.5 - 200, opacity: 0, duration: 0.5, ease: 'power2.out' }, 10.6);
+  if (text7Left) {
+    mainTimeline.to(text7Left, { opacity: 0, y: -window.innerHeight * 0.5, duration: 0.5, ease: 'power2.out' }, 10.6);
+  }
+
+  // Right elements slide DOWN (Reversed)
+  mainTimeline.to('#popout-2', { y: window.innerHeight * 0.5 + 200, opacity: 0, duration: 0.5, ease: 'power2.out' }, 10.6);
+  if (text7Right) {
+    mainTimeline.to(text7Right, { opacity: 0, y: window.innerHeight * 0.5, duration: 0.5, ease: 'power2.out' }, 10.6);
+  }
+
+  // Setup new popouts behind the phones (shifted 40px outward total)
+  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, zIndex: -1, scale: 1 }, 10.6);
+  mainTimeline.set('#cmp-popout', { opacity: 0, x: 480, zIndex: -1, scale: 1 }, 10.6);
+
+  // Section 9: New Popouts Slide to Center & Phones Rotate
+  const popoutEmergeTime = 11.1;
+  const popoutEmergeDuration = 0.4;
+  const popoutSlideTime = 11.5;
+  const popoutSlideDuration = 1.0;
+
+  // Step 1: Images emerge (pop out) from behind the phones
+  mainTimeline.to('#alert-popout', { x: -440, y: 35, scale: 1.03, opacity: 1, duration: popoutEmergeDuration, ease: 'back.out(1.5)' }, popoutEmergeTime);
+  mainTimeline.to('#cmp-popout', { x: 440, y: 45, scale: 1.03, opacity: 1, duration: popoutEmergeDuration, ease: 'back.out(1.5)' }, popoutEmergeTime);
+
+  // Bring images to the front (over the phones) right before they slide to the center
+  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: 10 }, popoutSlideTime);
+
+  // Step 2: Once visible, they slide to the center (offset by 20px)
+  mainTimeline.to('#alert-popout', { x: 20, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
+  mainTimeline.to('#cmp-popout', { x: 20, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
+
+  // Phones rotate synchronously while the images slide to the center
+  mainTimeline.to(endPhones[0].rotation, { y: -Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
+  mainTimeline.to(endPhones[1].rotation, { y: Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
@@ -569,25 +664,25 @@ window.addEventListener('pointermove', (e) => {
   // --- Raycast GLB Hitbox Detection ---
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  
+
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(phoneGroup.children, true);
-  
+
   let isHoveringGLB = false;
   if (intersects.length > 0) {
-     for (let i = 0; i < intersects.length; i++) {
-        let obj = intersects[i].object;
-        let visible = true;
-        let curr = obj;
-        while(curr) {
-          if (!curr.visible) { visible = false; break; }
-          curr = curr.parent;
-        }
-        if (visible && obj.material.opacity > 0.05) {
-           isHoveringGLB = true;
-           break;
-        }
-     }
+    for (let i = 0; i < intersects.length; i++) {
+      let obj = intersects[i].object;
+      let visible = true;
+      let curr = obj;
+      while (curr) {
+        if (!curr.visible) { visible = false; break; }
+        curr = curr.parent;
+      }
+      if (visible && obj.material.opacity > 0.05) {
+        isHoveringGLB = true;
+        break;
+      }
+    }
   }
 
   // --- DOM Pop-out Hitbox Detection ---
@@ -601,9 +696,9 @@ window.addEventListener('pointermove', (e) => {
       if (opacity > 0.1) {
         const rect = el.getBoundingClientRect();
         if (e.clientX >= rect.left && e.clientX <= rect.right &&
-            e.clientY >= rect.top && e.clientY <= rect.bottom) {
-           isHoveringPopout = true;
-           break;
+          e.clientY >= rect.top && e.clientY <= rect.bottom) {
+          isHoveringPopout = true;
+          break;
         }
       }
     }
@@ -667,6 +762,21 @@ const tick = () => {
   if (interactiveGroup) {
     interactiveGroup.rotation.y = currentRotation;
   }
+
+  // Check global popout state
+  let isAnyPopoutVisible = false;
+  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2'];
+  for (let selector of popouts) {
+    const el = document.querySelector(selector);
+    if (el) {
+      const opacity = parseFloat(window.getComputedStyle(el).opacity);
+      if (opacity > 0.01) {
+        isAnyPopoutVisible = true;
+        break;
+      }
+    }
+  }
+  window.isPopoutPlaying = isAnyPopoutVisible;
 
   // Very subtle floating animation (optional, only if ScrollTrigger isn't aggressively pinning it)
   // if(phoneGroup) {

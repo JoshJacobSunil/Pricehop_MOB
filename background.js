@@ -86,7 +86,7 @@
     lastMoveTimeEvent = now;
 
     // Do not queue points if inside an exclusion zone
-    if (velocity <= SPEED_LIMIT && !window.isExclusionZoneHovered) {
+    if (velocity <= SPEED_LIMIT && !window.isExclusionZoneHovered && !window.isPopoutPlaying) {
       pathQueue.push({x: e.clientX, y: e.clientY});
     }
 
@@ -293,7 +293,7 @@
       entityX = mouseX;
       entityY = mouseY;
     } else {
-      if (window.isExclusionZoneHovered) {
+      if (window.isExclusionZoneHovered || window.isPopoutPlaying) {
         // Exclusion zone hover: Skid to a complete stop
         pathQueue = [];
         currentTarget = null;
@@ -371,7 +371,16 @@
     }
 
     // State Logic
-    if (state === 'MOVING' || state === 'RETRACTING') {
+    if (window.isPopoutPlaying) {
+      if (state === 'POPPING_UP' || state === 'EXPANDING') {
+        state = 'RETRACTING';
+        holeTargetRadius = currentHoleRadius; 
+        headTargetProgress = 0; 
+        pawRetractStartTime = Date.now();
+        headPopStartTime = 0;
+        earShakeStartTime = 0;
+      }
+    } else if (state === 'MOVING' || state === 'RETRACTING') {
       // Prevent idle popup if hovering an exclusion zone
       if (now - lastMoveTime > 2000 && mouseX !== -1000 && !window.isExclusionZoneHovered) {
         state = 'EXPANDING';
