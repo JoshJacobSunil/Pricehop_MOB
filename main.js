@@ -83,6 +83,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   alpha: true, // transparent background so black shows through
   antialias: true,
+  powerPreference: "high-performance",
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -112,10 +113,7 @@ let phoneGroup = new THREE.Group();
 let extraPhones = [];
 let endPhones = [];
 let screenMaterial = null;
-let seqTextures = [];
-interactiveGroup.add(phoneGroup);
-
-gltfLoader.load(`${import.meta.env.BASE_URL}iphone_17.glb`, (gltf) => {
+  gltfLoader.load(`${import.meta.env.BASE_URL}${import.meta.env.VITE_GLB_MODEL_PATH || 'iphone_17.glb'}`, (gltf) => {
   const model = gltf.scene;
 
   // Center the model's geometry
@@ -332,6 +330,16 @@ gltfLoader.load(`${import.meta.env.BASE_URL}iphone_17.glb`, (gltf) => {
 
   // Setup GSAP ScrollTrigger Animations
   setupScrollAnimations();
+}, undefined, (error) => {
+  console.warn("Could not load the 3D phone model. Using fallback image.", error);
+  // Show fallback image inside canvas if loading fails
+  const canvasEl = document.querySelector('#webgl-canvas');
+  if (canvasEl) {
+    canvasEl.style.backgroundImage = `url(${heroImage})`;
+    canvasEl.style.backgroundSize = 'contain';
+    canvasEl.style.backgroundPosition = 'center';
+    canvasEl.style.backgroundRepeat = 'no-repeat';
+  }
 });
 
 let mainTimeline;
@@ -804,10 +812,20 @@ window.addEventListener('pointermove', (e) => {
   }
 });
 
-// 7. Resize Handler
+// 7. Resize Handler (Optimized to ignore vertical shift from mobile address bars)
+let lastWidth = window.innerWidth;
 window.addEventListener('resize', () => {
-  sizes.width = window.innerWidth;
-  sizes.height = window.innerHeight;
+  const currentWidth = window.innerWidth;
+  const currentHeight = window.innerHeight;
+
+  // Ignore small vertical-only changes caused by mobile browser URL bars hiding/showing
+  if (currentWidth === lastWidth && Math.abs(currentHeight - sizes.height) < 120) {
+    return;
+  }
+
+  lastWidth = currentWidth;
+  sizes.width = currentWidth;
+  sizes.height = currentHeight;
 
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
@@ -819,8 +837,32 @@ window.addEventListener('resize', () => {
 // 8. Animation Loop
 const clock = new THREE.Clock();
 let lastTimelineProgress = 0;
+let animationFrameId = null;
+let isCanvasVisible = true;
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    isCanvasVisible = entry.isIntersecting;
+    if (isCanvasVisible) {
+      if (!animationFrameId) {
+        tick();
+      }
+    } else {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+    }
+  });
+}, { threshold: 0.05 });
+
+if (canvas) {
+  observer.observe(canvas);
+}
 
 const tick = () => {
+  if (!isCanvasVisible) return;
+
   const elapsedTime = clock.getElapsedTime();
 
   // Add auto-rotation during the carousel section
@@ -858,13 +900,8 @@ const tick = () => {
   }
   window.isPopoutPlaying = isAnyPopoutVisible;
 
-  // Very subtle floating animation (optional, only if ScrollTrigger isn't aggressively pinning it)
-  // if(phoneGroup) {
-  //   phoneGroup.position.y += Math.sin(elapsedTime) * 0.001;
-  // }
-
   renderer.render(scene, camera);
-  window.requestAnimationFrame(tick);
+  animationFrameId = window.requestAnimationFrame(tick);
 };
 
 tick();
