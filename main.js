@@ -115,7 +115,7 @@ let screenMaterial = null;
 let seqTextures = [];
 interactiveGroup.add(phoneGroup);
 
-gltfLoader.load('/iphone_17.glb', (gltf) => {
+gltfLoader.load(`${import.meta.env.BASE_URL}iphone_17.glb`, (gltf) => {
   const model = gltf.scene;
 
   // Center the model's geometry
