@@ -319,3 +319,391 @@ html.lenis, html.lenis body {
   color: var(--accent);
   animation: bounceUp 2s infinite ease-in-out;
 }
+
+/* Release Countdown Page Styles */
+.countdown-page {
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  min-height: 100vh; /* Covers the whole screen */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 80px 20px 40px;
+}
+
+.countdown-wrapper {
+  max-width: 800px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.countdown-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #111111, #555555);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 5px;
+}
+
+.countdown-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+}
+
+/* Timer Grid Layout */
+.timer-grid {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.timer-segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+
+.timer-number {
+  font-size: 5.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums; /* Monospaced numbers to prevent jumping layout */
+  background: linear-gradient(135deg, #111111, #4a90e2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.timer-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.badge-container {
+  margin-top: 20px;
+}
+
+.app-badges {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.app-badge {
+  background: #111111;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-badge:hover {
+  transform: translateY(-2px);
+  background: #222222;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.badge-store {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.badge-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.footer-disclosures {
+  max-width: 750px;
+  width: 100%;
+  margin: 50px auto 0;
+  padding-top: 25px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.disclosure-text {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #999999;
+  text-align: center;
+}
+
+.disclosure-text strong {
+  color: #555555;
+  font-weight: 600;
+}
+
+.footer-bottom {
+  width: 100%;
+  padding-top: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer-bottom p {
+  font-size: 0.8rem;
+  color: #888888;
+}
+
+/* --- Live Price Scanner Ticker --- */
+.live-ticker-wrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  padding: 12px 0;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-family: inherit;
+  pointer-events: auto;
+}
+
+.live-ticker-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #a855f7; /* Soft purple */
+  background: rgba(168, 85, 247, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-right: 15px;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+.live-ticker-content {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: marqueeScroll 25s linear infinite;
+}
+
+.ticker-item {
+  font-size: 0.82rem;
+  color: #666666;
+  font-weight: 500;
+}
+
+.ticker-item span {
+  font-weight: 600;
+  color: #111111;
+}
+
+.ticker-item .highlight {
+  color: #22c55e; /* Green deal color */
+  font-weight: 600;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* --- Waitlist Email Form --- */
+.waitlist-container {
+  margin: 35px auto 45px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.waitlist-title {
+  font-size: 0.88rem;
+  color: #555555;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.waitlist-form:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 4px 25px rgba(168, 85, 247, 0.12);
+}
+
+.waitlist-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  color: #111111;
+  outline: none;
+  font-family: inherit;
+}
+
+.waitlist-input::placeholder {
+  color: #999999;
+}
+
+.waitlist-btn {
+  background: #111111;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.waitlist-btn:hover {
+  background: #a855f7; /* Swaps to purple highlight */
+  transform: scale(1.02);
+}
+
+/* --- App Features Grid --- */
+.app-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 800px;
+  width: 100%;
+  margin: 45px auto 40px;
+  pointer-events: auto;
+}
+
+.feature-col {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-col:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.feature-col h3 {
+  font-size: 0.95rem;
+  color: #111111;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.feature-col p {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #666666;
+}
+
+/* --- Footer Navigation Links --- */
+.footer-links-row {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  width: 100%;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  pointer-events: auto;
+}
+
+.footer-link-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.footer-link-group h4 {
+  font-size: 0.8rem;
+  color: #111111;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer-link-group a {
+  font-size: 0.8rem;
+  color: #666666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link-group a:hover {
+  color: #a855f7;
+}
+
+@media (max-width: 768px) {
+  .countdown-title {
+    font-size: 2.3rem;
+  }
+  .timer-number {
+    font-size: 3.5rem;
+  }
+  .timer-segment {
+    min-width: 70px;
+  }
+  .timer-grid {
+    gap: 15px;
+  }
+  .app-features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 15px;
+  }
+  .footer-links-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+  }
+  .footer-link-group {
+    align-items: center;
+    text-align: center;
+  }
+}
+

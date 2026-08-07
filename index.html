@@ -10,6 +10,8 @@
 </head>
 
 <body>
+
+
   <!-- The WebGL Canvas for 3D Model -->
   <canvas id="webgl-canvas"></canvas>
   <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
@@ -132,8 +134,116 @@
       </div>
     </section>
 
-    <footer class="section about-us" id="section-about">
-      <div class="content-wrapper">
+    <footer class="countdown-page" id="section-about">
+      <div class="countdown-wrapper">
+        <!-- Live Deal Scanner Ticker -->
+        <div class="live-ticker-wrapper">
+          <div class="live-ticker-label">LIVE PRICE SCANNER:</div>
+          <div class="live-ticker-content">
+            <div class="ticker-item"><span>iPhone 15 Pro</span> ➔ Amazon: <del>₹1,19,900</del> | Pricehop: <span class="highlight">₹1,14,500</span> (Saved ₹5,400)</div>
+            <div class="ticker-item"><span>Sony WH-1000XM5</span> ➔ Croma: <del>₹29,990</del> | Pricehop: <span class="highlight">₹24,990</span> (Saved ₹5,000)</div>
+            <div class="ticker-item"><span>Nike Air Jordan</span> ➔ Myntra: <del>₹11,495</del> | Pricehop: <span class="highlight">₹9,195</span> (Saved ₹2,300)</div>
+            <div class="ticker-item"><span>MacBook Air M3</span> ➔ Reliance Digital: <del>₹1,14,900</del> | Pricehop: <span class="highlight">₹1,09,900</span> (Saved ₹5,000)</div>
+            <!-- Duplicate for seamless looping -->
+            <div class="ticker-item"><span>iPhone 15 Pro</span> ➔ Amazon: <del>₹1,19,900</del> | Pricehop: <span class="highlight">₹1,14,500</span> (Saved ₹5,400)</div>
+            <div class="ticker-item"><span>Sony WH-1000XM5</span> ➔ Croma: <del>₹29,990</del> | Pricehop: <span class="highlight">₹24,990</span> (Saved ₹5,000)</div>
+            <div class="ticker-item"><span>Nike Air Jordan</span> ➔ Myntra: <del>₹11,495</del> | Pricehop: <span class="highlight">₹9,195</span> (Saved ₹2,300)</div>
+            <div class="ticker-item"><span>MacBook Air M3</span> ➔ Reliance Digital: <del>₹1,14,900</del> | Pricehop: <span class="highlight">₹1,09,900</span> (Saved ₹5,000)</div>
+          </div>
+        </div>
+
+        <h2 class="countdown-title">PRICEHOP APP RELEASE</h2>
+        <p class="countdown-subtitle">Get ready to discover value. Launching in:</p>
+        
+        <!-- Timer Display Grid -->
+        <div id="release-timer" class="timer-grid">
+          <div class="timer-segment">
+            <span id="timer-days" class="timer-number">100</span>
+            <span class="timer-label">Days</span>
+          </div>
+          <div class="timer-segment">
+            <span id="timer-hours" class="timer-number">00</span>
+            <span class="timer-label">Hours</span>
+          </div>
+          <div class="timer-segment">
+            <span id="timer-minutes" class="timer-number">00</span>
+            <span class="timer-label">Minutes</span>
+          </div>
+          <div class="timer-segment">
+            <span id="timer-seconds" class="timer-number">00</span>
+            <span class="timer-label">Seconds</span>
+          </div>
+        </div>
+        
+        <!-- Waitlist signup form -->
+        <div class="waitlist-container">
+          <p class="waitlist-title">Be the first to scan & save. Secure early access:</p>
+          <form class="waitlist-form" onsubmit="event.preventDefault(); alert('You are on the list! Early access code will be sent to your email.'); this.reset();">
+            <input type="email" placeholder="Enter your email address" required class="waitlist-input" />
+            <button type="submit" class="waitlist-btn">Notify Me</button>
+          </form>
+        </div>
+
+        <!-- App Features Grid -->
+        <div class="app-features-grid">
+          <div class="feature-col">
+            <div class="feature-icon">🔍</div>
+            <h3>Smart Compare</h3>
+            <p>Real-time price matching across 100+ stores instantly.</p>
+          </div>
+          <div class="feature-col">
+            <div class="feature-icon">🔔</div>
+            <h3>Price Alerts</h3>
+            <p>Get push notifications the second an item drops in price.</p>
+          </div>
+          <div class="feature-col">
+            <div class="feature-icon">📈</div>
+            <h3>Price History</h3>
+            <p>Track price changes over 90 days to buy at the bottom.</p>
+          </div>
+        </div>
+
+        <div class="badge-container">
+          <div class="app-badges">
+            <a href="#" class="app-badge">
+              <span class="badge-store">Download on the</span>
+              <span class="badge-title">App Store</span>
+            </a>
+            <a href="#" class="app-badge">
+              <span class="badge-store">GET IT ON</span>
+              <span class="badge-title">Google Play</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer navigation links -->
+      <div class="footer-links-row">
+        <div class="footer-link-group">
+          <h4>Platform</h4>
+          <a href="#">FAQ</a>
+          <a href="#">Contact Support</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-link-group">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">Instagram</a>
+          <a href="#">Discord</a>
+        </div>
+      </div>
+
+      <div class="footer-disclosures">
+        <p class="disclosure-text">
+          <strong>Affiliate Disclosure:</strong> Pricehop is a price comparison platform. We partner with affiliate programs (including Amazon Associates, Flipkart Affiliate Program, and QLinks). When you click on product links to stores, we may earn a referral commission at no additional cost to you.
+        </p>
+        <p class="disclosure-text">
+          <strong>Trademark Disclaimer:</strong> All product names, logos, brands, and registered trademarks displayed on this site (including Amazon, Flipkart, Tira, Myntra) are property of their respective owners. Use of these names and marks does not imply endorsement or official affiliation.
+        </p>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Pricehop Technologies Inc. All rights reserved.</p>
       </div>
     </footer>
   </main>

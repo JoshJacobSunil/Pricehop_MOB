@@ -52,10 +52,12 @@ const scene = new THREE.Scene();
 
 // 1.5 Lenis Smooth Scrolling Setup
 const lenis = new Lenis({
-  autoBind: true,
-  lerp: 0.1, // Modern standard for smooth, responsive scrolling
+  autoRaf: false, // Stops Lenis from running its own RAF loop (since we call raf inside GSAP ticker)
+  lerp: 0.08,     // Luxurious, slightly slower catchup for smooth scrolling
+  duration: 1.2,  // Set uniform duration
   smoothWheel: true,
-  wheelMultiplier: 1,
+  wheelMultiplier: 1.0,
+  syncTouch: true // Normalizes touch devices
 });
 
 // Sync Lenis with GSAP ScrollTrigger
@@ -162,6 +164,72 @@ gltfLoader.load('/iphone_17.glb', (gltf) => {
     t.flipY = false;
     t.colorSpace = THREE.SRGBColorSpace;
     t.offset.y = -Y_OFFSET;
+  });
+
+  // Asynchronously invert pCompImage to make its screen light mode
+  textureLoader.load(pCompImage, (tex) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = tex.image.width;
+    canvas.height = tex.image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(tex.image, 0, 0);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = 255 - data[i];
+      data[i+1] = 255 - data[i+1];
+      data[i+2] = 255 - data[i+2];
+    }
+    ctx.putImageData(imgData, 0, 0);
+    
+    const invertedTex = new THREE.CanvasTexture(canvas);
+    invertedTex.flipY = false;
+    invertedTex.colorSpace = THREE.SRGBColorSpace;
+    invertedTex.offset.y = -Y_OFFSET;
+    invertedTex.needsUpdate = true;
+    
+    endTextures[0] = invertedTex;
+    if (endPhones[0]) {
+      endPhones[0].traverse((child) => {
+        if (child.isMesh && (child.material.name.includes('Screen') || child.material.name === '17ProMax_Screen')) {
+          child.material.map = invertedTex;
+          child.material.needsUpdate = true;
+        }
+      });
+    }
+  });
+
+  // Asynchronously invert pAlertImage to make its screen light mode
+  textureLoader.load(pAlertImage, (tex) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = tex.image.width;
+    canvas.height = tex.image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(tex.image, 0, 0);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = 255 - data[i];
+      data[i+1] = 255 - data[i+1];
+      data[i+2] = 255 - data[i+2];
+    }
+    ctx.putImageData(imgData, 0, 0);
+    
+    const invertedTex = new THREE.CanvasTexture(canvas);
+    invertedTex.flipY = false;
+    invertedTex.colorSpace = THREE.SRGBColorSpace;
+    invertedTex.offset.y = -Y_OFFSET;
+    invertedTex.needsUpdate = true;
+    
+    endTextures[1] = invertedTex;
+    if (endPhones[1]) {
+      endPhones[1].traverse((child) => {
+        if (child.isMesh && (child.material.name.includes('Screen') || child.material.name === '17ProMax_Screen')) {
+          child.material.map = invertedTex;
+          child.material.needsUpdate = true;
+        }
+      });
+    }
   });
 
   model.traverse((child) => {
@@ -278,7 +346,7 @@ function setupScrollAnimations() {
       trigger: '.scroll-container',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: true, // Let Lenis handle the smoothing natively
+      scrub: 1, // Smooth animation catch-up synced with Lenis inertia
     }
   });
 
@@ -359,7 +427,7 @@ function setupScrollAnimations() {
   );
 
   // Slide drow popup, text, and logo strip out to the right, phone returns to center
-  mainTimeline.to('#drow-popup', { x: '100vw', scale: 0.35, opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.3);
+  mainTimeline.to('#drow-popup', { x: -65, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.3);
   mainTimeline.to('#drow-text', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
   mainTimeline.to('#logo-strip', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
   mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 1.3);
@@ -393,7 +461,7 @@ function setupScrollAnimations() {
   );
 
   // Slide dday popup, text, and logo strip 2 out to the left, phone returns to center
-  mainTimeline.to('#dday-popup', { x: '-100vw', scale: 0.45, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.9);
+  mainTimeline.to('#dday-popup', { x: 0, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.9);
   mainTimeline.to('#dday-text', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
   mainTimeline.to('#logo-strip-2', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
   mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 2.9);
@@ -645,6 +713,18 @@ function setupScrollAnimations() {
   // Phones rotate synchronously while the images slide to the center
   mainTimeline.to(endPhones[0].rotation, { y: -Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
   mainTimeline.to(endPhones[1].rotation, { y: Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
+
+  // Slide final popouts back into their respective phones (left: -440px, right: 440px), shrink, and fade out
+  const fadeOutTime = 12.8;
+  const fadeOutDuration = 0.6;
+  mainTimeline.to('#alert-popout', { x: -440, y: 35, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
+  mainTimeline.to('#cmp-popout', { x: 440, y: 45, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
+  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: -1 }, fadeOutTime + fadeOutDuration);
+  mainTimeline.to(phoneGroup.position, { y: -6.0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
+
+  // Add dummy padding duration at the end of the timeline. This maps the final scroll distance 
+  // (when the countdown footer page scrolls in) to an empty canvas.
+  mainTimeline.to({}, { duration: 2.2 }, fadeOutTime + fadeOutDuration);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
@@ -788,3 +868,47 @@ const tick = () => {
 };
 
 tick();
+
+// --- 100-Day App Release Countdown Timer ---
+(function initCountdownTimer() {
+  const targetDate = new Date("Nov 14, 2026 18:10:00").getTime();
+
+  function updateTimer() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance < 0) {
+      const daysEl = document.getElementById("timer-days");
+      const hoursEl = document.getElementById("timer-hours");
+      const minutesEl = document.getElementById("timer-minutes");
+      const secondsEl = document.getElementById("timer-seconds");
+
+      if (daysEl) daysEl.innerText = "00";
+      if (hoursEl) hoursEl.innerText = "00";
+      if (minutesEl) minutesEl.innerText = "00";
+      if (secondsEl) secondsEl.innerText = "00";
+      clearInterval(timerInterval);
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const pad = (num) => String(num).padStart(2, '0');
+
+    const daysEl = document.getElementById("timer-days");
+    const hoursEl = document.getElementById("timer-hours");
+    const minutesEl = document.getElementById("timer-minutes");
+    const secondsEl = document.getElementById("timer-seconds");
+
+    if (daysEl) daysEl.innerText = pad(days);
+    if (hoursEl) hoursEl.innerText = pad(hours);
+    if (minutesEl) minutesEl.innerText = pad(minutes);
+    if (secondsEl) secondsEl.innerText = pad(seconds);
+  }
+
+  updateTimer();
+  const timerInterval = setInterval(updateTimer, 1000);
+})();

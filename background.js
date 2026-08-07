@@ -60,6 +60,9 @@
   let headTargetProgress = 0;
   let headPopStartTime = 0;
   let earShakeStartTime = 0;
+  let lastBlinkTime = Date.now();
+  let isBlinking = false;
+  let blinkStartTime = 0;
   let pawRetractStartTime = 0;
 
   let pathQueue = [];
@@ -85,8 +88,7 @@
     lastMouseY = e.clientY;
     lastMoveTimeEvent = now;
 
-    // Do not queue points if inside an exclusion zone
-    if (velocity <= SPEED_LIMIT && !window.isExclusionZoneHovered && !window.isPopoutPlaying) {
+    if (velocity <= SPEED_LIMIT) {
       pathQueue.push({x: e.clientX, y: e.clientY});
     }
 
@@ -104,7 +106,21 @@
     }
   });
 
-  // ── Procedural Bunny Rendering ───────────────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    lastMoveTime = Date.now(); // Reset idle timer when scrolling
+    
+    // Force immediate retraction if scroll starts while bunny is popping/expanded
+    if (state === 'POPPING_UP' || state === 'EXPANDING') {
+      state = 'RETRACTING';
+      holeTargetRadius = currentHoleRadius; 
+      headTargetProgress = 0; 
+      pawRetractStartTime = Date.now(); // retract immediately (no delay)
+      headPopStartTime = 0;
+      earShakeStartTime = 0;
+    }
+  });
+
+  // ── Procedural Bunny Rendering — Minimal Apple-style ─────────────────────────
   function drawBunny(ctx, x, y, scale, pawProgress, headProgress, earAngle) {
     if (pawProgress <= 0.01 && headProgress <= 0.01) return;
     
@@ -289,22 +305,30 @@
     const now = Date.now();
     const timeSinceLastMove = now - lastMoveTime;
 
+    // Blinking state update
+    if (!isBlinking && Math.random() < 0.005 && (now - lastBlinkTime > 3000)) {
+      isBlinking = true;
+      blinkStartTime = now;
+    }
+    if (isBlinking && (now - blinkStartTime > 150)) {
+      isBlinking = false;
+      lastBlinkTime = now;
+    }
+
     if (entityX === -1000) {
       entityX = mouseX;
       entityY = mouseY;
     } else {
-      if (window.isExclusionZoneHovered || window.isPopoutPlaying) {
-        // Exclusion zone hover: Skid to a complete stop
-        pathQueue = [];
+      // Lock trailing entity to the hole dot when the hole is actively open/opening
+      if (holeDot && currentHoleRadius > baseRadius + 2) {
+        entityX = holeDot.x;
+        entityY = holeDot.y;
+        entityVX = 0;
+        entityVY = 0;
+        pathQueue = []; // clear queue to prevent jumps after closing
         currentTarget = null;
-        entityVX *= 0.85;
-        entityVY *= 0.85;
-        entityX += entityVX;
-        entityY += entityVY;
-        
-        // Suppress ripple
-        activeBumpRadius += (0 - activeBumpRadius) * 0.1;
       } else {
+        // Standard trailing logic chasing mouse
         // Resume ripple
         activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
 
@@ -371,25 +395,15 @@
     }
 
     // State Logic
-    if (window.isPopoutPlaying) {
-      if (state === 'POPPING_UP' || state === 'EXPANDING') {
-        state = 'RETRACTING';
-        holeTargetRadius = currentHoleRadius; 
-        headTargetProgress = 0; 
-        pawRetractStartTime = Date.now();
-        headPopStartTime = 0;
-        earShakeStartTime = 0;
-      }
-    } else if (state === 'MOVING' || state === 'RETRACTING') {
-      // Prevent idle popup if hovering an exclusion zone
-      if (now - lastMoveTime > 2000 && mouseX !== -1000 && !window.isExclusionZoneHovered) {
+    if (state === 'MOVING' || state === 'RETRACTING') {
+      if (now - lastMoveTime > 2000 && mouseX !== -1000) {
         state = 'EXPANDING';
         
         // Find nearest grid dot to lock onto
         const nx = Math.round(entityX / gap) * gap;
         const ny = Math.round(entityY / gap) * gap;
         holeDot = { x: nx, y: ny };
-        holeTargetRadius = 60; // reduced by 40% (was 100)
+        holeTargetRadius = 60; // original full size hole
       }
     }
     
@@ -479,9 +493,11 @@
             }
           }
           
-          // Fabric Bump Logic (Chase cursor)
-          const bdx = x - entityX;
-          const bdy = y - entityY;
+          // Fabric Bump — follows mouse directly; freezes at holeDot when hole is open
+          const bumpX = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.x : mouseX;
+          const bumpY = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.y : mouseY;
+          const bdx = x - bumpX;
+          const bdy = y - bumpY;
           const bDist = Math.sqrt(bdx*bdx + bdy*bdy);
           
           if (bDist < activeBumpRadius && activeBumpRadius > 1) {
@@ -489,10 +505,26 @@
             const force = (activeBumpRadius - bDist) / activeBumpRadius;
             drawX += (bdx / bDist) * force * maxDistortion;
             drawY += (bdy / bDist) * force * maxDistortion;
-            radius = baseRadius + (force * 1.5); // scale up slightly on bump
+            radius = baseRadius + (force * 1.5);
             
-            // 20-30% darker for dots in the ripple/cursor interaction area
-            ctx.fillStyle = `rgba(110,110,115,${0.5 + (force * 0.3)})`;
+            ctx.fillStyle = `rgba(20,20,20,${0.45 + (force * 0.35)})`;
+          }
+          
+          // Pre-emergence jitter: dots tremble near the cursor when idle but bunny not yet emerged
+          const idleTime = now - lastMoveTime;
+          if (idleTime > 800 && idleTime < 3000 && (state === 'MOVING' || state === 'RETRACTING' || state === 'EXPANDING')) {
+            const jdx = x - mouseX;
+            const jdy = y - mouseY;
+            const jDist = Math.sqrt(jdx * jdx + jdy * jdy);
+            const jitterRadius = 42;
+            if (jDist < jitterRadius && jDist > 0) {
+              // Jitter intensity grows as idle time increases, strongest near center
+              const intensity = Math.min((idleTime - 800) / 1200, 1.0);
+              const proximity = (jitterRadius - jDist) / jitterRadius;
+              const jitterAmt = intensity * proximity * 1.8;
+              drawX += Math.sin(now * 0.012 + x * 0.3) * jitterAmt;
+              drawY += Math.cos(now * 0.009 + y * 0.3) * jitterAmt;
+            }
           }
         }
         
