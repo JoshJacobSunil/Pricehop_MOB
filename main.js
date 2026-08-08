@@ -113,7 +113,10 @@ let phoneGroup = new THREE.Group();
 let extraPhones = [];
 let endPhones = [];
 let screenMaterial = null;
-  gltfLoader.load(`${import.meta.env.BASE_URL}${import.meta.env.VITE_GLB_MODEL_PATH || 'iphone_17.glb'}`, (gltf) => {
+let seqTextures = [];
+interactiveGroup.add(phoneGroup);
+
+gltfLoader.load(`${import.meta.env.BASE_URL}${import.meta.env.VITE_GLB_MODEL_PATH || 'iphone_17.glb'}`, (gltf) => {
   const model = gltf.scene;
 
   // Center the model's geometry
