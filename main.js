@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { initTinderCards } from './src/tinder-cards.js';
 import heroImage from './src/assets/hero.png';
 import ip1Image from './src/assets/ip1.png';
 import ip2Image from './src/assets/ip2.png';
@@ -59,6 +60,7 @@ const lenis = new Lenis({
   wheelMultiplier: 1.0,
   syncTouch: true // Normalizes touch devices
 });
+window.lenis = lenis; // expose for tinder-cards overlay
 
 // Sync Lenis with GSAP ScrollTrigger
 lenis.on('scroll', ScrollTrigger.update);
@@ -908,6 +910,9 @@ const tick = () => {
 };
 
 tick();
+
+// Init Tinder-style swipeable card feature
+initTinderCards();
 
 // --- 100-Day App Release Countdown Timer ---
 (function initCountdownTimer() {
