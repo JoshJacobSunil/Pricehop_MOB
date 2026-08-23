@@ -46,6 +46,7 @@
   let entityY = -1000;
   let entityVX = 0;
   let entityVY = 0;
+  let isTravelling = false; // true while bump is moving toward a delayed stop point
   
   let lastMoveTime = Date.now();
   let state = 'MOVING'; // MOVING, EXPANDING, POPPING_UP, RETRACTING
@@ -65,42 +66,66 @@
   let blinkStartTime = 0;
   let pawRetractStartTime = 0;
 
-  let pathQueue = [];
-  let currentTarget = null;
-  
+  // Stop-point tracking — no path history, only care about where cursor STOPS
+  const DELAY_MS = 1500;      // delay before bump moves toward a stop
+  const STOP_SPEED = 0.3;     // px/ms — below this = "cursor stopped"
+  const STOP_SETTLE_MS = 80;  // cursor must be still for this long to register a stop
+
   let velocity = 0;
-  const SPEED_LIMIT = 1.2; // Lowered threshold so it triggers earlier
-  let lastMouseX = -1000;
-  let lastMouseY = -1000;
+  let lastMouseX = mouseX;
+  let lastMouseY = mouseY;
   let lastMoveTimeEvent = Date.now();
+
+  // The last confirmed stop point (cursor was stationary here)
+  let stopX = -1000;
+  let stopY = -1000;
+  let stopTime = -1;          // timestamp when cursor stopped
+
+  // Whether cursor is currently considered "fast/moving"
+  let isFastMoving = false;
+  let stillSince = Date.now(); // when cursor last became slow
 
   window.addEventListener('mousemove', (e) => {
     const now = Date.now();
     const dt = now - lastMoveTimeEvent;
-    
+
     if (dt > 0 && lastMouseX !== -1000) {
       const dx = e.clientX - lastMouseX;
       const dy = e.clientY - lastMouseY;
-      velocity = Math.sqrt(dx*dx + dy*dy) / dt;
+      velocity = Math.sqrt(dx * dx + dy * dy) / dt; // px/ms
     }
-    
+
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
     lastMoveTimeEvent = now;
 
-    if (velocity <= SPEED_LIMIT) {
-      pathQueue.push({x: e.clientX, y: e.clientY});
+    if (velocity > STOP_SPEED) {
+      isFastMoving = true;
+      stillSince = now;
+    } else {
+      if (isFastMoving && now - stillSince > STOP_SETTLE_MS) {
+        // Cursor just settled — record this as the new stop point
+        isFastMoving = false;
+        stopX = e.clientX;
+        stopY = e.clientY;
+        stopTime = now;
+      } else if (!isFastMoving) {
+        // Cursor continues to be slow — update the stop point continuously
+        stopX = e.clientX;
+        stopY = e.clientY;
+        stopTime = now;
+      }
     }
 
     mouseX = e.clientX;
     mouseY = e.clientY;
     lastMoveTime = now;
-    
+
     if (state === 'POPPING_UP' || state === 'EXPANDING') {
       state = 'RETRACTING';
-      holeTargetRadius = currentHoleRadius; // Wait to shrink until paws retract
-      headTargetProgress = 0; // Head retracts first
-      pawRetractStartTime = Date.now() + 500; // Paws delay
+      holeTargetRadius = currentHoleRadius;
+      headTargetProgress = 0;
+      pawRetractStartTime = Date.now() + 500;
       headPopStartTime = 0;
       earShakeStartTime = 0;
     }
@@ -325,78 +350,73 @@
         entityY = holeDot.y;
         entityVX = 0;
         entityVY = 0;
-        pathQueue = []; // clear queue to prevent jumps after closing
-        currentTarget = null;
       } else {
-        // Standard trailing logic chasing mouse
-        // Resume ripple
-        activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
+        // Exclusion zone: hide bump and retract bunny
+        const isExcluded = window.isExclusionZoneHovered;
+        if (isExcluded) {
+          activeBumpRadius += (0 - activeBumpRadius) * 0.3;
+          if (state === 'POPPING_UP' || state === 'EXPANDING') {
+            state = 'RETRACTING';
+            holeTargetRadius = currentHoleRadius;
+            headTargetProgress = 0;
+            pawRetractStartTime = Date.now();
+            headPopStartTime = 0;
+            earShakeStartTime = 0;
+          }
+        } else {
+          activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
+        }
 
-        if (velocity > SPEED_LIMIT && timeSinceLastMove < 50) {
-          // High speed and actively moving: slowly slide to a stop
-          pathQueue = []; // clear any lingering points
-          currentTarget = null;
-          entityVX *= 0.92; // less friction = slides slower and further
-          entityVY *= 0.92;
-          
+        // ── STOP-POINT STRAIGHT-LINE LOGIC ──────────────────────────────────
+        // We only care about WHERE the cursor stopped, not its path.
+        //
+        // • Fast/circling  → decelerate bump to a stop, ignore the chaos
+        // • Cursor stopped + 1.5s passed → move in a STRAIGHT LINE to that stop
+        // • Waiting        → stay put (or ease very gently so bump stays visible)
+
+        const targetReady = stopTime > 0 && (now - stopTime) >= DELAY_MS;
+
+        if (isFastMoving) {
+          // Cursor is moving fast — slow the bump down to a smooth stop
+          isTravelling = false;
+          entityVX *= 0.88;
+          entityVY *= 0.88;
           entityX += entityVX;
           entityY += entityVY;
-        } else {
-          // Obtain a target from the queue if we don't have one
-          if (!currentTarget && pathQueue.length > 0) {
-            currentTarget = pathQueue.shift();
-          }
-
-          if (currentTarget) {
-            let dx = currentTarget.x - entityX;
-            let dy = currentTarget.y - entityY;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-
-            // If we are close to the target, consume the next points to trace smoothly
-            while (dist < 20 && pathQueue.length > 0) {
-              currentTarget = pathQueue.shift();
-              dx = currentTarget.x - entityX;
-              dy = currentTarget.y - entityY;
-              dist = Math.sqrt(dx*dx + dy*dy);
-            }
-
-            if (dist < 20 && pathQueue.length === 0) {
-              currentTarget = null; // Reached the end of the queued path
-            } else {
-              // Constant robotic path-tracing speed
-              const CONSTANT_SPEED = 10;
-              entityVX = (dx / dist) * CONSTANT_SPEED;
-              entityVY = (dy / dist) * CONSTANT_SPEED;
-              
-              entityX += entityVX;
-              entityY += entityVY;
-            }
+        } else if (targetReady) {
+          // Cursor has stopped and 1.5s has elapsed — go straight there
+          const dx = stopX - entityX;
+          const dy = stopY - entityY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > 2) {
+            const speed = Math.min(dist * 0.12, 16); // proportional, capped
+            entityVX = (dx / dist) * speed;
+            entityVY = (dy / dist) * speed;
+            entityX += entityVX;
+            entityY += entityVY;
+            isTravelling = true; // ← tingle only here
           } else {
-            // Queue is empty. Direct robotic relocation to mouse resting point
-            let dx = mouseX - entityX;
-            let dy = mouseY - entityY;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            
-            if (dist > 5) {
-              const CONSTANT_SPEED = 10;
-              entityVX = (dx / dist) * CONSTANT_SPEED;
-              entityVY = (dy / dist) * CONSTANT_SPEED;
-              entityX += entityVX;
-              entityY += entityVY;
-            } else {
-              entityX = mouseX;
-              entityY = mouseY;
-              entityVX = 0;
-              entityVY = 0;
-            }
+            // Arrived
+            entityX = stopX;
+            entityY = stopY;
+            entityVX = 0;
+            entityVY = 0;
+            isTravelling = false;
           }
+        } else {
+          // Waiting for delay — no tingle
+          isTravelling = false;
+          const dxm = mouseX - entityX;
+          const dym = mouseY - entityY;
+          entityX += dxm * 0.04;
+          entityY += dym * 0.04;
         }
       }
     }
 
     // State Logic
     if (state === 'MOVING' || state === 'RETRACTING') {
-      if (now - lastMoveTime > 2000 && mouseX !== -1000) {
+      if (!window.isExclusionZoneHovered && now - lastMoveTime > 2000 && mouseX !== -1000) {
         state = 'EXPANDING';
         
         // Find nearest grid dot to lock onto
@@ -493,9 +513,9 @@
             }
           }
           
-          // Fabric Bump — follows mouse directly; freezes at holeDot when hole is open
-          const bumpX = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.x : mouseX;
-          const bumpY = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.y : mouseY;
+          // Fabric Bump — follows delayed entityX/entityY so the 1.5s lag is visible; freezes at holeDot when hole is open
+          const bumpX = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.x : entityX;
+          const bumpY = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.y : entityY;
           const bdx = x - bumpX;
           const bdy = y - bumpY;
           const bDist = Math.sqrt(bdx*bdx + bdy*bdy);
@@ -508,6 +528,13 @@
             radius = baseRadius + (force * 1.5);
             
             ctx.fillStyle = `rgba(20,20,20,${0.45 + (force * 0.35)})`;
+
+            // Tingle: dots inside the bump jitter rapidly while bump is travelling
+            if (isTravelling) {
+              const tingleIntensity = force * 2.2;
+              drawX += Math.sin(now * 0.04 + x * 0.8 + y * 0.5) * tingleIntensity;
+              drawY += Math.cos(now * 0.04 + y * 0.8 + x * 0.5) * tingleIntensity;
+            }
           }
           
           // Pre-emergence jitter: dots tremble near the cursor when idle but bunny not yet emerged

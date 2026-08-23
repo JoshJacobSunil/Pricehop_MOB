@@ -27,14 +27,17 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1; /* behind text */
-  pointer-events: none; /* Let clicks pass through */
+  z-index: 1;
+  /* behind text */
+  pointer-events: none;
+  /* Let clicks pass through */
 }
 
 /* Scroll Container */
 .scroll-container {
   position: relative;
-  z-index: 2; /* above canvas */
+  z-index: 2;
+  /* above canvas */
 }
 
 .section {
@@ -55,9 +58,10 @@ body {
 .content-wrapper {
   min-width: max-content;
   z-index: 2;
-  opacity: 0; /* Hidden initially for GSAP */
+  opacity: 0;
+  /* Hidden initially for GSAP */
   text-align: center;
-  
+
   /* Fixed to the center of the viewport */
   position: fixed;
   top: 50%;
@@ -68,7 +72,8 @@ body {
   position: relative;
   top: auto;
   left: auto;
-  transform: translateY(20px); /* Initial state for fadeUp */
+  transform: translateY(20px);
+  /* Initial state for fadeUp */
   text-align: center;
   margin-top: -30vh;
   max-width: 100%;
@@ -104,15 +109,18 @@ p {
 }
 
 /* Alignments for fixed positioning */
-.align-left, .split-left {
+.align-left,
+.split-left {
   left: 10vw;
 }
 
-.align-right, .split-right {
+.align-right,
+.split-right {
   right: 10vw;
 }
 
-.split-left, .split-right {
+.split-left,
+.split-right {
   top: 25%;
 }
 
@@ -129,11 +137,14 @@ p {
 }
 
 @media (max-width: 768px) {
-  .title { font-size: 2.7rem; }
+  .title {
+    font-size: 2.7rem;
+  }
 }
 
 /* Lenis Recommended CSS */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -195,7 +206,7 @@ html.lenis, html.lenis body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #4a90e2, #9013fe);
+  background: linear-gradient(135deg, #249b3c, #043c02d2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -223,9 +234,17 @@ html.lenis, html.lenis body {
 }
 
 @media (max-width: 768px) {
-  .main-headline { font-size: 2.25rem; }
-  .sub-headline { font-size: 1.08rem; }
-  .impact-statement { font-size: 1.8rem; }
+  .main-headline {
+    font-size: 2.25rem;
+  }
+
+  .sub-headline {
+    font-size: 1.08rem;
+  }
+
+  .impact-statement {
+    font-size: 1.8rem;
+  }
 }
 
 /* Glass Box for Popouts */
@@ -258,14 +277,14 @@ html.lenis, html.lenis body {
   border-radius: 999px;
   cursor: pointer;
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 15px rgba(144, 19, 254, 0.4), 0 0 5px rgba(74, 144, 226, 0.4);
+  box-shadow: 0 0 15px rgba(2, 36, 3, 0.4), 0 0 5px rgba(74, 144, 226, 0.4);
   transition: all 0.3s ease;
   display: inline-block;
   pointer-events: auto;
 }
 
 .glowing-btn:hover {
-  box-shadow: 0 0 25px rgba(144, 19, 254, 0.8), 0 0 10px rgba(74, 144, 226, 0.8);
+  box-shadow: 0 0 25px rgba(41, 222, 98, 0.8), 0 0 10px rgba(74, 144, 226, 0.8);
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.1);
 }
@@ -293,13 +312,27 @@ html.lenis, html.lenis body {
 }
 
 @keyframes bounceDown {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(10px); }
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
 }
 
 @keyframes bounceUp {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
 }
 
 .arrow-down {
@@ -324,7 +357,8 @@ html.lenis, html.lenis body {
 .countdown-page {
   background: #ffffff;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  min-height: 100vh; /* Covers the whole screen */
+  min-height: 100vh;
+  /* Covers the whole screen */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -382,8 +416,9 @@ html.lenis, html.lenis body {
   font-weight: 800;
   line-height: 1;
   color: var(--text-primary);
-  font-variant-numeric: tabular-nums; /* Monospaced numbers to prevent jumping layout */
-  background: linear-gradient(135deg, #111111, #4a90e2);
+  font-variant-numeric: tabular-nums;
+  /* Monospaced numbers to prevent jumping layout */
+  background: linear-gradient(135deg, #0f1911, #06710c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -478,8 +513,9 @@ html.lenis, html.lenis body {
   width: 100%;
   max-width: 800px;
   margin: 0 auto 40px;
-  padding: 12px 0;
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.05);
+  padding: 12px 24px;
+  border: 1.2px solid rgba(71, 71, 71, 0.05);
+  border-radius: 15px;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -490,7 +526,8 @@ html.lenis, html.lenis body {
 .live-ticker-label {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #a855f7; /* Soft purple */
+  color: #a855f7;
+  /* Soft purple */
   background: rgba(168, 85, 247, 0.1);
   padding: 4px 8px;
   border-radius: 4px;
@@ -519,13 +556,19 @@ html.lenis, html.lenis body {
 }
 
 .ticker-item .highlight {
-  color: #22c55e; /* Green deal color */
+  color: #22c55e;
+  /* Green deal color */
   font-weight: 600;
 }
 
 @keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* --- Waitlist Email Form --- */
@@ -589,7 +632,8 @@ html.lenis, html.lenis body {
 }
 
 .waitlist-btn:hover {
-  background: #a855f7; /* Swaps to purple highlight */
+  background: #0a6201;
+  /* Swaps to purple highlight */
   transform: scale(1.02);
 }
 
@@ -681,29 +725,34 @@ html.lenis, html.lenis body {
   .countdown-title {
     font-size: 2.3rem;
   }
+
   .timer-number {
     font-size: 3.5rem;
   }
+
   .timer-segment {
     min-width: 70px;
   }
+
   .timer-grid {
     gap: 15px;
   }
+
   .app-features-grid {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 0 15px;
   }
+
   .footer-links-row {
     flex-direction: column;
     align-items: center;
     gap: 30px;
     text-align: center;
   }
+
   .footer-link-group {
     align-items: center;
     text-align: center;
   }
 }
-

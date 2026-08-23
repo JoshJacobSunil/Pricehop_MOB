@@ -701,7 +701,7 @@ function setupScrollAnimations() {
   }
 
   // Setup new popouts behind the phones (shifted 40px outward total)
-  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, zIndex: -1, scale: 1 }, 10.6);
+  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, y: 15, zIndex: -1, scale: 1 }, 10.6);
   mainTimeline.set('#cmp-popout', { opacity: 0, x: 480, zIndex: -1, scale: 1 }, 10.6);
 
   // Section 9: New Popouts Slide to Center & Phones Rotate
@@ -725,17 +725,16 @@ function setupScrollAnimations() {
   mainTimeline.to(endPhones[0].rotation, { y: -Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
   mainTimeline.to(endPhones[1].rotation, { y: Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
 
-  // Slide final popouts back into their respective phones (left: -440px, right: 440px), shrink, and fade out
-  const fadeOutTime = 12.8;
-  const fadeOutDuration = 0.6;
-  mainTimeline.to('#alert-popout', { x: -440, y: 35, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
-  mainTimeline.to('#cmp-popout', { x: 440, y: 45, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
-  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: -1 }, fadeOutTime + fadeOutDuration);
-  mainTimeline.to(phoneGroup.position, { y: -6.0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
+  // 1. Remove Old Animation: Delete the lateral exit animations
+  // 2. New Scroll-Triggered Transition: Entire previous section slides UP vertically
+  const slideUpTime = 12.8;
+  const slideUpDuration = 2.2; // Match the dummy padding duration to sync with footer scrolling in
 
-  // Add dummy padding duration at the end of the timeline. This maps the final scroll distance 
-  // (when the countdown footer page scrolls in) to an empty canvas.
-  mainTimeline.to({}, { duration: 2.2 }, fadeOutTime + fadeOutDuration);
+  // Lower z-index so the scrolling footer page (z-index 2) can cover them
+  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: 1 }, slideUpTime);
+
+  mainTimeline.to('#webgl-canvas', { y: "-100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
+  mainTimeline.to(['#alert-popout', '#cmp-popout'], { y: "-=100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
@@ -778,16 +777,21 @@ window.addEventListener('pointermove', (e) => {
 
   // --- DOM Pop-out Hitbox Detection ---
   let isHoveringPopout = false;
-  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2'];
+  // Included alert/cmp popouts and other DOM elements that should exclude the bunny
+  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2', '#alert-popout', '#cmp-popout', '.countdown-page'];
   for (let selector of popouts) {
     const el = document.querySelector(selector);
     if (el) {
       const style = window.getComputedStyle(el);
       const opacity = parseFloat(style.opacity);
-      if (opacity > 0.1) {
+      // countdown page doesn't use opacity to hide, so we check if it's visible in viewport
+      if (opacity > 0.1 || selector === '.countdown-page') {
         const rect = el.getBoundingClientRect();
-        if (e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        // Skip elements completely off-screen
+        if (rect.top >= window.innerHeight || rect.bottom <= 0) continue;
+        
+        if (e.clientX >= rect.left - 25 && e.clientX <= rect.right + 25 &&
+          e.clientY >= rect.top - 25 && e.clientY <= rect.bottom + 25) {
           isHoveringPopout = true;
           break;
         }
