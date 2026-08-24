@@ -964,6 +964,7 @@ tick();
   const privacyModalClose = document.getElementById('privacy-modal-close');
   const privacyModalAccept = document.getElementById('privacy-modal-accept');
   const privacyKeyIcon = document.getElementById('privacy-key-icon');
+  const footerPrivacyLink = document.getElementById('footer-privacy-link');
 
   let isScrollLocked = true;
   
@@ -1020,7 +1021,8 @@ tick();
     window.removeEventListener('touchmove', handleScrollAttempt);
   };
 
-  const openModal = () => {
+  const openModal = (e) => {
+    if (e) e.preventDefault();
     if (privacyModal) {
       privacyModal.style.display = 'flex';
       setTimeout(() => {
@@ -1030,6 +1032,13 @@ tick();
         }
       }, 10);
     }
+    // Re-lock scroll when opening the modal again
+    isScrollLocked = true;
+    if (typeof lenis !== 'undefined' && lenis) {
+      lenis.stop();
+    }
+    window.addEventListener('wheel', handleScrollAttempt, { passive: false });
+    window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
   };
 
   const closeModal = () => {
@@ -1059,4 +1068,5 @@ tick();
   if (privacyNav) privacyNav.addEventListener('click', openModal);
   if (privacyModalClose) privacyModalClose.addEventListener('click', closeModal);
   if (privacyModalAccept) privacyModalAccept.addEventListener('click', acceptPrivacy);
+  if (footerPrivacyLink) footerPrivacyLink.addEventListener('click', openModal);
 })();
