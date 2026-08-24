@@ -956,3 +956,107 @@ tick();
   updateTimer();
   const timerInterval = setInterval(updateTimer, 1000);
 })();
+
+// --- Privacy Gate Logic ---
+(function initPrivacyGate() {
+  const privacyNav = document.getElementById('privacy-nav');
+  const privacyModal = document.getElementById('privacy-modal');
+  const privacyModalClose = document.getElementById('privacy-modal-close');
+  const privacyModalAccept = document.getElementById('privacy-modal-accept');
+  const privacyKeyIcon = document.getElementById('privacy-key-icon');
+
+  let isScrollLocked = true;
+  
+  // Stop lenis scrolling initially
+  if (lenis) {
+    lenis.stop();
+  }
+
+  // Handle scroll attempts
+  let shakeTimeout;
+  const handleScrollAttempt = (e) => {
+    if (isScrollLocked) {
+      // Allow scrolling inside the modal's scrollable boxes
+      if (privacyModal && privacyModal.contains(e.target)) {
+        const scrollable = e.target.closest('.scrollable-box');
+        if (scrollable) {
+          return; // Let the native scroll happen inside the box
+        }
+        e.preventDefault(); // Block scrolling on the modal overlay
+        return; // Don't shake the key when modal is open
+      }
+      
+      e.preventDefault();
+      // Trigger shake animation
+      if (privacyKeyIcon) {
+        if (!privacyKeyIcon.classList.contains('shake-animation')) {
+          privacyKeyIcon.classList.add('shake-animation');
+        }
+        
+        // Reset the timeout on every scroll attempt
+        clearTimeout(shakeTimeout);
+        shakeTimeout = setTimeout(() => {
+          privacyKeyIcon.classList.remove('shake-animation');
+        }, 300); // 300ms after the last scroll event, the shake stops
+      }
+    }
+  };
+
+  window.addEventListener('wheel', handleScrollAttempt, { passive: false });
+  window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
+  window.addEventListener('keydown', (e) => {
+    if (isScrollLocked && ['ArrowUp', 'ArrowDown', 'Space', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.code)) {
+      e.preventDefault();
+      handleScrollAttempt(e);
+    }
+  }, { passive: false });
+
+  const unlockScroll = () => {
+    isScrollLocked = false;
+    if (typeof lenis !== 'undefined' && lenis) {
+      lenis.start();
+    }
+    window.removeEventListener('wheel', handleScrollAttempt);
+    window.removeEventListener('touchmove', handleScrollAttempt);
+  };
+
+  const openModal = () => {
+    if (privacyModal) {
+      privacyModal.style.display = 'flex';
+      setTimeout(() => {
+        privacyModal.style.opacity = '1';
+        if(privacyModal.querySelector('div')) {
+          privacyModal.querySelector('div').style.transform = 'translateY(0)';
+        }
+      }, 10);
+    }
+  };
+
+  const closeModal = () => {
+    if (privacyModal) {
+      privacyModal.style.opacity = '0';
+      if(privacyModal.querySelector('div')) {
+        privacyModal.querySelector('div').style.transform = 'translateY(20px)';
+      }
+      setTimeout(() => {
+        privacyModal.style.display = 'none';
+      }, 300);
+    }
+    unlockScroll();
+  };
+
+  const acceptPrivacy = () => {
+    closeModal();
+    if (privacyNav) {
+      privacyNav.style.opacity = '0';
+      privacyNav.style.pointerEvents = 'none';
+      setTimeout(() => {
+        privacyNav.style.display = 'none';
+      }, 300);
+    }
+  };
+
+  if (privacyNav) privacyNav.addEventListener('click', openModal);
+  if (privacyModalClose) privacyModalClose.addEventListener('click', closeModal);
+  if (privacyModalAccept) privacyModalAccept.addEventListener('click', acceptPrivacy);
+})();
