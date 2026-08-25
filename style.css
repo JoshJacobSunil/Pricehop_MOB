@@ -366,7 +366,7 @@ html.lenis body {
   text-align: center;
   position: relative;
   z-index: 10;
-  padding: 80px 20px 40px;
+  padding: 40px 20px 30px;
 }
 
 .countdown-wrapper {
@@ -376,31 +376,31 @@ html.lenis body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .countdown-title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   letter-spacing: -2px;
   background: linear-gradient(135deg, #111111, #555555);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .countdown-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 400;
   color: var(--text-secondary);
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 /* Timer Grid Layout */
 .timer-grid {
   display: flex;
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 25px;
+  margin-bottom: 25px;
   justify-content: center;
 }
 
@@ -408,11 +408,11 @@ html.lenis body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 100px;
+  min-width: 90px;
 }
 
 .timer-number {
-  font-size: 5.5rem;
+  font-size: 4.5rem;
   font-weight: 800;
   line-height: 1;
   color: var(--text-primary);
@@ -424,87 +424,46 @@ html.lenis body {
 }
 
 .timer-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-secondary);
-  margin-top: 8px;
-}
-
-.badge-container {
-  margin-top: 20px;
-}
-
-.app-badges {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-.app-badge {
-  background: #111111;
-  color: #ffffff;
-  padding: 8px 18px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.app-badge:hover {
-  transform: translateY(-2px);
-  background: #222222;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.badge-store {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.7;
-  margin-bottom: 2px;
-}
-
-.badge-title {
-  font-size: 0.9rem;
-  font-weight: 700;
+  margin-top: 6px;
 }
 
 .footer-disclosures {
   max-width: 750px;
   width: 100%;
-  margin: 50px auto 0;
-  padding-top: 25px;
+  margin: 25px auto 0;
+  padding-top: 15px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .disclosure-text {
   font-size: 0.72rem;
-  line-height: 1.5;
-  color: #999999;
+  line-height: 1.45;
+  color: #888888;
   text-align: center;
 }
 
 .disclosure-text strong {
-  color: #555555;
+  color: #444444;
   font-weight: 600;
 }
 
 .footer-bottom {
   width: 100%;
-  padding-top: 20px;
+  padding-top: 12px;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .footer-bottom p {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #888888;
 }
 
@@ -512,8 +471,8 @@ html.lenis body {
 .live-ticker-wrapper {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto 40px;
-  padding: 12px 24px;
+  margin: 0 auto 20px;
+  padding: 10px 20px;
   border: 1.2px solid rgba(71, 71, 71, 0.05);
   border-radius: 15px;
   display: flex;
@@ -571,9 +530,9 @@ html.lenis body {
   }
 }
 
-/* --- Waitlist Email Form --- */
+/* --- Waitlist Email Form & Privacy Button --- */
 .waitlist-container {
-  margin: 35px auto 45px;
+  margin: 20px auto 10px;
   width: 100%;
   max-width: 500px;
   text-align: center;
@@ -583,7 +542,7 @@ html.lenis body {
 .waitlist-title {
   font-size: 0.88rem;
   color: #555555;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-weight: 500;
 }
 
@@ -600,8 +559,8 @@ html.lenis body {
 }
 
 .waitlist-form:focus-within {
-  border-color: #a855f7;
-  box-shadow: 0 4px 25px rgba(168, 85, 247, 0.12);
+  border-color: #0a6201;
+  box-shadow: 0 4px 25px rgba(10, 98, 1, 0.12);
 }
 
 .waitlist-input {
@@ -633,8 +592,62 @@ html.lenis body {
 
 .waitlist-btn:hover {
   background: #0a6201;
-  /* Swaps to purple highlight */
   transform: scale(1.02);
+}
+
+.footer-privacy-btn {
+  background: rgba(10, 98, 1, 0.06);
+  color: #0a6201;
+  border: 1px solid rgba(10, 98, 1, 0.2);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+}
+
+.footer-privacy-btn:hover {
+  background: #0a6201;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(10, 98, 1, 0.2);
+}
+
+.footer-privacy-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-delete-btn {
+  background: rgba(220, 38, 38, 0.06);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.footer-delete-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
 }
 
 /* --- App Features Grid --- */

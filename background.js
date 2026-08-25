@@ -1,17 +1,15 @@
 /**
- * Pricehop Background — Fabric Bump + Grain Texture + Idle Bunny
- * Interactive dot grid with cursor-following entity, grain overlay,
- * and an origami bunny that pops out of a hole after 3s of inactivity.
+ * Pricehop Background — Interactive Textured White
+ * Grain texture + dynamic dot grid. Features fabric bump & origami bunny.
  */
 
 (function initBackground() {
-  // ── 1. Canvas Setup ────────────────────────────────────────────────────────
   const canvas = document.createElement('canvas');
   canvas.id = 'bg-canvas';
   canvas.style.cssText = [
-    'position:fixed', 'top:0', 'left:0',
-    'width:100%', 'height:100%',
-    'z-index:-1', 'pointer-events:none',
+    'position:fixed','top:0','left:0',
+    'width:100%','height:100%',
+    'z-index:-1','pointer-events:none',
   ].join(';');
   document.body.prepend(canvas);
   const ctx = canvas.getContext('2d');
@@ -19,13 +17,7 @@
   let W = canvas.width  = window.innerWidth;
   let H = canvas.height = window.innerHeight;
 
-  window.addEventListener('resize', () => {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    buildGrain();
-  });
-
-  // ── Grain Texture ──────────────────────────────────────────────────────────
+  // ── Grain texture ─────────────────────────────────────────────────────────────
   let grainCanvas;
   function buildGrain() {
     grainCanvas = document.createElement('canvas');
@@ -35,142 +27,101 @@
     const d  = id.data;
     for (let i = 0; i < d.length; i += 4) {
       const v = Math.random() * 255 | 0;
-      d[i] = d[i + 1] = d[i + 2] = v;
-      d[i + 3] = Math.random() < 0.3 ? (Math.random() * 16 | 0) : 0;
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = Math.random() < 0.3 ? (Math.random() * 16 | 0) : 0;
     }
     gc.putImageData(id, 0, 0);
   }
   buildGrain();
 
-  // ── 2. State & Entity Tracking ─────────────────────────────────────────────
+  // ── State Management ──────────────────────────────────────────────────────────
+  const gap = 28;
+  const baseRadius = 0.7;
+  
   let mouseX = W / 2;
   let mouseY = H / 2;
+  
+  // Continuous smooth trailing bump (glides steadily over ~1.5s with zero initial pause)
+  let bumpX = mouseX;
+  let bumpY = mouseY;
 
-  let lastMouseX    = mouseX;
-  let lastMouseY    = mouseY;
-  let lastMoveTime  = Date.now();
-  let mouseVelocity = 0;
+  let entityX = mouseX;
+  let entityY = mouseY;
+  
+  let lastMoveTime = Date.now();
+  let state = 'MOVING'; // MOVING, EXPANDING, POPPING_UP, RETRACTING
+  
+  let holeDot = null;
+  let holeTargetRadius = baseRadius;
+  let currentHoleRadius = baseRadius;
+  
+  let pawPopProgress = 0; // 0 to 1
+  let pawTargetProgress = 0;
+  let headPopProgress = 0; // 0 to 1
+  let headTargetProgress = 0;
+  let headPopStartTime = 0;
+  let earShakeStartTime = 0;
+  let lastBlinkTime = Date.now();
+  let isBlinking = false;
+  let blinkStartTime = 0;
+  let pawRetractStartTime = 0;
 
   window.addEventListener('mousemove', (e) => {
     const now = Date.now();
-    const dt  = now - lastMoveTime;
-    if (dt > 0) {
-      const dx = e.clientX - lastMouseX;
-      const dy = e.clientY - lastMouseY;
-      mouseVelocity = Math.sqrt(dx * dx + dy * dy) / dt;
-    }
-    lastMouseX   = e.clientX;
-    lastMouseY   = e.clientY;
-    lastMoveTime = now;
     mouseX = e.clientX;
     mouseY = e.clientY;
+    lastMoveTime = now;
 
-    // Retract bunny on any mouse movement
-    if (bstate === 'EXPANDING' || bstate === 'POPPING_UP') {
-      bstate = 'RETRACTING';
-      holeTargetR     = currentHoleR;
-      headTargetProg  = 0;
-      pawRetractAt    = Date.now() + 400;
-      headPopStartAt  = 0;
-      earShakeStartAt = 0;
+    if (state === 'POPPING_UP' || state === 'EXPANDING') {
+      state = 'RETRACTING';
+      holeTargetRadius = currentHoleRadius;
+      headTargetProgress = 0;
+      pawRetractStartTime = Date.now() + 500;
+      headPopStartTime = 0;
+      earShakeStartTime = 0;
     }
   });
 
-  // Invisible entity
-  let entityX  = mouseX;
-  let entityY  = mouseY;
-  let entityVX = 0;
-  let entityVY = 0;
-
-  const posQueue    = [];
-  const ENTITY_SPEED = 10;
-
-  // ── 3. Grid & Fabric Bump constants ───────────────────────────────────────
-  const gap              = 28;
-  const baseRadius       = 0.7;
-  const MAX_BUMP_RADIUS  = 127.5;
-  const maxDistortion    = 25;
-
-  // Live bump radius — eases to 0 near components, back to MAX otherwise
-  let currentBumpRadius = MAX_BUMP_RADIUS;
-
-  // ── Component Proximity Detection ─────────────────────────────────────────
-  // Selector for UI elements (main.js handles the 3D phone and image popouts)
-  const INTERACTIVE_SEL = 'a, button, input, select, textarea, label, [role="button"], [role="link"], .content-wrapper, #drow-text, #dday-text';
-  const PROXIMITY_PX    = 25;
-  let nearComponent     = false;
-
-  function checkProximity(mx, my) {
-    // Rely on main.js for the 3D phone model and complex popouts
-    if (window.isExclusionZoneHovered) return true;
-
-    const els = document.querySelectorAll(INTERACTIVE_SEL);
-    for (const el of els) {
-      // Skip elements that are fully transparent
-      const opacity = el.style.opacity || window.getComputedStyle(el).opacity;
-      if (opacity === '0' || opacity === '') {
-        // Only skip if explicitly '0'. If empty, let computed style dictate (mostly not 0)
-        if (opacity === '0' || window.getComputedStyle(el).opacity === '0') continue;
-      }
-
-      const r = el.getBoundingClientRect();
-      // Expand rect by PROXIMITY_PX on all sides
-      if (
-        mx >= r.left   - PROXIMITY_PX &&
-        mx <= r.right  + PROXIMITY_PX &&
-        my >= r.top    - PROXIMITY_PX &&
-        my <= r.bottom + PROXIMITY_PX &&
-        r.width > 0 && r.height > 0
-      ) {
-        return true;
-      }
+  window.addEventListener('scroll', () => {
+    lastMoveTime = Date.now(); // Reset idle timer when scrolling
+    
+    // Force immediate retraction if scroll starts while bunny is popping/expanded
+    if (state === 'POPPING_UP' || state === 'EXPANDING') {
+      state = 'RETRACTING';
+      holeTargetRadius = currentHoleRadius; 
+      headTargetProgress = 0; 
+      pawRetractStartTime = Date.now(); // retract immediately (no delay)
+      headPopStartTime = 0;
+      earShakeStartTime = 0;
     }
-    return false;
-  }
+  });
 
-  // ── Bunny / Hole State ─────────────────────────────────────────────────────
-  // States: 'MOVING' → idle 3s → 'EXPANDING' → hole big → 'POPPING_UP' → 'RETRACTING' → 'MOVING'
-  let bstate = 'MOVING';
-
-  let holeDot      = null;   // { x, y } grid dot where hole is
-  let holeTargetR  = baseRadius;
-  let currentHoleR = baseRadius;
-
-  let pawProg       = 0;
-  let pawTargetProg = 0;
-  let headProg      = 0;
-  let headTargetProg = 0;
-
-  let headPopStartAt  = 0;
-  let earShakeStartAt = 0;
-  let pawRetractAt    = 0;
-
-  let isBlinking    = false;
-  let blinkStartAt  = 0;
-  let lastBlinkAt   = Date.now();
-
-  // ── Procedural Bunny ───────────────────────────────────────────────────────
-  function drawBunny(cx, cy, scale, pawProgress, headProgress, earAngle) {
+  // ── Procedural Bunny Rendering — Minimal Apple-style ─────────────────────────
+  function drawBunny(ctx, x, y, scale, pawProgress, headProgress, earAngle) {
     if (pawProgress <= 0.01 && headProgress <= 0.01) return;
-
-    // Head (clipped inside hole)
+    
+    // Head logic
     if (headProgress > 0.01) {
-      const yOffset = currentHoleR + 30 - (headProgress * 60);
-
+      // Bunny origin rests near the bottom edge of the hole when fully popped
+      const yOffset = currentHoleRadius + 30 - (headProgress * 60); 
+      
       ctx.save();
+      // Clip to the hole so bunny body/head doesn't render outside the black circle
       ctx.beginPath();
-      ctx.arc(cx, cy, currentHoleR, 0, Math.PI * 2);
+      ctx.arc(x, y, currentHoleRadius, 0, Math.PI * 2);
       ctx.clip();
-
-      ctx.translate(cx, cy + yOffset);
-      ctx.scale(scale * 0.77, scale * 0.77);
-
+      
+      // Transform
+      ctx.translate(x, y + yOffset);
+      ctx.scale(scale * 0.77, scale * 0.77); // Decreased size by 30% from 1.1 (1.1 * 0.7 = 0.77)
+      
+      // Helper for soft bezier origami shapes
       const shape = (color, drawFn) => {
-        ctx.fillStyle   = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth   = 1.5;
-        ctx.lineJoin    = 'round';
-        ctx.lineCap     = 'round';
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color; // Soften seams to prevent gaps
+        ctx.lineWidth = 1.5;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
         ctx.beginPath();
         drawFn();
         ctx.closePath();
@@ -178,15 +129,17 @@
         ctx.stroke();
       };
 
-      // Ears
+      // --- EARS (realistic spoon shape) ---
       ctx.save();
-      ctx.rotate(earAngle);
+      ctx.rotate(earAngle); // Shake side-to-side
+      // Left Ear
       shape('#ffffff', () => {
         ctx.moveTo(-15, -15);
-        ctx.quadraticCurveTo(-45, -30, -40, -80);
-        ctx.quadraticCurveTo(-35, -95, -25, -85);
-        ctx.quadraticCurveTo(-10, -50, -5, -20);
+        ctx.quadraticCurveTo(-45, -30, -40, -80); // Outer left edge
+        ctx.quadraticCurveTo(-35, -95, -25, -85); // Soft tip
+        ctx.quadraticCurveTo(-10, -50, -5, -20);  // Inner right edge
       });
+      // Left Ear Inner Pink
       shape('#ffcccc', () => {
         ctx.moveTo(-15, -25);
         ctx.quadraticCurveTo(-35, -35, -30, -75);
@@ -196,13 +149,15 @@
       ctx.restore();
 
       ctx.save();
-      ctx.rotate(earAngle);
+      ctx.rotate(earAngle); // Shake side-to-side together
+      // Right Ear
       shape('#f0f0f0', () => {
         ctx.moveTo(15, -15);
-        ctx.quadraticCurveTo(45, -30, 40, -80);
-        ctx.quadraticCurveTo(35, -95, 25, -85);
+        ctx.quadraticCurveTo(45, -30, 40, -80); 
+        ctx.quadraticCurveTo(35, -95, 25, -85); 
         ctx.quadraticCurveTo(10, -50, 5, -20);
       });
+      // Right Ear Inner Pink
       shape('#ffe0e0', () => {
         ctx.moveTo(15, -25);
         ctx.quadraticCurveTo(35, -35, 30, -75);
@@ -211,13 +166,15 @@
       });
       ctx.restore();
 
-      // Head halves
+      // --- HEAD (fuller cheeks) ---
+      // Head left
       shape('#ffffff', () => {
         ctx.moveTo(0, 20);
-        ctx.quadraticCurveTo(-45, 10, -35, -15);
-        ctx.quadraticCurveTo(-25, -40, 0, -35);
-        ctx.lineTo(0, 20);
+        ctx.quadraticCurveTo(-45, 10, -35, -15); // Full cheek
+        ctx.quadraticCurveTo(-25, -40, 0, -35);  // Top curve
+        ctx.lineTo(0, 20);                       // Center seam
       });
+      // Head right
       shape('#e0e0e0', () => {
         ctx.moveTo(0, 20);
         ctx.quadraticCurveTo(45, 10, 35, -15);
@@ -225,28 +182,28 @@
         ctx.lineTo(0, 20);
       });
 
-      // Neck
+      // --- NECK (small part) ---
       shape('#ffffff', () => {
         ctx.moveTo(0, 15);
-        ctx.lineTo(-25, 25);
-        ctx.quadraticCurveTo(-15, 45, 0, 45);
+        ctx.lineTo(-25, 25); // Neck left
+        ctx.quadraticCurveTo(-15, 45, 0, 45); // Bottom curve
         ctx.lineTo(0, 15);
       });
       shape('#f0f0f0', () => {
         ctx.moveTo(0, 15);
-        ctx.lineTo(25, 25);
-        ctx.quadraticCurveTo(15, 45, 0, 45);
+        ctx.lineTo(25, 25); // Neck right
+        ctx.quadraticCurveTo(15, 45, 0, 45); // Bottom curve
         ctx.lineTo(0, 15);
       });
 
-      // Eyes (with blinking)
-      const eyeRadiusY = isBlinking ? 0.3 : 3;
+      // --- FACE ---
+      // Eyes
       ctx.fillStyle = '#333';
       ctx.beginPath();
-      ctx.ellipse(-12, -5, 3, eyeRadiusY, 0, 0, Math.PI * 2);
+      ctx.arc(-12, -5, 3, 0, Math.PI * 2);
       ctx.fill();
       ctx.beginPath();
-      ctx.ellipse(12, -5, 3, eyeRadiusY, 0, 0, Math.PI * 2);
+      ctx.arc(12, -5, 3, 0, Math.PI * 2);
       ctx.fill();
 
       // Nose
@@ -258,215 +215,158 @@
 
       // Mouth
       ctx.strokeStyle = '#333';
-      ctx.lineWidth   = 1.5;
-      ctx.lineCap     = 'round';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(-6, 12);
       ctx.quadraticCurveTo(-3, 15, 0, 10);
       ctx.quadraticCurveTo(3, 15, 6, 12);
       ctx.stroke();
 
-      ctx.restore(); // end clip
+      ctx.restore(); // END CLIP
     }
 
-    // Paws (outside clip so they drape over edge)
+    // --- HANDS (drawn outside clip so they overlap the edge) ---
     if (pawProgress > 0.01) {
-      const handScale = pawProgress * scale * 0.7;
+      const handScale = pawProgress * scale * 0.7; // Decreased size by 30%
       ctx.save();
-      ctx.translate(cx, cy);
-
+      ctx.translate(x, y);
+      
       const drawHand = (hx, hy, rot, color) => {
         ctx.save();
         ctx.translate(hx, hy);
         ctx.rotate(rot);
         ctx.scale(handScale, handScale);
-
-        ctx.fillStyle   = color;
+        
+        // Hand shape (paw)
+        ctx.fillStyle = color;
         ctx.strokeStyle = '#d0d0d0';
-        ctx.lineWidth   = 1;
+        ctx.lineWidth = 1;
         ctx.beginPath();
+        // Full ellipse for the paw, centered on the edge
         ctx.ellipse(0, 0, 12, 16, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
-
+        
+        // Fingers
         ctx.strokeStyle = '#aaa';
-        ctx.lineWidth   = 1.5;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(-5, -2); ctx.lineTo(-5, -12);
-        ctx.moveTo(0,  0);  ctx.lineTo(0,  -14);
-        ctx.moveTo(5,  -2); ctx.lineTo(5,  -12);
+        ctx.moveTo(0, 0);   ctx.lineTo(0, -14);
+        ctx.moveTo(5, -2);  ctx.lineTo(5, -12);
         ctx.stroke();
-
+        
         ctx.restore();
       };
 
-      const r = currentHoleR;
-      drawHand(
-        Math.cos(Math.PI * 0.65) * r,
-        Math.sin(Math.PI * 0.65) * r,
-        Math.PI * 0.65 - Math.PI / 2,
-        '#ffffff'
-      );
-      drawHand(
-        Math.cos(Math.PI * 0.35) * r,
-        Math.sin(Math.PI * 0.35) * r,
-        Math.PI * 0.35 - Math.PI / 2,
-        '#f0f0f0'
-      );
+      const handDist = currentHoleRadius;
+      
+      // Left hand at ~20 degrees left of bottom center
+      const leftAngle = Math.PI * 0.65;
+      drawHand(Math.cos(leftAngle) * handDist, Math.sin(leftAngle) * handDist, leftAngle - Math.PI/2, '#ffffff');
+
+      // Right hand at ~20 degrees right of bottom center
+      const rightAngle = Math.PI * 0.35;
+      drawHand(Math.cos(rightAngle) * handDist, Math.sin(rightAngle) * handDist, rightAngle - Math.PI/2, '#f0f0f0');
 
       ctx.restore();
     }
   }
 
-  // ── Main Animation Loop ────────────────────────────────────────────────────
+  // ── Main Animation Loop ──────────────────────────────────────────────────────
+  let activeBumpRadius = 127.5; // Animated ripple radius
+
   function draw() {
     const now = Date.now();
 
-    // Update component proximity flag every frame (handles scrolling)
-    nearComponent = checkProximity(mouseX, mouseY);
-
-    // --- Blink logic ---
-    if (!isBlinking && Math.random() < 0.005 && (now - lastBlinkAt > 3000)) {
-      isBlinking   = true;
-      blinkStartAt = now;
+    // Blinking state update
+    if (!isBlinking && Math.random() < 0.005 && (now - lastBlinkTime > 3000)) {
+      isBlinking = true;
+      blinkStartTime = now;
     }
-    if (isBlinking && (now - blinkStartAt > 150)) {
+    if (isBlinking && (now - blinkStartTime > 150)) {
       isBlinking = false;
-      lastBlinkAt = now;
+      lastBlinkTime = now;
     }
 
-    // --- Animate bump radius: disappears near components, returns otherwise ---
-    const bumpTarget = nearComponent ? 0 : MAX_BUMP_RADIUS;
-    currentBumpRadius += (bumpTarget - currentBumpRadius) * 0.12;
-
-    // Retract bunny if near a component
-    if (nearComponent && (bstate === 'EXPANDING' || bstate === 'POPPING_UP')) {
-      bstate = 'RETRACTING';
-      holeTargetR     = currentHoleR;
-      headTargetProg  = 0;
-      pawRetractAt    = now + 400;
-      headPopStartAt  = 0;
-      earShakeStartAt = 0;
-    }
-
-    // --- Entity Movement ---
-    // Lock entity to holeDot when hole is visibly open
-    if (holeDot && currentHoleR > baseRadius + 2) {
-      entityX  = holeDot.x;
-      entityY  = holeDot.y;
-      entityVX = 0;
-      entityVY = 0;
+    // Continuous smooth trailing bump — always lerp toward mouse, even while retracting.
+    // Only freeze bump position while the hole is OPEN and fully expanded (POPPING_UP state).
+    const holeIsOpen = state === 'POPPING_UP' && currentHoleRadius > baseRadius + 2;
+    if (holeIsOpen) {
+      // Freeze bump at the locked hole dot while bunny is fully emerged
+      bumpX = holeDot.x;
+      bumpY = holeDot.y;
     } else {
-      const fast = mouseVelocity > 1.2;
-
-      if (fast) {
-        posQueue.length = 0;
-        entityVX *= 0.92;
-        entityVY *= 0.92;
-        entityX  += entityVX;
-        entityY  += entityVY;
-      } else {
-        posQueue.push({ x: mouseX, y: mouseY });
-
-        if (posQueue.length > 0) {
-          const target = posQueue[0];
-          const dx   = target.x - entityX;
-          const dy   = target.y - entityY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist <= ENTITY_SPEED) {
-            entityX  = target.x;
-            entityY  = target.y;
-            entityVX = 0;
-            entityVY = 0;
-            posQueue.shift();
-          } else {
-            entityVX = (dx / dist) * ENTITY_SPEED;
-            entityVY = (dy / dist) * ENTITY_SPEED;
-            entityX += entityVX;
-            entityY += entityVY;
-          }
-        } else {
-          const dx   = mouseX - entityX;
-          const dy   = mouseY - entityY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist > ENTITY_SPEED) {
-            entityVX = (dx / dist) * ENTITY_SPEED;
-            entityVY = (dy / dist) * ENTITY_SPEED;
-            entityX += entityVX;
-            entityY += entityVY;
-          } else if (dist > 0.5) {
-            entityX  = mouseX;
-            entityY  = mouseY;
-            entityVX = 0;
-            entityVY = 0;
-          }
-        }
-      }
+      // Always glide toward mouse — this runs during MOVING, EXPANDING, and RETRACTING
+      activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
+      const lerpFactor = 0.045; // ~1.5s glide to target
+      bumpX += (mouseX - bumpX) * lerpFactor;
+      bumpY += (mouseY - bumpY) * lerpFactor;
     }
 
-    // --- Bunny State Machine ---
-    const idleMs = now - lastMoveTime;
-
-    if (bstate === 'MOVING' || bstate === 'RETRACTING') {
-      // Trigger after 3 seconds of no mouse movement, only when not near a component
-      if (!nearComponent && idleMs >= 3000 && mouseX !== -1000) {
-        bstate = 'EXPANDING';
-        // Lock hole to nearest grid dot under the entity
-        const nx = Math.round(entityX / gap) * gap;
-        const ny = Math.round(entityY / gap) * gap;
-        holeDot     = { x: nx, y: ny };
-        holeTargetR = 60;
+    // State Logic — Bunny hole emerges ONLY from MOVING state, never from RETRACTING.
+    // This prevents a new hole opening before the previous one fully closes.
+    if (state === 'MOVING') {
+      if (now - lastMoveTime > 2000 && mouseX !== -1000) {
+        state = 'EXPANDING';
+        
+        // Find nearest grid dot to lock onto — snap to where bump actually IS
+        const nx = Math.round(bumpX / gap) * gap;
+        const ny = Math.round(bumpY / gap) * gap;
+        holeDot = { x: nx, y: ny };
+        holeTargetRadius = 60;
       }
     }
-
+    
     // Animate hole radius
-    currentHoleR += (holeTargetR - currentHoleR) * 0.08;
-
-    if (bstate === 'EXPANDING' && currentHoleR > 48) {
-      bstate         = 'POPPING_UP';
-      pawTargetProg  = 1;
-      headPopStartAt = now + 500;
+    currentHoleRadius += (holeTargetRadius - currentHoleRadius) * 0.08;
+    
+    // Transition to popping up when hole is wide enough
+    if (state === 'EXPANDING' && currentHoleRadius > 48) {
+      state = 'POPPING_UP';
+      pawTargetProgress = 1;
+      headPopStartTime = now + 500;
     }
-
-    if (bstate === 'POPPING_UP') {
-      if (headPopStartAt !== 0 && now >= headPopStartAt) {
-        headTargetProg = 1;
+    
+    // Head emergence logic
+    if (state === 'POPPING_UP') {
+      if (now >= headPopStartTime && headPopStartTime !== 0) {
+        headTargetProgress = 1;
       }
-      if (headProg > 0.99 && headTargetProg === 1 && !earShakeStartAt) {
-        earShakeStartAt = now;
-      }
-    }
-
-    if (bstate === 'RETRACTING') {
-      if (pawRetractAt !== 0 && now >= pawRetractAt) {
-        pawTargetProg  = 0;
-        holeTargetR    = baseRadius;
-        pawRetractAt   = 0;
+      if (headPopProgress > 0.99 && headTargetProgress === 1) {
+        if (!earShakeStartTime) earShakeStartTime = now;
       }
     }
 
-    // Fully retracted → back to MOVING
-    if (bstate === 'RETRACTING' && currentHoleR < baseRadius + 1 && pawTargetProg === 0 && pawProg < 0.02) {
-      bstate  = 'MOVING';
+    // Retraction sequence
+    if (state === 'RETRACTING') {
+      if (now >= pawRetractStartTime && pawRetractStartTime !== 0) {
+        pawTargetProgress = 0;
+        holeTargetRadius = baseRadius;
+        pawRetractStartTime = 0;
+      }
+    }
+    
+    // Transition back to MOVING when fully retracted.
+    // IMPORTANT: reset lastMoveTime so the 2s idle timer starts fresh from this moment,
+    // preventing an immediate re-open at a stale position.
+    if (state === 'RETRACTING' && currentHoleRadius < baseRadius + 1 && pawTargetProgress === 0) {
+      state = 'MOVING';
       holeDot = null;
-      headTargetProg  = 0;
-      headProg        = 0;
-      headPopStartAt  = 0;
-      earShakeStartAt = 0;
+      lastMoveTime = now; // <- reset idle timer; bump needs time to reach cursor before next open
     }
 
-    // Animate progress values
-    pawProg  += (pawTargetProg  - pawProg)  * 0.1;
-    headProg += (headTargetProg - headProg) * 0.1;
+    // Animate pop progress
+    pawPopProgress += (pawTargetProgress - pawPopProgress) * 0.1;
+    headPopProgress += (headTargetProgress - headPopProgress) * 0.1;
 
-    // --- Clear canvas ---
-    canvas.width = W;
+    // Clear canvas
+    canvas.width = W; // also clears
     ctx.fillStyle = '#f5f5f5';
     ctx.fillRect(0, 0, W, H);
 
-    // --- Grain texture (before dots) ---
+    // Grain
     ctx.save();
     ctx.globalAlpha = 0.58;
     for (let tx = 0; tx < W; tx += 300) {
@@ -476,72 +376,97 @@
     }
     ctx.restore();
 
-    // --- Dot Grid with Fabric Bump + Hole ---
-    const bumpX = (holeDot && currentHoleR > baseRadius + 2) ? holeDot.x : entityX;
-    const bumpY = (holeDot && currentHoleR > baseRadius + 2) ? holeDot.y : entityY;
+    const maxDistortion = 25;
 
+    // Draw Dot Grid
     ctx.save();
-
+    
     for (let x = gap; x < W + gap; x += gap) {
       for (let y = gap; y < H + gap; y += gap) {
-        let drawX  = x;
-        let drawY  = y;
+        let drawX = x;
+        let drawY = y;
         let radius = baseRadius;
         let isHole = false;
-
-        // Hole dot
+        
+        // Hole Logic
         if (holeDot && Math.abs(x - holeDot.x) < 1 && Math.abs(y - holeDot.y) < 1) {
-          radius = currentHoleR;
+          radius = currentHoleRadius;
           isHole = true;
-          ctx.fillStyle = '#111';
+          ctx.fillStyle = '#111'; // Dark void
         } else {
-          ctx.fillStyle = 'rgba(145,145,150,0.5)';
-
-          // Push dots away from open hole
-          if (holeDot && currentHoleR > baseRadius) {
-            const hdx  = x - holeDot.x;
-            const hdy  = y - holeDot.y;
-            const hdist = Math.sqrt(hdx * hdx + hdy * hdy);
-            if (hdist < currentHoleR + 30 && hdist > 0) {
-              const push = (currentHoleR + 30 - hdist) / 30;
-              drawX += (hdx / hdist) * push * 30;
-              drawY += (hdy / hdist) * push * 30;
+          ctx.fillStyle = 'rgba(145,145,150,0.5)'; // 10% darker default
+          
+          // If a hole exists, push dots away
+          if (holeDot && currentHoleRadius > baseRadius) {
+            const dx = x - holeDot.x;
+            const dy = y - holeDot.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < currentHoleRadius + 30 && dist > 0) {
+              const pushForce = (currentHoleRadius + 30 - dist) / 30;
+              drawX += (dx / dist) * pushForce * 30;
+              drawY += (dy / dist) * pushForce * 30;
             }
           }
-
-          // Fabric bump
-          const bdx  = x - bumpX;
-          const bdy  = y - bumpY;
-          const bdist = Math.sqrt(bdx * bdx + bdy * bdy);
-
-          if (bdist < currentBumpRadius && bdist > 0 && currentBumpRadius > 1) {
-            const force = (currentBumpRadius - bdist) / currentBumpRadius;
-            drawX  += (bdx / bdist) * force * maxDistortion;
-            drawY  += (bdy / bdist) * force * maxDistortion;
-            radius  = baseRadius + (force * 1.5);
-            ctx.fillStyle = `rgba(110,110,115,${0.5 + force * 0.3})`;
+          
+          // Fabric Bump — bumpX/Y always reflect correct position (frozen at holeDot during POPPING_UP, gliding during all other states)
+          const curBumpX = bumpX;
+          const curBumpY = bumpY;
+          const bdx = x - curBumpX;
+          const bdy = y - curBumpY;
+          const bDist = Math.sqrt(bdx*bdx + bdy*bdy);
+          
+          if (bDist < activeBumpRadius && activeBumpRadius > 1) {
+            // Distort outwards slightly
+            const force = (activeBumpRadius - bDist) / activeBumpRadius;
+            drawX += (bdx / bDist) * force * maxDistortion;
+            drawY += (bdy / bDist) * force * maxDistortion;
+            radius = baseRadius + (force * 1.5);
+            
+            ctx.fillStyle = `rgba(20,20,20,${0.45 + (force * 0.35)})`;
+          }
+          
+          // Pre-emergence jitter: dots tremble near bump position when idle before bunny emerges
+          const idleTime = now - lastMoveTime;
+          if (idleTime > 800 && idleTime < 3000 && (state === 'MOVING' || state === 'RETRACTING' || state === 'EXPANDING')) {
+            const jdx = x - bumpX;
+            const jdy = y - bumpY;
+            const jDist = Math.sqrt(jdx * jdx + jdy * jdy);
+            const jitterRadius = 42;
+            if (jDist < jitterRadius && jDist > 0) {
+              const intensity = Math.min((idleTime - 800) / 1200, 1.0);
+              const proximity = (jitterRadius - jDist) / jitterRadius;
+              const jitterAmt = intensity * proximity * 1.8;
+              drawX += Math.sin(now * 0.012 + x * 0.3) * jitterAmt;
+              drawY += Math.cos(now * 0.009 + y * 0.3) * jitterAmt;
+            }
           }
         }
-
+        
         ctx.beginPath();
         ctx.arc(drawX, drawY, radius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
-
     ctx.restore();
-
-    // --- Bunny ---
+    
+    // Draw Bunny
     if (holeDot) {
       let earAngle = 0;
-      if (earShakeStartAt > 0 && now - earShakeStartAt < 1200) {
-        earAngle = Math.sin((now - earShakeStartAt) * 0.03) * 0.15;
+      if (earShakeStartTime > 0 && now - earShakeStartTime < 1000) {
+        earAngle = Math.sin((now - earShakeStartTime) * 0.03) * 0.15;
       }
-      drawBunny(holeDot.x, holeDot.y, 1.0, pawProg, headProg, earAngle);
+      drawBunny(ctx, holeDot.x, holeDot.y, 1.0, pawPopProgress, headPopProgress, earAngle);
     }
 
     requestAnimationFrame(draw);
   }
 
   requestAnimationFrame(draw);
+
+  window.addEventListener('resize', () => { 
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    buildGrain(); 
+  });
+
 })();

@@ -957,69 +957,38 @@ tick();
   const timerInterval = setInterval(updateTimer, 1000);
 })();
 
-// --- Privacy Gate Logic ---
+// --- Privacy Modal Logic (Unlocked Scrolling with Top Nav Scroll Fade) ---
 (function initPrivacyGate() {
   const privacyNav = document.getElementById('privacy-nav');
   const privacyModal = document.getElementById('privacy-modal');
   const privacyModalClose = document.getElementById('privacy-modal-close');
   const privacyModalAccept = document.getElementById('privacy-modal-accept');
-  const privacyKeyIcon = document.getElementById('privacy-key-icon');
   const footerPrivacyLink = document.getElementById('footer-privacy-link');
+  const footerPrivacyBtn = document.getElementById('footer-privacy-btn');
 
-  let isScrollLocked = true;
-  
-  // Stop lenis scrolling initially
-  if (lenis) {
-    lenis.stop();
+  // Handle top privacy nav fade-out on scroll (only visible on top screen)
+  const handlePrivacyNavScroll = () => {
+    if (!privacyNav) return;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const fadeDistance = 180; // Fade out completely over the first 180px of scroll
+    if (scrollY <= 0) {
+      privacyNav.style.opacity = '1';
+      privacyNav.style.pointerEvents = 'auto';
+    } else if (scrollY < fadeDistance) {
+      const opacity = 1 - (scrollY / fadeDistance);
+      privacyNav.style.opacity = opacity.toString();
+      privacyNav.style.pointerEvents = opacity > 0.2 ? 'auto' : 'none';
+    } else {
+      privacyNav.style.opacity = '0';
+      privacyNav.style.pointerEvents = 'none';
+    }
+  };
+
+  window.addEventListener('scroll', handlePrivacyNavScroll, { passive: true });
+  if (typeof lenis !== 'undefined' && lenis) {
+    lenis.on('scroll', handlePrivacyNavScroll);
   }
-
-  // Handle scroll attempts
-  let shakeTimeout;
-  const handleScrollAttempt = (e) => {
-    if (isScrollLocked) {
-      // Allow scrolling inside the modal's scrollable boxes
-      if (privacyModal && privacyModal.contains(e.target)) {
-        const scrollable = e.target.closest('.scrollable-box');
-        if (scrollable) {
-          return; // Let the native scroll happen inside the box
-        }
-        e.preventDefault(); // Block scrolling on the modal overlay
-        return; // Don't shake the key when modal is open
-      }
-      
-      e.preventDefault();
-      // Trigger shake animation
-      if (privacyKeyIcon) {
-        if (!privacyKeyIcon.classList.contains('shake-animation')) {
-          privacyKeyIcon.classList.add('shake-animation');
-        }
-        
-        // Reset the timeout on every scroll attempt
-        clearTimeout(shakeTimeout);
-        shakeTimeout = setTimeout(() => {
-          privacyKeyIcon.classList.remove('shake-animation');
-        }, 300); // 300ms after the last scroll event, the shake stops
-      }
-    }
-  };
-
-  window.addEventListener('wheel', handleScrollAttempt, { passive: false });
-  window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
-  window.addEventListener('keydown', (e) => {
-    if (isScrollLocked && ['ArrowUp', 'ArrowDown', 'Space', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.code)) {
-      e.preventDefault();
-      handleScrollAttempt(e);
-    }
-  }, { passive: false });
-
-  const unlockScroll = () => {
-    isScrollLocked = false;
-    if (typeof lenis !== 'undefined' && lenis) {
-      lenis.start();
-    }
-    window.removeEventListener('wheel', handleScrollAttempt);
-    window.removeEventListener('touchmove', handleScrollAttempt);
-  };
+  handlePrivacyNavScroll();
 
   const openModal = (e) => {
     if (e) e.preventDefault();
@@ -1027,46 +996,28 @@ tick();
       privacyModal.style.display = 'flex';
       setTimeout(() => {
         privacyModal.style.opacity = '1';
-        if(privacyModal.querySelector('div')) {
+        if (privacyModal.querySelector('div')) {
           privacyModal.querySelector('div').style.transform = 'translateY(0)';
         }
       }, 10);
     }
-    // Re-lock scroll when opening the modal again
-    isScrollLocked = true;
-    if (typeof lenis !== 'undefined' && lenis) {
-      lenis.stop();
-    }
-    window.addEventListener('wheel', handleScrollAttempt, { passive: false });
-    window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
   };
 
   const closeModal = () => {
     if (privacyModal) {
       privacyModal.style.opacity = '0';
-      if(privacyModal.querySelector('div')) {
+      if (privacyModal.querySelector('div')) {
         privacyModal.querySelector('div').style.transform = 'translateY(20px)';
       }
       setTimeout(() => {
         privacyModal.style.display = 'none';
       }, 300);
     }
-    unlockScroll();
-  };
-
-  const acceptPrivacy = () => {
-    closeModal();
-    if (privacyNav) {
-      privacyNav.style.opacity = '0';
-      privacyNav.style.pointerEvents = 'none';
-      setTimeout(() => {
-        privacyNav.style.display = 'none';
-      }, 300);
-    }
   };
 
   if (privacyNav) privacyNav.addEventListener('click', openModal);
   if (privacyModalClose) privacyModalClose.addEventListener('click', closeModal);
-  if (privacyModalAccept) privacyModalAccept.addEventListener('click', acceptPrivacy);
+  if (privacyModalAccept) privacyModalAccept.addEventListener('click', closeModal);
   if (footerPrivacyLink) footerPrivacyLink.addEventListener('click', openModal);
+  if (footerPrivacyBtn) footerPrivacyBtn.addEventListener('click', openModal);
 })();
