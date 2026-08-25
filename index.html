@@ -42,6 +42,32 @@
   <img id="cmp-popout" src="/src/assets/cmp_popout.png" alt="Cmp Popout"
     style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none; filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.3));" />
 
+  <!-- Left-hand 6-Dot Scroll Progress Indicator (Green & White theme) -->
+  <nav id="section-nav" class="section-nav" aria-label="Page progress">
+    <div class="nav-track"></div>
+    <!-- Continuous traveling green glowing dot -->
+    <div class="nav-glide-dot" id="nav-glide-dot"></div>
+
+    <button class="nav-dot active" data-section="0" aria-label="Part 1: Home">
+      <span class="nav-tooltip">01 Home</span>
+    </button>
+    <button class="nav-dot" data-section="1" aria-label="Part 2: Deals & Feed">
+      <span class="nav-tooltip">02 Deals & Feed</span>
+    </button>
+    <button class="nav-dot" data-section="2" aria-label="Part 3: Search">
+      <span class="nav-tooltip">03 Search</span>
+    </button>
+    <button class="nav-dot" data-section="3" aria-label="Part 4: Features">
+      <span class="nav-tooltip">04 Features</span>
+    </button>
+    <button class="nav-dot" data-section="4" aria-label="Part 5: Smart Alerts">
+      <span class="nav-tooltip">05 Smart Alerts</span>
+    </button>
+    <button class="nav-dot" data-section="5" aria-label="Part 6: Waitlist">
+      <span class="nav-tooltip">06 Waitlist</span>
+    </button>
+  </nav>
+
   <!-- Scrollable content sections -->
   <main class="scroll-container">
     <section class="section hero" id="section-1">
@@ -78,11 +104,11 @@
 
     <section class="section split-section" id="section-3">
       <div class="content-wrapper split-left"
-        style="top: 50%; left: 5vw; transform: translate(-20px, -50%); max-width: 25vw; text-align: center;">
+        style="top: 50%; left: calc(5vw + 40px); transform: translateY(-50%); max-width: 25vw; text-align: center;">
         <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">Everything Starts<br>With a Search.</h2>
       </div>
       <div class="content-wrapper split-right"
-        style="top: 50%; right: 5vw; transform: translate(20px, -50%); max-width: 25vw; text-align: center;">
+        style="top: 50%; right: 5vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
         <p class="impact-statement gradient-text" style="font-size: 2.52rem; line-height: 1.2;">Never Pay More<br>Than
           You Have To.</p>
       </div>

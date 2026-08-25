@@ -87,20 +87,20 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-// For nicer GLTF rendering
+// LinearToneMapping keeps phone body bright white; ACESFilmic was graying/darkening the chassis
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1;
+renderer.toneMapping = THREE.LinearToneMapping;
+renderer.toneMappingExposure = 1.2;
 
-// 4. Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+// 4. Lighting — bright enough so phone body doesn't look gray
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
 directionalLight.position.set(5, 5, 5);
 scene.add(directionalLight);
 
-const fillLight = new THREE.DirectionalLight(0xffffff, 1);
+const fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
 fillLight.position.set(-5, 0, -5);
 scene.add(fillLight);
 
@@ -1020,4 +1020,94 @@ tick();
   if (privacyModalAccept) privacyModalAccept.addEventListener('click', closeModal);
   if (footerPrivacyLink) footerPrivacyLink.addEventListener('click', openModal);
   if (footerPrivacyBtn) footerPrivacyBtn.addEventListener('click', openModal);
+})();
+
+// --- 6-Dot Left Section Navigation Tracking & Smooth Glide ---
+(function initSectionNav() {
+  const dots = Array.from(document.querySelectorAll('.section-nav .nav-dot'));
+  const glideDot = document.getElementById('nav-glide-dot');
+  const navContainer = document.getElementById('section-nav');
+  if (dots.length === 0 || !glideDot || !navContainer) return;
+
+  const updateGlideDot = () => {
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const maxScroll = Math.max(
+      document.documentElement.scrollHeight - window.innerHeight,
+      1
+    );
+    const scrollRatio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
+    // ── Position: glide continuously along the track ──────────────────────────
+    const firstDotY = dots[0].offsetTop + dots[0].offsetHeight / 2;
+    const lastDotY = dots[dots.length - 1].offsetTop + dots[dots.length - 1].offsetHeight / 2;
+    const targetY = firstDotY + scrollRatio * (lastDotY - firstDotY);
+    glideDot.style.top = `${targetY}px`;
+
+    // ── Morph: orb ↔ thin line based on distance from nearest node ───────────
+    // exactIndex: 0.0 at dot 0, 1.0 at dot 1, 2.0 at dot 2 … 5.0 at dot 5
+    const exactIndex = scrollRatio * (dots.length - 1);
+    const nearestIndex = Math.round(exactIndex);
+    const distFromNearest = Math.abs(exactIndex - nearestIndex); // 0 = at node, 0.5 = midway
+
+    // morphT: 0 = fully at node (orb), 1 = traveling between nodes (thin line)
+    // Collapses fully into a line within 0.25 scroll-steps of leaving a node
+    const morphT = Math.min(distFromNearest / 0.25, 1.0);
+
+    // Smooth easing so collapse/expansion feel organic
+    const eased = morphT < 0.5
+      ? 2 * morphT * morphT
+      : 1 - Math.pow(-2 * morphT + 2, 2) / 2;
+
+    // Interpolate width: 14px (orb) → 3px (line)
+    const w = 14 - (14 - 3) * eased;
+    // Interpolate height: 14px (orb) → 10px (line segment)
+    const h = 14 - (14 - 10) * eased;
+    // Interpolate border-radius: 7px (circle) → 2px (pill/line cap)
+    const r = 7 - (7 - 2) * eased;
+    // Interpolate border: 2px white (orb) → 0px (line — pure green, no white border)
+    const borderW = Math.round((1 - eased) * 2);
+
+    glideDot.style.width = `${w}px`;
+    glideDot.style.height = `${h}px`;
+    glideDot.style.borderRadius = `${r}px`;
+    glideDot.style.border = borderW > 0 ? `${borderW}px solid #ffffff` : 'none';
+
+    // Glow: bright halo at node, fades while traveling as a line
+    const auraSize = Math.round((1 - eased) * 4);
+    const glowSize = Math.round((1 - eased) * 14);
+    const auraAlpha = ((1 - eased) * 0.25).toFixed(2);
+    const glowAlpha = (0.25 + (1 - eased) * 0.4).toFixed(2);
+    glideDot.style.boxShadow = `0 0 0 ${auraSize}px rgba(10,98,1,${auraAlpha}), 0 0 ${glowSize}px rgba(10,98,1,${glowAlpha})`;
+
+    // ── Node highlight: dot lights up only when orb is resting over it ────────
+    dots.forEach((dot, index) => {
+      if (index === nearestIndex && morphT < 0.25) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  };
+
+  // Synchronize on scroll
+  window.addEventListener('scroll', updateGlideDot, { passive: true });
+  if (typeof lenis !== 'undefined' && lenis) {
+    lenis.on('scroll', updateGlideDot);
+  }
+  // Initial positioning after layout calculation
+  setTimeout(updateGlideDot, 100);
+
+  // Click dot to jump directly to section target
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const targetScrollY = (index / 5) * maxScroll;
+      
+      if (typeof lenis !== 'undefined' && lenis) {
+        lenis.scrollTo(targetScrollY, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+      }
+    });
+  });
 })();
