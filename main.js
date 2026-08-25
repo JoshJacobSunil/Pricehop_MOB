@@ -89,20 +89,20 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-// For nicer GLTF rendering
+// LinearToneMapping keeps phone body bright white; ACESFilmic was graying/darkening the chassis
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1;
+renderer.toneMapping = THREE.LinearToneMapping;
+renderer.toneMappingExposure = 1.2;
 
-// 4. Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+// 4. Lighting — bright enough so phone body doesn't look gray
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
 directionalLight.position.set(5, 5, 5);
 scene.add(directionalLight);
 
-const fillLight = new THREE.DirectionalLight(0xffffff, 1);
+const fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
 fillLight.position.set(-5, 0, -5);
 scene.add(fillLight);
 
@@ -703,7 +703,7 @@ function setupScrollAnimations() {
   }
 
   // Setup new popouts behind the phones (shifted 40px outward total)
-  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, zIndex: -1, scale: 1 }, 10.6);
+  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, y: 15, zIndex: -1, scale: 1 }, 10.6);
   mainTimeline.set('#cmp-popout', { opacity: 0, x: 480, zIndex: -1, scale: 1 }, 10.6);
 
   // Section 9: New Popouts Slide to Center & Phones Rotate
@@ -727,17 +727,16 @@ function setupScrollAnimations() {
   mainTimeline.to(endPhones[0].rotation, { y: -Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
   mainTimeline.to(endPhones[1].rotation, { y: Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
 
-  // Slide final popouts back into their respective phones (left: -440px, right: 440px), shrink, and fade out
-  const fadeOutTime = 12.8;
-  const fadeOutDuration = 0.6;
-  mainTimeline.to('#alert-popout', { x: -440, y: 35, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
-  mainTimeline.to('#cmp-popout', { x: 440, y: 45, scale: 0.2, opacity: 0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
-  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: -1 }, fadeOutTime + fadeOutDuration);
-  mainTimeline.to(phoneGroup.position, { y: -6.0, duration: fadeOutDuration, ease: 'power2.inOut' }, fadeOutTime);
+  // 1. Remove Old Animation: Delete the lateral exit animations
+  // 2. New Scroll-Triggered Transition: Entire previous section slides UP vertically
+  const slideUpTime = 12.8;
+  const slideUpDuration = 2.2; // Match the dummy padding duration to sync with footer scrolling in
 
-  // Add dummy padding duration at the end of the timeline. This maps the final scroll distance 
-  // (when the countdown footer page scrolls in) to an empty canvas.
-  mainTimeline.to({}, { duration: 2.2 }, fadeOutTime + fadeOutDuration);
+  // Lower z-index so the scrolling footer page (z-index 2) can cover them
+  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: 1 }, slideUpTime);
+
+  mainTimeline.to('#webgl-canvas', { y: "-100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
+  mainTimeline.to(['#alert-popout', '#cmp-popout'], { y: "-=100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
@@ -780,16 +779,21 @@ window.addEventListener('pointermove', (e) => {
 
   // --- DOM Pop-out Hitbox Detection ---
   let isHoveringPopout = false;
-  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2'];
+  // Included alert/cmp popouts and other DOM elements that should exclude the bunny
+  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2', '#alert-popout', '#cmp-popout', '.countdown-page'];
   for (let selector of popouts) {
     const el = document.querySelector(selector);
     if (el) {
       const style = window.getComputedStyle(el);
       const opacity = parseFloat(style.opacity);
-      if (opacity > 0.1) {
+      // countdown page doesn't use opacity to hide, so we check if it's visible in viewport
+      if (opacity > 0.1 || selector === '.countdown-page') {
         const rect = el.getBoundingClientRect();
-        if (e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        // Skip elements completely off-screen
+        if (rect.top >= window.innerHeight || rect.bottom <= 0) continue;
+        
+        if (e.clientX >= rect.left - 25 && e.clientX <= rect.right + 25 &&
+          e.clientY >= rect.top - 25 && e.clientY <= rect.bottom + 25) {
           isHoveringPopout = true;
           break;
         }
@@ -956,4 +960,159 @@ initTinderCards();
 
   updateTimer();
   const timerInterval = setInterval(updateTimer, 1000);
+})();
+
+// --- Privacy Modal Logic (Unlocked Scrolling with Top Nav Scroll Fade) ---
+(function initPrivacyGate() {
+  const privacyNav = document.getElementById('privacy-nav');
+  const privacyModal = document.getElementById('privacy-modal');
+  const privacyModalClose = document.getElementById('privacy-modal-close');
+  const privacyModalAccept = document.getElementById('privacy-modal-accept');
+  const footerPrivacyLink = document.getElementById('footer-privacy-link');
+  const footerPrivacyBtn = document.getElementById('footer-privacy-btn');
+
+  // Handle top privacy nav fade-out on scroll (only visible on top screen)
+  const handlePrivacyNavScroll = () => {
+    if (!privacyNav) return;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const fadeDistance = 180; // Fade out completely over the first 180px of scroll
+    if (scrollY <= 0) {
+      privacyNav.style.opacity = '1';
+      privacyNav.style.pointerEvents = 'auto';
+    } else if (scrollY < fadeDistance) {
+      const opacity = 1 - (scrollY / fadeDistance);
+      privacyNav.style.opacity = opacity.toString();
+      privacyNav.style.pointerEvents = opacity > 0.2 ? 'auto' : 'none';
+    } else {
+      privacyNav.style.opacity = '0';
+      privacyNav.style.pointerEvents = 'none';
+    }
+  };
+
+  window.addEventListener('scroll', handlePrivacyNavScroll, { passive: true });
+  if (typeof lenis !== 'undefined' && lenis) {
+    lenis.on('scroll', handlePrivacyNavScroll);
+  }
+  handlePrivacyNavScroll();
+
+  const openModal = (e) => {
+    if (e) e.preventDefault();
+    if (privacyModal) {
+      privacyModal.style.display = 'flex';
+      setTimeout(() => {
+        privacyModal.style.opacity = '1';
+        if (privacyModal.querySelector('div')) {
+          privacyModal.querySelector('div').style.transform = 'translateY(0)';
+        }
+      }, 10);
+    }
+  };
+
+  const closeModal = () => {
+    if (privacyModal) {
+      privacyModal.style.opacity = '0';
+      if (privacyModal.querySelector('div')) {
+        privacyModal.querySelector('div').style.transform = 'translateY(20px)';
+      }
+      setTimeout(() => {
+        privacyModal.style.display = 'none';
+      }, 300);
+    }
+  };
+
+  if (privacyNav) privacyNav.addEventListener('click', openModal);
+  if (privacyModalClose) privacyModalClose.addEventListener('click', closeModal);
+  if (privacyModalAccept) privacyModalAccept.addEventListener('click', closeModal);
+  if (footerPrivacyLink) footerPrivacyLink.addEventListener('click', openModal);
+  if (footerPrivacyBtn) footerPrivacyBtn.addEventListener('click', openModal);
+})();
+
+// --- 6-Dot Left Section Navigation Tracking & Smooth Glide ---
+(function initSectionNav() {
+  const dots = Array.from(document.querySelectorAll('.section-nav .nav-dot'));
+  const glideDot = document.getElementById('nav-glide-dot');
+  const navContainer = document.getElementById('section-nav');
+  if (dots.length === 0 || !glideDot || !navContainer) return;
+
+  const updateGlideDot = () => {
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const maxScroll = Math.max(
+      document.documentElement.scrollHeight - window.innerHeight,
+      1
+    );
+    const scrollRatio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
+    // ── Position: glide continuously along the track ──────────────────────────
+    const firstDotY = dots[0].offsetTop + dots[0].offsetHeight / 2;
+    const lastDotY = dots[dots.length - 1].offsetTop + dots[dots.length - 1].offsetHeight / 2;
+    const targetY = firstDotY + scrollRatio * (lastDotY - firstDotY);
+    glideDot.style.top = `${targetY}px`;
+
+    // ── Morph: orb ↔ thin line based on distance from nearest node ───────────
+    // exactIndex: 0.0 at dot 0, 1.0 at dot 1, 2.0 at dot 2 … 5.0 at dot 5
+    const exactIndex = scrollRatio * (dots.length - 1);
+    const nearestIndex = Math.round(exactIndex);
+    const distFromNearest = Math.abs(exactIndex - nearestIndex); // 0 = at node, 0.5 = midway
+
+    // morphT: 0 = fully at node (orb), 1 = traveling between nodes (thin line)
+    // Collapses fully into a line within 0.25 scroll-steps of leaving a node
+    const morphT = Math.min(distFromNearest / 0.25, 1.0);
+
+    // Smooth easing so collapse/expansion feel organic
+    const eased = morphT < 0.5
+      ? 2 * morphT * morphT
+      : 1 - Math.pow(-2 * morphT + 2, 2) / 2;
+
+    // Interpolate width: 14px (orb) → 3px (line)
+    const w = 14 - (14 - 3) * eased;
+    // Interpolate height: 14px (orb) → 10px (line segment)
+    const h = 14 - (14 - 10) * eased;
+    // Interpolate border-radius: 7px (circle) → 2px (pill/line cap)
+    const r = 7 - (7 - 2) * eased;
+    // Interpolate border: 2px white (orb) → 0px (line — pure green, no white border)
+    const borderW = Math.round((1 - eased) * 2);
+
+    glideDot.style.width = `${w}px`;
+    glideDot.style.height = `${h}px`;
+    glideDot.style.borderRadius = `${r}px`;
+    glideDot.style.border = borderW > 0 ? `${borderW}px solid #ffffff` : 'none';
+
+    // Glow: bright halo at node, fades while traveling as a line
+    const auraSize = Math.round((1 - eased) * 4);
+    const glowSize = Math.round((1 - eased) * 14);
+    const auraAlpha = ((1 - eased) * 0.25).toFixed(2);
+    const glowAlpha = (0.25 + (1 - eased) * 0.4).toFixed(2);
+    glideDot.style.boxShadow = `0 0 0 ${auraSize}px rgba(10,98,1,${auraAlpha}), 0 0 ${glowSize}px rgba(10,98,1,${glowAlpha})`;
+
+    // ── Node highlight: dot lights up only when orb is resting over it ────────
+    dots.forEach((dot, index) => {
+      if (index === nearestIndex && morphT < 0.25) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  };
+
+  // Synchronize on scroll
+  window.addEventListener('scroll', updateGlideDot, { passive: true });
+  if (typeof lenis !== 'undefined' && lenis) {
+    lenis.on('scroll', updateGlideDot);
+  }
+  // Initial positioning after layout calculation
+  setTimeout(updateGlideDot, 100);
+
+  // Click dot to jump directly to section target
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const targetScrollY = (index / 5) * maxScroll;
+      
+      if (typeof lenis !== 'undefined' && lenis) {
+        lenis.scrollTo(targetScrollY, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+      }
+    });
+  });
 })();

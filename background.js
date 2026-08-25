@@ -38,14 +38,15 @@
   const gap = 28;
   const baseRadius = 0.7;
   
-  let mouseX = -1000;
-  let mouseY = -1000;
+  let mouseX = W / 2;
+  let mouseY = H / 2;
   
-  // Entity trailing variables
-  let entityX = -1000;
-  let entityY = -1000;
-  let entityVX = 0;
-  let entityVY = 0;
+  // Continuous smooth trailing bump (glides steadily over ~1.5s with zero initial pause)
+  let bumpX = mouseX;
+  let bumpY = mouseY;
+
+  let entityX = mouseX;
+  let entityY = mouseY;
   
   let lastMoveTime = Date.now();
   let state = 'MOVING'; // MOVING, EXPANDING, POPPING_UP, RETRACTING
@@ -65,42 +66,17 @@
   let blinkStartTime = 0;
   let pawRetractStartTime = 0;
 
-  let pathQueue = [];
-  let currentTarget = null;
-  
-  let velocity = 0;
-  const SPEED_LIMIT = 1.2; // Lowered threshold so it triggers earlier
-  let lastMouseX = -1000;
-  let lastMouseY = -1000;
-  let lastMoveTimeEvent = Date.now();
-
   window.addEventListener('mousemove', (e) => {
     const now = Date.now();
-    const dt = now - lastMoveTimeEvent;
-    
-    if (dt > 0 && lastMouseX !== -1000) {
-      const dx = e.clientX - lastMouseX;
-      const dy = e.clientY - lastMouseY;
-      velocity = Math.sqrt(dx*dx + dy*dy) / dt;
-    }
-    
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-    lastMoveTimeEvent = now;
-
-    if (velocity <= SPEED_LIMIT) {
-      pathQueue.push({x: e.clientX, y: e.clientY});
-    }
-
     mouseX = e.clientX;
     mouseY = e.clientY;
     lastMoveTime = now;
-    
+
     if (state === 'POPPING_UP' || state === 'EXPANDING') {
       state = 'RETRACTING';
-      holeTargetRadius = currentHoleRadius; // Wait to shrink until paws retract
-      headTargetProgress = 0; // Head retracts first
-      pawRetractStartTime = Date.now() + 500; // Paws delay
+      holeTargetRadius = currentHoleRadius;
+      headTargetProgress = 0;
+      pawRetractStartTime = Date.now() + 500;
       headPopStartTime = 0;
       earShakeStartTime = 0;
     }
@@ -303,7 +279,6 @@
 
   function draw() {
     const now = Date.now();
-    const timeSinceLastMove = now - lastMoveTime;
 
     // Blinking state update
     if (!isBlinking && Math.random() < 0.005 && (now - lastBlinkTime > 3000)) {
@@ -315,95 +290,32 @@
       lastBlinkTime = now;
     }
 
-    if (entityX === -1000) {
-      entityX = mouseX;
-      entityY = mouseY;
+    // Continuous smooth trailing bump — always lerp toward mouse, even while retracting.
+    // Only freeze bump position while the hole is OPEN and fully expanded (POPPING_UP state).
+    const holeIsOpen = state === 'POPPING_UP' && currentHoleRadius > baseRadius + 2;
+    if (holeIsOpen) {
+      // Freeze bump at the locked hole dot while bunny is fully emerged
+      bumpX = holeDot.x;
+      bumpY = holeDot.y;
     } else {
-      // Lock trailing entity to the hole dot when the hole is actively open/opening
-      if (holeDot && currentHoleRadius > baseRadius + 2) {
-        entityX = holeDot.x;
-        entityY = holeDot.y;
-        entityVX = 0;
-        entityVY = 0;
-        pathQueue = []; // clear queue to prevent jumps after closing
-        currentTarget = null;
-      } else {
-        // Standard trailing logic chasing mouse
-        // Resume ripple
-        activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
-
-        if (velocity > SPEED_LIMIT && timeSinceLastMove < 50) {
-          // High speed and actively moving: slowly slide to a stop
-          pathQueue = []; // clear any lingering points
-          currentTarget = null;
-          entityVX *= 0.92; // less friction = slides slower and further
-          entityVY *= 0.92;
-          
-          entityX += entityVX;
-          entityY += entityVY;
-        } else {
-          // Obtain a target from the queue if we don't have one
-          if (!currentTarget && pathQueue.length > 0) {
-            currentTarget = pathQueue.shift();
-          }
-
-          if (currentTarget) {
-            let dx = currentTarget.x - entityX;
-            let dy = currentTarget.y - entityY;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-
-            // If we are close to the target, consume the next points to trace smoothly
-            while (dist < 20 && pathQueue.length > 0) {
-              currentTarget = pathQueue.shift();
-              dx = currentTarget.x - entityX;
-              dy = currentTarget.y - entityY;
-              dist = Math.sqrt(dx*dx + dy*dy);
-            }
-
-            if (dist < 20 && pathQueue.length === 0) {
-              currentTarget = null; // Reached the end of the queued path
-            } else {
-              // Constant robotic path-tracing speed
-              const CONSTANT_SPEED = 10;
-              entityVX = (dx / dist) * CONSTANT_SPEED;
-              entityVY = (dy / dist) * CONSTANT_SPEED;
-              
-              entityX += entityVX;
-              entityY += entityVY;
-            }
-          } else {
-            // Queue is empty. Direct robotic relocation to mouse resting point
-            let dx = mouseX - entityX;
-            let dy = mouseY - entityY;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            
-            if (dist > 5) {
-              const CONSTANT_SPEED = 10;
-              entityVX = (dx / dist) * CONSTANT_SPEED;
-              entityVY = (dy / dist) * CONSTANT_SPEED;
-              entityX += entityVX;
-              entityY += entityVY;
-            } else {
-              entityX = mouseX;
-              entityY = mouseY;
-              entityVX = 0;
-              entityVY = 0;
-            }
-          }
-        }
-      }
+      // Always glide toward mouse — this runs during MOVING, EXPANDING, and RETRACTING
+      activeBumpRadius += (127.5 - activeBumpRadius) * 0.1;
+      const lerpFactor = 0.045; // ~1.5s glide to target
+      bumpX += (mouseX - bumpX) * lerpFactor;
+      bumpY += (mouseY - bumpY) * lerpFactor;
     }
 
-    // State Logic
-    if (state === 'MOVING' || state === 'RETRACTING') {
+    // State Logic — Bunny hole emerges ONLY from MOVING state, never from RETRACTING.
+    // This prevents a new hole opening before the previous one fully closes.
+    if (state === 'MOVING') {
       if (now - lastMoveTime > 2000 && mouseX !== -1000) {
         state = 'EXPANDING';
         
-        // Find nearest grid dot to lock onto
-        const nx = Math.round(entityX / gap) * gap;
-        const ny = Math.round(entityY / gap) * gap;
+        // Find nearest grid dot to lock onto — snap to where bump actually IS
+        const nx = Math.round(bumpX / gap) * gap;
+        const ny = Math.round(bumpY / gap) * gap;
         holeDot = { x: nx, y: ny };
-        holeTargetRadius = 60; // original full size hole
+        holeTargetRadius = 60;
       }
     }
     
@@ -411,10 +323,10 @@
     currentHoleRadius += (holeTargetRadius - currentHoleRadius) * 0.08;
     
     // Transition to popping up when hole is wide enough
-    if (state === 'EXPANDING' && currentHoleRadius > 48) { // 80% of 60
+    if (state === 'EXPANDING' && currentHoleRadius > 48) {
       state = 'POPPING_UP';
-      pawTargetProgress = 1; // Paws emerge first
-      headPopStartTime = now + 500; // 0.5s delay before head
+      pawTargetProgress = 1;
+      headPopStartTime = now + 500;
     }
     
     // Head emergence logic
@@ -436,10 +348,13 @@
       }
     }
     
-    // Transition back to moving when fully retracted
+    // Transition back to MOVING when fully retracted.
+    // IMPORTANT: reset lastMoveTime so the 2s idle timer starts fresh from this moment,
+    // preventing an immediate re-open at a stale position.
     if (state === 'RETRACTING' && currentHoleRadius < baseRadius + 1 && pawTargetProgress === 0) {
       state = 'MOVING';
       holeDot = null;
+      lastMoveTime = now; // <- reset idle timer; bump needs time to reach cursor before next open
     }
 
     // Animate pop progress
@@ -493,11 +408,11 @@
             }
           }
           
-          // Fabric Bump — follows mouse directly; freezes at holeDot when hole is open
-          const bumpX = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.x : mouseX;
-          const bumpY = (holeDot && currentHoleRadius > baseRadius + 2) ? holeDot.y : mouseY;
-          const bdx = x - bumpX;
-          const bdy = y - bumpY;
+          // Fabric Bump — bumpX/Y always reflect correct position (frozen at holeDot during POPPING_UP, gliding during all other states)
+          const curBumpX = bumpX;
+          const curBumpY = bumpY;
+          const bdx = x - curBumpX;
+          const bdy = y - curBumpY;
           const bDist = Math.sqrt(bdx*bdx + bdy*bdy);
           
           if (bDist < activeBumpRadius && activeBumpRadius > 1) {
@@ -510,15 +425,14 @@
             ctx.fillStyle = `rgba(20,20,20,${0.45 + (force * 0.35)})`;
           }
           
-          // Pre-emergence jitter: dots tremble near the cursor when idle but bunny not yet emerged
+          // Pre-emergence jitter: dots tremble near bump position when idle before bunny emerges
           const idleTime = now - lastMoveTime;
           if (idleTime > 800 && idleTime < 3000 && (state === 'MOVING' || state === 'RETRACTING' || state === 'EXPANDING')) {
-            const jdx = x - mouseX;
-            const jdy = y - mouseY;
+            const jdx = x - bumpX;
+            const jdy = y - bumpY;
             const jDist = Math.sqrt(jdx * jdx + jdy * jdy);
             const jitterRadius = 42;
             if (jDist < jitterRadius && jDist > 0) {
-              // Jitter intensity grows as idle time increases, strongest near center
               const intensity = Math.min((idleTime - 800) / 1200, 1.0);
               const proximity = (jitterRadius - jDist) / jitterRadius;
               const jitterAmt = intensity * proximity * 1.8;
