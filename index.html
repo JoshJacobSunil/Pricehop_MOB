@@ -25,41 +25,79 @@
             
             <!-- Sticky Phone Wrapper -->
             <div class="phone-mockup-wrapper">
+                
+                <!-- Popouts that go BEHIND the phone (State 3) -->
+                <img src="assets/pop out 1.png" class="floating-behind pop-behind-1 screen-hidden" id="bg-pop-1" alt="">
+                <img src="assets/pop out 2.png" class="floating-behind pop-behind-2 screen-hidden" id="bg-pop-2" alt="">
+
                 <div class="phone-frame">
-                    <!-- Actual screen images -->
+                    
+                    <!-- State 0: Hero / Initial -->
                     <div class="phone-screen screen-active" id="screen-0">
-                        <img src="assets/ip1.png" alt="Home Feed UI" class="screen-img">
-                        <div class="floating-glass-card">Swipe right to like, left to pass.</div>
+                        <img src="assets/hero.png" alt="Hero Screen" class="screen-img">
                     </div>
+
+                    <!-- State 1: Deals (Section 2) -->
                     <div class="phone-screen screen-hidden" id="screen-1">
-                        <img src="assets/ip2.png" alt="Search UI" class="screen-img">
+                        <img src="assets/hero.png" alt="Deals Screen" class="screen-img">
+                        <img src="assets/drow.png" class="floating-img-layered float-drow" alt="Drow">
+                        <img src="assets/dday.png" class="floating-img-layered float-dday" alt="Dday">
+                        <img src="assets/shoe_card.png" class="floating-img-layered float-shoe" alt="Shoe Card">
                     </div>
+
+                    <!-- State 2: Carousel (Section 4) -->
                     <div class="phone-screen screen-hidden" id="screen-2">
-                        <img src="assets/ip3.png" alt="Alerts UI" class="screen-img">
-                        <img src="assets/alert_popout.png" alt="Alert Popout" class="floating-img">
+                        <div class="carousel-grid">
+                            <img src="assets/ip1.png" alt="Phone 1">
+                            <img src="assets/ip2.png" alt="Phone 2">
+                            <img src="assets/ip3.png" alt="Phone 3">
+                            <img src="assets/ip4.png" alt="Phone 4">
+                        </div>
                     </div>
+
+                    <!-- State 3: Split Screen (Section 7) -->
+                    <div class="phone-screen screen-hidden" id="screen-3">
+                        <div class="split-screen-container">
+                            <div class="split-half">
+                                <img src="assets/Pr_comp/P_comp.png" alt="Compare Screen" class="split-img">
+                                <img src="assets/cmp_popout.png" alt="Compare Popout" class="split-popout pop-cmp">
+                            </div>
+                            <div class="split-half">
+                                <img src="assets/Pr_alert/P_alert.png" alt="Alert Screen" class="split-img">
+                                <img src="assets/alert_popout.png" alt="Alert Popout" class="split-popout pop-alert">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <!-- Scroll Text Sections -->
-            <!-- Section 2: The Setup -->
+            <!-- Section 1 -->
             <div class="scroll-text-section" data-index="0">
+                <div class="text-content">
+                    <h2>Initial View</h2>
+                </div>
+            </div>
+            
+            <!-- Section 2 -->
+            <div class="scroll-text-section" data-index="1">
                 <div class="text-content">
                     <h2>The Best Deals, All in One Feed.</h2>
                 </div>
             </div>
-            
-            <!-- Section 3: Search -->
-            <div class="scroll-text-section" data-index="1">
+
+            <!-- Section 3 -->
+            <div class="scroll-text-section" data-index="2">
                 <div class="text-content">
-                    <h2>Never Pay More Than You Have To.</h2>
+                    <h2>Carousel View</h2>
                 </div>
             </div>
 
-            <!-- Section 4: Smart Alerts -->
-            <div class="scroll-text-section" data-index="2">
+            <!-- Section 4 -->
+            <div class="scroll-text-section" data-index="3">
                 <div class="text-content">
-                    <h2>One Tap Away From a Better Price.</h2>
+                    <h2>Compare & Alert</h2>
                 </div>
             </div>
 
