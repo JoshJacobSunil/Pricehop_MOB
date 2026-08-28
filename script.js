@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const scrollyContainer = document.getElementById('scrolly-container');
-    const totalSteps = 10; // Steps 0 to 10 (11 total)
+    const totalSteps = 7; // Steps 0 to 7 (8 total)
     
     function updateScrollState() {
         const rect = scrollyContainer.getBoundingClientRect();
