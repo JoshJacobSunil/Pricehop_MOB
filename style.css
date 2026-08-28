@@ -31,13 +31,13 @@ body {
 /* Scrollytelling Track */
 .mobile-sticky-container {
   position: relative;
-  height: 800vh; /* Exactly 8 full viewports for the 8 steps */
+  height: 900vh; /* Exactly 9 full viewports for the 9 steps */
 }
 
 .phone-mockup-wrapper {
   position: sticky;
-  top: 10vh;
-  height: 80vh;
+  top: 5vh;
+  height: 68vh; /* Shrunk height to fit the stepper below */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,11 +46,12 @@ body {
 
 /* Perfect Aspect Ratio Phone */
 .phone-frame {
-  width: 85vw;
-  max-width: 320px;
+  width: auto;
+  max-width: 85vw;
+  height: 100%;
   aspect-ratio: 9 / 19.5;
-  border: 12px solid #ddd; /* Gray border */
-  border-radius: 40px;
+  border: 10px solid #ddd; /* Gray border */
+  border-radius: 35px;
   background-color: #fff;
   overflow: hidden;
   position: relative;
@@ -76,7 +77,117 @@ body[data-step="3"] #screen-3,
 body[data-step="4"] #screen-4,
 body[data-step="5"] #screen-5,
 body[data-step="6"] #screen-6,
-body[data-step="7"] #screen-7 { opacity: 1; }
+body[data-step="7"] #screen-7,
+body[data-step="8"] #screen-8 { opacity: 1; }
+
+/* Stepper Overlay */
+.stepper-overlay {
+    position: fixed;
+    bottom: 3vh;
+    left: 5vw;
+    width: 90vw;
+    background: rgba(26, 26, 28, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    z-index: 100;
+    color: #fff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    text-align: left;
+}
+.stepper-overlay.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.stepper-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+    padding: 0 5px;
+}
+.step-line {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    right: 10px;
+    height: 3px;
+    background: #333;
+    z-index: 1;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+.step-line-active {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    height: 3px;
+    background: #fff;
+    z-index: 2;
+    transform: translateY(-50%);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+    width: 0%;
+}
+.step-node {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #222;
+    border: 2px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    transition: all 0.4s ease;
+}
+.step-node.completed {
+    background: #fff;
+    border-color: #fff;
+    color: #000;
+}
+.step-node.active {
+    border-color: #fff;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 0 5px rgba(255,255,255,0.15);
+}
+.stepper-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.stepper-badge {
+    display: inline-block;
+    background: #20409a; /* Blue tint for In Progress */
+    color: #60a5fa; 
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.stepper-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+}
+.stepper-desc {
+    font-size: 0.95rem;
+    color: #aaa;
+    line-height: 1.4;
+}
 
 /* Footer */
 .footer-section { background: #f9f9f9; padding-top: 50px; }
