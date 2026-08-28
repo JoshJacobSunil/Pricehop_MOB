@@ -36,8 +36,8 @@ body {
 
 .phone-mockup-wrapper {
   position: sticky;
-  top: 15vh; /* Moved 10% further down from 5vh */
-  height: 68vh;
+  top: 10vh; /* Moved 5% higher from 15vh */
+  height: 73vh; /* Increased height by 5% from 68vh */
   display: flex;
   align-items: center;
   justify-content: center;
