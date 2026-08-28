@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 // Trigger deployment build 
 export default defineConfig({
+  base: '/Pricehop_MOB/',
   plugins: [],
   build: {
     outDir: 'dist',
