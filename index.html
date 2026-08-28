@@ -1,388 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pricehop - 3D Experience</title>
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricehop</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <!-- Global Elements -->
+    <nav class="top-navbar">
+        <div class="logo">PRICEHOP</div>
+    </nav>
+    <div id="progress-bar"></div>
 
+    <main>
+        <!-- Section 1: Hero -->
+        <section class="section hero">
+            <h1 class="title">PRICEHOP</h1>
+            <h2 class="subtitle">WE DON'T JUST COMPARE, WE VALUE.</h2>
+        </section>
 
-  <!-- The WebGL Canvas for 3D Model -->
-  <canvas id="webgl-canvas"></canvas>
-  <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
-  <img id="popup-image" class="popout-element" src="/src/assets/shoe_card.png" alt="Popup Image" />
-  <img id="drow-popup" class="popout-element" src="/src/assets/drow.png" alt="Drow Popup" />
-  <div id="drow-text" class="popout-element popout-headline-text">
-    <h2 class="main-headline">See Best Deals<br>in Best Platforms</h2>
-  </div>
-  <img id="logo-strip" class="popout-element popout-logo" src="/src/assets/logo strip.png" alt="Logo Strip" />
-  <div id="dday-text" class="popout-element popout-headline-text">
-    <h2 class="main-headline">Discover Today's<br>Biggest Deal</h2>
-  </div>
-  <img id="logo-strip-2" class="popout-element popout-logo" src="/src/assets/logo strip 2.png" alt="Logo Strip 2" />
-  <img id="dday-popup" class="popout-element" src="/src/assets/dday.png" alt="Dday Popup" />
-  <img id="popout-1" class="popout-element" src="/src/assets/pop out 1.png" alt="Popout 1" />
-  <img id="popout-2" class="popout-element" src="/src/assets/pop out 2.png" alt="Popout 2" />
-  <img id="alert-popout" class="popout-element popout-shadow" src="/src/assets/alert_popout.png" alt="Alert Popout" />
-  <img id="cmp-popout" class="popout-element popout-shadow" src="/src/assets/cmp_popout.png" alt="Cmp Popout" />
-
-  <!-- Left-hand 6-Dot Scroll Progress Indicator (Green & White theme) -->
-  <nav id="section-nav" class="section-nav" aria-label="Page progress">
-    <div class="nav-track"></div>
-    <!-- Continuous traveling green glowing dot -->
-    <div class="nav-glide-dot" id="nav-glide-dot"></div>
-
-    <button class="nav-dot active" data-section="0" aria-label="Part 1: Home">
-      <span class="nav-tooltip">01 Home</span>
-    </button>
-    <button class="nav-dot" data-section="1" aria-label="Part 2: Deals & Feed">
-      <span class="nav-tooltip">02 Deals & Feed</span>
-    </button>
-    <button class="nav-dot" data-section="2" aria-label="Part 3: Search">
-      <span class="nav-tooltip">03 Search</span>
-    </button>
-    <button class="nav-dot" data-section="3" aria-label="Part 4: Features">
-      <span class="nav-tooltip">04 Features</span>
-    </button>
-    <button class="nav-dot" data-section="4" aria-label="Part 5: Smart Alerts">
-      <span class="nav-tooltip">05 Smart Alerts</span>
-    </button>
-    <button class="nav-dot" data-section="5" aria-label="Part 6: Waitlist">
-      <span class="nav-tooltip">06 Waitlist</span>
-    </button>
-  </nav>
-
-  <!-- Scrollable content sections -->
-  <main class="scroll-container">
-    <section class="section hero" id="section-1">
-      <div class="content-wrapper pos-top">
-        <h1 class="title">PRICEHOP</h1>
-        <h2 class="subtitle">WE DON'T JUST COMPARE, WE VALUE.</h2>
-      </div>
-    </section>
-
-    <section class="section" id="section-2">
-      <div class="content-wrapper pos-top">
-        <h2 class="main-headline">The Best Deals, All in One Feed.</h2>
-      </div>
-    </section>
-
-    <!-- Split Section: Discover / Swipe (Top Headline + Bottom Action) -->
-    <section class="section split-section" id="section-2b">
-      <div class="content-wrapper split-top">
-        <h2 class="main-headline">Discover More,<br>Spend Less on Items You Like.</h2>
-      </div>
-      <div class="content-wrapper split-bottom">
-        <p class="impact-statement gradient-text">Swipe right to like,<br>left to pass.</p>
-        <button class="glowing-btn">Try this Feature</button>
-      </div>
-    </section>
-
-    <!-- Split Section: Search (Top Headline + Bottom Impact) -->
-    <section class="section split-section" id="section-3">
-      <div class="content-wrapper split-top">
-        <h2 class="main-headline">Everything Starts<br>With a Search.</h2>
-      </div>
-      <div class="content-wrapper split-bottom">
-        <p class="impact-statement gradient-text">Never Pay More<br>Than You Have To.</p>
-      </div>
-    </section>
-
-    <section class="section" id="section-4" style="height: 150vh;">
-      <div class="content-wrapper"></div>
-    </section>
-
-    <section class="section" id="section-5" style="height: 150vh;">
-      <div class="content-wrapper"></div>
-    </section>
-
-    <section class="section" id="section-6" style="height: 150vh;">
-      <div class="content-wrapper"></div>
-    </section>
-
-    <!-- Split Section: Smart Alerts (Top Headline + Bottom Copy) -->
-    <section class="section split-section" id="section-7" style="height: 150vh;">
-      <div class="content-wrapper split-top">
-        <h2 class="main-headline">One Tap Away<br>From a Better Price.</h2>
-      </div>
-      <div class="content-wrapper split-bottom">
-        <p class="impact-statement gradient-text">Enable price alerts<br>and let Pricehop<br>monitor the price for you.</p>
-      </div>
-    </section>
-
-    <section class="section" id="section-8" style="height: 120vh;">
-      <div class="content-wrapper"></div>
-    </section>
-
-    <footer class="countdown-page" id="section-about">
-      <div class="countdown-wrapper">
-        <!-- Live Deal Scanner Ticker -->
-        <div class="live-ticker-wrapper">
-          <div class="live-ticker-content">
-            <div class="ticker-item"><span>iPhone 15 Pro</span> ➔ Amazon: <del>₹1,19,900</del> | Pricehop: <span
-                class="highlight">₹1,14,500</span> (Saved ₹5,400)</div>
-            <div class="ticker-item"><span>Sony WH-1000XM5</span> ➔ Croma: <del>₹29,990</del> | Pricehop: <span
-                class="highlight">₹24,990</span> (Saved ₹5,000)</div>
-            <div class="ticker-item"><span>Nike Air Jordan</span> ➔ Myntra: <del>₹11,495</del> | Pricehop: <span
-                class="highlight">₹9,195</span> (Saved ₹2,300)</div>
-            <div class="ticker-item"><span>MacBook Air M3</span> ➔ Reliance Digital: <del>₹1,14,900</del> | Pricehop:
-              <span class="highlight">₹1,09,900</span> (Saved ₹5,000)
+        <!-- Sticky Phone Sections Container -->
+        <div class="mobile-sticky-container">
+            
+            <!-- Sticky Phone Wrapper -->
+            <div class="phone-mockup-wrapper">
+                <div class="phone-frame">
+                    <!-- Actual screen images -->
+                    <div class="phone-screen screen-active" id="screen-0">
+                        <img src="assets/ip1.png" alt="Home Feed UI" class="screen-img">
+                        <div class="floating-glass-card">Swipe right to like, left to pass.</div>
+                    </div>
+                    <div class="phone-screen screen-hidden" id="screen-1">
+                        <img src="assets/ip2.png" alt="Search UI" class="screen-img">
+                    </div>
+                    <div class="phone-screen screen-hidden" id="screen-2">
+                        <img src="assets/ip3.png" alt="Alerts UI" class="screen-img">
+                        <img src="assets/alert_popout.png" alt="Alert Popout" class="floating-img">
+                    </div>
+                </div>
             </div>
-            <!-- Duplicate for seamless looping -->
-            <div class="ticker-item"><span>iPhone 15 Pro</span> ➔ Amazon: <del>₹1,19,900</del> | Pricehop: <span
-                class="highlight">₹1,14,500</span> (Saved ₹5,400)</div>
-            <div class="ticker-item"><span>Sony WH-1000XM5</span> ➔ Croma: <del>₹29,990</del> | Pricehop: <span
-                class="highlight">₹24,990</span> (Saved ₹5,000)</div>
-            <div class="ticker-item"><span>Nike Air Jordan</span> ➔ Myntra: <del>₹11,495</del> | Pricehop: <span
-                class="highlight">₹9,195</span> (Saved ₹2,300)</div>
-            <div class="ticker-item"><span>MacBook Air M3</span> ➔ Reliance Digital: <del>₹1,14,900</del> | Pricehop:
-              <span class="highlight">₹1,09,900</span> (Saved ₹5,000)
+
+            <!-- Scroll Text Sections -->
+            <!-- Section 2: The Setup -->
+            <div class="scroll-text-section" data-index="0">
+                <div class="text-content">
+                    <h2>The Best Deals, All in One Feed.</h2>
+                </div>
             </div>
-          </div>
+            
+            <!-- Section 3: Search -->
+            <div class="scroll-text-section" data-index="1">
+                <div class="text-content">
+                    <h2>Never Pay More Than You Have To.</h2>
+                </div>
+            </div>
+
+            <!-- Section 4: Smart Alerts -->
+            <div class="scroll-text-section" data-index="2">
+                <div class="text-content">
+                    <h2>One Tap Away From a Better Price.</h2>
+                </div>
+            </div>
+
         </div>
 
-        <h2 class="countdown-title">PRICEHOP APP RELEASE</h2>
-        <p class="countdown-subtitle">Get ready to discover value. Launching in:</p>
+        <!-- Section 5: Waitlist & Footer -->
+        <section class="section footer-section">
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    <div class="ticker__item">🔥 iPhone 15 Pro - Price Dropped ₹5000</div>
+                    <div class="ticker__item">🔥 Sony WH-1000XM5 - Lowest Price Today</div>
+                    <div class="ticker__item">🔥 MacBook Air M2 - Save 15%</div>
+                </div>
+            </div>
 
-        <!-- Timer Display Grid -->
-        <div id="release-timer" class="timer-grid">
-          <div class="timer-segment">
-            <span id="timer-days" class="timer-number">100</span>
-            <span class="timer-label">Days</span>
-          </div>
-          <div class="timer-segment">
-            <span id="timer-hours" class="timer-number">00</span>
-            <span class="timer-label">Hours</span>
-          </div>
-          <div class="timer-segment">
-            <span id="timer-minutes" class="timer-number">00</span>
-            <span class="timer-label">Minutes</span>
-          </div>
-          <div class="timer-segment">
-            <span id="timer-seconds" class="timer-number">00</span>
-            <span class="timer-label">Seconds</span>
-          </div>
-        </div>
+            <div class="countdown-container">
+                <div class="countdown-item"><span id="days">00</span>Days</div>
+                <div class="countdown-item"><span id="hours">00</span>Hours</div>
+                <div class="countdown-item"><span id="minutes">00</span>Minutes</div>
+                <div class="countdown-item"><span id="seconds">00</span>Seconds</div>
+            </div>
 
-        <!-- Waitlist signup form -->
-        <div class="waitlist-container">
-          <p class="waitlist-title">Be the first to scan & save. Secure early access:</p>
-          <form class="waitlist-form"
-            onsubmit="event.preventDefault(); alert('You are on the list! Early access code will be sent to your email.'); this.reset();">
-            <input type="email" placeholder="Enter your email address" required class="waitlist-input" />
-            <button type="submit" class="waitlist-btn">Notify Me</button>
-          </form>
-          <!-- Privacy Policy & Terms access button -->
-          <!-- Delete account page lives at /delete-account.html (Google Play compliance) but is not linked here -->
-          <div class="footer-privacy-wrapper" style="margin-top: 18px;">
-            <button id="footer-privacy-btn" class="footer-privacy-btn" type="button">
-              <span>Privacy Policy & Terms</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16 2a7 7 0 0 0-5.65 11.13L2.4 21.07a1 1 0 0 0 .7 1.7h3a1 1 0 0 0 1-1v-2h2a1 1 0 0 0 1-1v-2h2a1 1 0 0 0 .7-1.7L11.5 13.7A7 7 0 1 0 16 2Zm0 5a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
+            <div class="waitlist-form">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Notify Me</button>
+            </div>
 
-      <div class="footer-disclosures">
-        <p class="disclosure-text">
-          <strong>Affiliate Disclosure:</strong> Pricehop is a price comparison platform. We partner with affiliate
-          programs (including Amazon Associates, Flipkart Affiliate Program, and QLinks). When you click on product
-          links to stores, we may earn a referral commission at no additional cost to you.
-        </p>
-        <p class="disclosure-text">
-          <strong>Trademark Disclaimer:</strong> All product names, logos, brands, and registered trademarks displayed
-          on this site (including Amazon, Flipkart, Tira, Myntra) are property of their respective owners. Use of these
-          names and marks does not imply endorsement or official affiliation.
-        </p>
-      </div>
+            <footer class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Disclosures</a>
+                <a href="#">Copyright © 2026 Pricehop</a>
+            </footer>
+        </section>
+    </main>
 
-      <div class="footer-bottom">
-        <p>&copy; 2026 Pricehop Technologies Inc. All rights reserved.</p>
-      </div>
-    </footer>
-  </main>
-
-  <div id="privacy-nav" style="position: fixed; top: 20px; right: 30px; z-index: 9999; background: rgba(255, 255, 255, 0.95); padding: 10px 16px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease; border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
-    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #222;">Privacy Policy</span>
-        <svg id="privacy-key-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color: #444; transition: color 0.2s ease;">
-      <path d="M16 2a7 7 0 0 0-5.65 11.13L2.4 21.07a1 1 0 0 0 .7 1.7h3a1 1 0 0 0 1-1v-2h2a1 1 0 0 0 1-1v-2h2a1 1 0 0 0 .7-1.7L11.5 13.7A7 7 0 1 0 16 2Zm0 5a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
-    </svg>
-  </div>
-
-  <div id="privacy-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s ease;">
-    <div style="width: 95%; max-width: 1100px; font-family: 'Inter', sans-serif; position: relative; transform: translateY(20px); transition: transform 0.3s ease; display: flex; flex-direction: column; align-items: center;">
-      <button id="privacy-modal-close" style="position: absolute; top: -50px; right: 0; background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: #fff; transition: background 0.2s; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; backdrop-filter: blur(5px);">&times;</button>
-      <h2 style="margin-top: 0; margin-bottom: 30px; font-size: 28px; font-weight: 600; letter-spacing: -0.5px; color: #fff;">Privacy Policy & Terms</h2>
-      <div style="display: flex; gap: 30px; width: 100%; margin-bottom: 35px; flex-wrap: wrap;">
-      <div class="scrollable-box" data-lenis-prevent="true" style="flex: 1; min-width: 300px; height: 60vh; overflow-y: scroll; color: #444; line-height: 1.6; font-size: 15px; padding: 40px; border-radius: 20px; background: #fff; box-shadow: 0 10px 30px rgba(10,98,1,0.15); border: 2px solid #0a6201; outline: 3px solid rgba(10,98,1,0.15); outline-offset: 4px;">
-        <h3 style="margin-top: 0; color: #111;">Privacy Policy</h3>
-<p><strong>Last Updated: June 6, 2026</strong></p>
-
-<h4 style="margin-top: 20px; color: #333;">1. Introduction & Developer Identity</h4>
-<p>This Privacy Policy governs the use of Price Hop, a mobile application developed by Milan Sojan and Josh Jacob Sunil. We are committed to protecting user privacy and ensuring transparent data practices.</p>
-<p>For questions, contact us at: milansojanm@gmail.com or joshjacobsunil@gmail.com</p>
-
-<h4 style="margin-top: 20px; color: #333;">2. Information We Collect (Data Types)</h4>
-<p>Since the app has a wishlist, a feed, and push notifications, the following data is collected:</p>
-<ul style="padding-left: 20px;">
-  <li><strong>Account Data:</strong> Phone number (required for login via SMS verification), email address (optional for notifications and account recovery), and name (via Google Sign-In or manual entry).</li>
-  <li><strong>Location Data:</strong> Pin code provided by the user to track which platform offers the fastest delivery for their location.</li>
-  <li><strong>App Usage & Preferences:</strong> Data on products viewed, wishlisted items, search history, and categories browsed (Electronics, Fashion, Beauty, etc.) to curate your personalized feed.</li>
-  <li><strong>Device Identifiers:</strong> Device ID (Android ID / iOS Identifier), IP address, device model, and operating system version required to deliver real-time push notifications for price drops.</li>
-  <li><strong>Affiliate Tracking Data:</strong> Click data when you click affiliate links to Amazon and Flipkart. These stores may place cookies on your device to track purchases for affiliate commission purposes.</li>
-</ul>
-
-<h4 style="margin-top: 20px; color: #333;">3. How We Use Your Information (Purpose)</h4>
-<p>We use the information we collect strictly to:</p>
-<ul style="padding-left: 20px;">
-  <li>Synchronize your shopping wishlist across devices so you can track products for price drops.</li>
-  <li>Deliver real-time price drop alerts via push notifications when products in your wishlist drop in price.</li>
-  <li>Analyse viewing patterns to personalize your feed and show relevant deals based on categories you browse.</li>
-  <li>Monitor app performance and fix technical crashes to improve features and stability.</li>
-  <li>Compare delivery speeds across platforms using your pin code to show which platform offers fastest delivery for your location.</li>
-  <li>Earn affiliate revenue when you buy through our links, which helps us maintain the app.</li>
-</ul>
-
-<h4 style="margin-top: 20px; color: #333;">4. Third-Party Data Processing</h4>
-<p>We do not sell your personal data. We may share anonymized or technical data with third-party service providers to monitor application stability and user engagement. These third parties process data strictly under their own privacy protocols.</p>
-<p>Third-party services we use:</p>
-<ul style="padding-left: 20px;">
-  <li><strong>Supabase:</strong> Database hosting (stores your wishlist, account data, pin code, and app data)</li>
-  <li><strong>Firebase:</strong> Analytics (app usage tracking) and push notifications</li>
-  <li><strong>Google Sign-In:</strong> Authentication (login via Google, optional)</li>
-  <li><strong>CueLinks Affiliate Network:</strong> Universal affiliate tracking and redirect optimization across supported Indian e-commerce stores (Amazon, Flipkart, Myntra, Nykaa, Ajio, Purplle, Tata CLiQ, Snapdeal)</li>
-</ul>
-<p><strong>Affiliate Tracking & Revenue Disclosure:</strong><br>
-Pricehop is a price comparison engine supported by its users. When you purchase through links on our app (such as Amazon, Flipkart, Myntra, Nykaa, etc.), we may earn an affiliate commission at no additional cost to you through the CueLinks affiliate network. CueLinks and retailer stores may place tracking cookies or parameters on your device to attribute your purchase for commission purposes. This does not affect product pricing or ranking.</p>
-<p style="margin-top: 10px;"><strong>Automated Live Price Verification:</strong><br>
-To provide you with the most accurate and real-time prices, Pricehop occasionally establishes secure, anonymous background connections (via "Incognito" browser modes) to third-party stores like Amazon and Flipkart. This process fetches public price data and temporary security clearance cookies. This process NEVER accesses, reads, or stores your personal login sessions, account details, or personally identifiable information (PII).</p>
-<p style="margin-top: 10px;"><strong>Intellectual Property & Trademarks:</strong><br>
-All product names, logos, brands, and other trademarks displayed on Pricehop are the property of their respective owners. All company, product, and service names used in this App are for identification and comparison purposes only. The use of these names, logos, and brands does not imply endorsement, sponsorship, or affiliation with Pricehop.</p>
-
-<h4 style="margin-top: 20px; color: #333;">5. User Rights & Data Deletion Mandate</h4>
-<p>You have the right to access, update, or delete your personal information at any time.</p>
-<p>If you wish to delete your account and erase all saved wishlist, preference data, and pin code from our servers, you can do so directly within the App Settings screen by clicking "Delete Account", or by contacting us at milansojanm@gmail.com or joshjacobsunil@gmail.com. We will process your deletion request within 30 days.</p>
-<p>Your rights include:</p>
-<ul style="padding-left: 20px;">
-  <li><strong>Access:</strong> Request a copy of all data we have about you by emailing us.</li>
-  <li><strong>Delete:</strong> Delete your account and all data (we will process within 30 days)</li>
-  <li><strong>Opt Out:</strong> Disable push notifications in app settings; disable affiliate cookies in browser settings; update or remove your pin code in app settings</li>
-  <li><strong>Correct:</strong> Update your phone number, name, and email in app profile settings</li>
-</ul>
-
-<h4 style="margin-top: 20px; color: #333;">6. Children's Privacy Compliance</h4>
-<p>Our application is not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If we discover that a child under 13 has provided us with personal data, we will delete it immediately from our servers.</p>
-
-<h4 style="margin-top: 20px; color: #333;">7. What We DO NOT Collect</h4>
-<p>For transparency, we want to clarify what data we do NOT collect:</p>
-<ul style="padding-left: 20px;">
-  <li><strong>Full GPS Location:</strong> We do NOT collect your exact GPS coordinates or live location, only the pin code you manually provide</li>
-  <li><strong>Payment Data:</strong> We do NOT collect credit card or payment information (you buy directly from Amazon/Flipkart)</li>
-  <li><strong>Contacts:</strong> We do NOT access your contacts</li>
-  <li><strong>Camera/Microphone:</strong> We do NOT access camera or microphone</li>
-  <li><strong>Photos:</strong> We do NOT access your photos unless you upload a screenshot (optional feature)</li>
-</ul>
-
-<h4 style="margin-top: 20px; color: #333;">8. Contact Information</h4>
-<p>If you have any questions regarding this Privacy Policy or our data practices, please contact us at:</p>
-<p>Email: milansojanm@gmail.com, joshjacobsunil@gmail.com<br>
-Developer: Milan Sojan and Josh Jacob Sunil<br>
-Response Time: We will respond to privacy requests within 30 days</p>
-
-<h4 style="margin-top: 20px; color: #333;">9. App Tracking Transparency (iOS Only)</h4>
-<p>We use affiliate cookies to earn revenue when you buy through our links. You can disable tracking in iOS Settings → Privacy → Tracking. If you disable tracking, affiliate cookies may not work, but the app will still function normally.</p>
-
-<h4 style="margin-top: 20px; color: #333;">10. Policy Updates</h4>
-<p>We may update this privacy policy occasionally. We will notify you via app notification or email when policy changes. New policy takes effect immediately after notification.</p>
-
-
-      </div>
-      <div class="scrollable-box" data-lenis-prevent="true" style="flex: 1; min-width: 300px; height: 60vh; overflow-y: scroll; color: #444; line-height: 1.6; font-size: 15px; padding: 40px; border-radius: 20px; background: #fff; box-shadow: 0 10px 30px rgba(10,98,1,0.15); border: 2px solid #0a6201; outline: 3px solid rgba(10,98,1,0.15); outline-offset: 4px;">
-        <h3 style="margin-top: 0; color: #111;">Terms & Conditions</h3>
-<p><strong>Last Updated: June 18, 2026</strong></p>
-
-<p>Welcome to Pricehop. By downloading, accessing, or using the Pricehop app ("App"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, please do not use the App. Pricehop is a price-comparison and product discovery platform.</p>
-
-<h4 style="margin-top: 20px; color: #333;">1. Pricing & Accuracy ("As-Is" Clause)</h4>
-<p>Pricehop aggregates prices from various third-party e-commerce platforms (such as Amazon, Flipkart, Myntra, etc.). Prices, availability, and offers change rapidly on these platforms.<br>
-Pricehop provides pricing data strictly on an "AS-IS" basis. We do not guarantee the accuracy, completeness, or timeliness of the prices displayed. The final price, availability, and shipping costs at the checkout page of the partner platform are the only valid details.</p>
-
-<h4 style="margin-top: 20px; color: #333;">2. Third-Party Links & Transactions (Not the Seller)</h4>
-<p>Pricehop is not a retailer, manufacturer, or seller. We act solely as a discovery platform and affiliate partner.<br>
-When you click on a product link, you are redirected to a third-party website to complete your purchase. Pricehop is not responsible for fulfilling orders, processing payments, handling returns, or customer service related to your purchase. Any disputes, claims, or issues regarding a purchased product must be taken up directly with the third-party seller or platform.</p>
-
-<h4 style="margin-top: 20px; color: #333;">3. Intellectual Property & Trademarks</h4>
-<p>All product names, logos, brands, and other trademarks displayed on Pricehop are the property of their respective owners.<br>
-All company, product, and service names used in this App are for identification and comparison purposes only. The use of these names, logos, and brands does not imply endorsement, sponsorship, or affiliation with Pricehop.</p>
-
-<h4 style="margin-top: 20px; color: #333;">4. Affiliate Disclosure</h4>
-<p>Pricehop participates in various affiliate marketing programs. We may earn a commission when you click on links to partner platforms and make a qualifying purchase. This does not affect the price you pay for the product.</p>
-
-<h4 style="margin-top: 20px; color: #333;">5. Limitation of Liability</h4>
-<p>To the maximum extent permitted by law, Pricehop and its developers shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from:<br>
-(i) your access to or use of or inability to access or use the App;<br>
-(ii) any conduct or content of any third party on the App;<br>
-(iii) any unauthorized access, use, or alteration of your transmissions or content.</p>
-      
-      </div>
-    </div>
-      <button id="privacy-modal-accept" style="background: #fff; color: #111; border: none; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform 0.2s, background 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">Let's get started</button>
-    </div>
-  </div>
-
-  <style>
-    @keyframes continuous-shake {
-      0% { transform: translateX(0) rotate(0); color: #d32f2f; }
-      25% { transform: translateX(-3px) rotate(-8deg); color: #d32f2f; }
-      50% { transform: translateX(0) rotate(0); color: #d32f2f; }
-      75% { transform: translateX(3px) rotate(8deg); color: #d32f2f; }
-      100% { transform: translateX(0) rotate(0); color: #d32f2f; }
-    }
-    .shake-animation {
-      animation: continuous-shake 0.2s linear infinite !important;
-    }
-    #privacy-nav:hover {
-      background: #fff !important;
-      transform: translateY(-1px);
-    }
-    #privacy-modal-close:hover {
-      color: #111 !important;
-      background: #fff !important;
-    }
-    #privacy-modal-accept:hover {
-      background: #0a6201 !important;
-      color: #fff !important;
-      transform: scale(1.03);
-    }
-
-    .scrollable-box::-webkit-scrollbar {
-      width: 10px;
-    }
-    .scrollable-box::-webkit-scrollbar-track {
-      background: #f1f1f1; 
-      border-radius: 10px;
-      margin: 10px;
-    }
-    .scrollable-box::-webkit-scrollbar-thumb {
-      background: #0a6201; 
-      border-radius: 10px;
-      border: 2px solid #f1f1f1;
-    }
-    .scrollable-box::-webkit-scrollbar-thumb:hover {
-      background: #064000; 
-    }
-
-  </style>
-
-  <script type="module" src="/background.js"></script>
-  <script type="module" src="/main.js"></script>
+    <script src="script.js"></script>
 </body>
-
 </html>
