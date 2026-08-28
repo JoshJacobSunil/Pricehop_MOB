@@ -31,7 +31,7 @@ body {
 /* Scrollytelling Track */
 .mobile-sticky-container {
   position: relative;
-  height: 800vh; /* Exactly 8 full viewports for the 8 steps */
+  height: 600vh; /* Exactly 6 full viewports for the 6 steps */
 }
 
 .phone-mockup-wrapper {
@@ -49,7 +49,7 @@ body {
   width: 85vw;
   max-width: 320px;
   aspect-ratio: 9 / 19.5;
-  border: 12px solid var(--accent-color); /* Dark green border */
+  border: 12px solid #222; /* Close to black border */
   border-radius: 40px;
   background-color: #fff;
   overflow: hidden;
@@ -74,9 +74,7 @@ body[data-step="1"] #screen-1,
 body[data-step="2"] #screen-2,
 body[data-step="3"] #screen-3,
 body[data-step="4"] #screen-4,
-body[data-step="5"] #screen-5,
-body[data-step="6"] #screen-6,
-body[data-step="7"] #screen-7 { opacity: 1; }
+body[data-step="5"] #screen-5 { opacity: 1; }
 
 /* Footer */
 .footer-section { background: #f9f9f9; padding-top: 50px; }
