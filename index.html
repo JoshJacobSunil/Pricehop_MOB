@@ -15,32 +15,21 @@
   <!-- The WebGL Canvas for 3D Model -->
   <canvas id="webgl-canvas"></canvas>
   <!-- Popup image moved outside scroll container to allow true z-index sorting with the canvas -->
-  <img id="popup-image" src="/src/assets/shoe_card.png" alt="Popup Image"
-    style="position: fixed; top: 50%; left: 50%; transform: scale(1.15); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <img id="drow-popup" src="/src/assets/drow.png" alt="Drow Popup"
-    style="position: fixed; top: 50%; left: 50%; transform: scale(0.26); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <div id="drow-text"
-    style="position: fixed; top: 28%; left: 50%; opacity: 0; z-index: 10; pointer-events: none; text-align: center; width: max-content;">
-    <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">See Best Deals<br>in Best Platforms</h2>
+  <img id="popup-image" class="popout-element" src="/src/assets/shoe_card.png" alt="Popup Image" />
+  <img id="drow-popup" class="popout-element" src="/src/assets/drow.png" alt="Drow Popup" />
+  <div id="drow-text" class="popout-element popout-headline-text">
+    <h2 class="main-headline">See Best Deals<br>in Best Platforms</h2>
   </div>
-  <img id="logo-strip" src="/src/assets/logo strip.png" alt="Logo Strip"
-    style="position: fixed; top: calc(72% + 60px); left: 50%; width: 12vw; opacity: 0; z-index: 10; pointer-events: none;" />
-  <div id="dday-text"
-    style="position: fixed; top: 25%; left: 50%; opacity: 0; z-index: 10; pointer-events: none; text-align: center; width: max-content;">
-    <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">Discover Today's<br>Biggest Deal</h2>
+  <img id="logo-strip" class="popout-element popout-logo" src="/src/assets/logo strip.png" alt="Logo Strip" />
+  <div id="dday-text" class="popout-element popout-headline-text">
+    <h2 class="main-headline">Discover Today's<br>Biggest Deal</h2>
   </div>
-  <img id="logo-strip-2" src="/src/assets/logo strip 2.png" alt="Logo Strip 2"
-    style="position: fixed; top: calc(72% + 80px); left: 50%; width: 12vw; opacity: 0; z-index: 10; pointer-events: none;" />
-  <img id="dday-popup" src="/src/assets/dday.png" alt="Dday Popup"
-    style="position: fixed; top: 50%; left: 50%; transform: scale(0.35); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <img id="popout-1" src="/src/assets/pop out 1.png" alt="Popout 1"
-    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <img id="popout-2" src="/src/assets/pop out 2.png" alt="Popout 2"
-    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none;" />
-  <img id="alert-popout" src="/src/assets/alert_popout.png" alt="Alert Popout"
-    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none; filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.3));" />
-  <img id="cmp-popout" src="/src/assets/cmp_popout.png" alt="Cmp Popout"
-    style="position: fixed; top: calc(50% + 5px); left: 50%; transform: scale(1.2); opacity: 0; max-height: 70vh; z-index: 0; pointer-events: none; filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.3));" />
+  <img id="logo-strip-2" class="popout-element popout-logo" src="/src/assets/logo strip 2.png" alt="Logo Strip 2" />
+  <img id="dday-popup" class="popout-element" src="/src/assets/dday.png" alt="Dday Popup" />
+  <img id="popout-1" class="popout-element" src="/src/assets/pop out 1.png" alt="Popout 1" />
+  <img id="popout-2" class="popout-element" src="/src/assets/pop out 2.png" alt="Popout 2" />
+  <img id="alert-popout" class="popout-element popout-shadow" src="/src/assets/alert_popout.png" alt="Alert Popout" />
+  <img id="cmp-popout" class="popout-element popout-shadow" src="/src/assets/cmp_popout.png" alt="Cmp Popout" />
 
   <!-- Left-hand 6-Dot Scroll Progress Indicator (Green & White theme) -->
   <nav id="section-nav" class="section-nav" aria-label="Page progress">
@@ -71,94 +60,63 @@
   <!-- Scrollable content sections -->
   <main class="scroll-container">
     <section class="section hero" id="section-1">
-      <div class="content-wrapper">
-        <h1 class="title" style="font-size: 6.3rem; z-index: 10;">PRICEHOP</h1>
-        <h2 class="subtitle" style="font-size: 2.52rem; z-index: 10;">WE DON'T JUST COMPARE, WE VALUE.</h2>
+      <div class="content-wrapper pos-top">
+        <h1 class="title">PRICEHOP</h1>
+        <h2 class="subtitle">WE DON'T JUST COMPARE, WE VALUE.</h2>
       </div>
     </section>
 
     <section class="section" id="section-2">
-      <div class="content-wrapper align-left"
-        style="left: 10vw; min-width: auto; width: 28vw; word-wrap: break-word; margin-top: - 5px;">
-        <!-- <p class="eyebrow">HOME FEED</p> -->
+      <div class="content-wrapper pos-top">
         <h2 class="main-headline">The Best Deals, All in One Feed.</h2>
-        <!-- <h3 class="sub-headline">No searching through countless websites.</h3>
-        <p class="body-text">Your home feed brings together trending products, hot deals, and the latest price drops in one continuously updated experience. Fresh discoveries are always waiting.</p> -->
       </div>
     </section>
 
-    <!-- NEW SECTION for middle screen and blur popup -->
+    <!-- Split Section: Discover / Swipe (Top Headline + Bottom Action) -->
     <section class="section split-section" id="section-2b">
-      <div class="content-wrapper split-left"
-        style="top: 50%; left: 8vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
-        <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">Discover More,<br>Spend Less on<br>Items
-          You Like.</h2>
+      <div class="content-wrapper split-top">
+        <h2 class="main-headline">Discover More,<br>Spend Less on Items You Like.</h2>
       </div>
-      <div class="content-wrapper split-right"
-        style="top: 50%; right: 8vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
-        <p class="impact-statement gradient-text" style="font-size: 2.52rem; line-height: 1.2;">Swipe right to
-          like,<br>left to pass.</p>
-        <button class="glowing-btn" style="margin-top: 40px;">Try this Feature</button>
+      <div class="content-wrapper split-bottom">
+        <p class="impact-statement gradient-text">Swipe right to like,<br>left to pass.</p>
+        <button class="glowing-btn">Try this Feature</button>
       </div>
     </section>
 
+    <!-- Split Section: Search (Top Headline + Bottom Impact) -->
     <section class="section split-section" id="section-3">
-      <div class="content-wrapper split-left"
-        style="top: 50%; left: calc(5vw + 40px); transform: translateY(-50%); max-width: 25vw; text-align: center;">
-        <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">Everything Starts<br>With a Search.</h2>
+      <div class="content-wrapper split-top">
+        <h2 class="main-headline">Everything Starts<br>With a Search.</h2>
       </div>
-      <div class="content-wrapper split-right"
-        style="top: 50%; right: 5vw; transform: translateY(-50%); max-width: 25vw; text-align: center;">
-        <p class="impact-statement gradient-text" style="font-size: 2.52rem; line-height: 1.2;">Never Pay More<br>Than
-          You Have To.</p>
+      <div class="content-wrapper split-bottom">
+        <p class="impact-statement gradient-text">Never Pay More<br>Than You Have To.</p>
       </div>
     </section>
 
-    <section class="section" id="section-4" style="height: 200vh;">
-      <div class="content-wrapper align-left" style="margin-left: 10vw;">
-      </div>
+    <section class="section" id="section-4" style="height: 150vh;">
+      <div class="content-wrapper"></div>
     </section>
 
-    <section class="section" id="section-5" style="height: 200vh;">
-      <div class="content-wrapper align-right">
-      </div>
+    <section class="section" id="section-5" style="height: 150vh;">
+      <div class="content-wrapper"></div>
     </section>
 
-    <section class="section" id="section-6">
-      <div class="content-wrapper align-right">
-      </div>
+    <section class="section" id="section-6" style="height: 150vh;">
+      <div class="content-wrapper"></div>
     </section>
 
+    <!-- Split Section: Smart Alerts (Top Headline + Bottom Copy) -->
     <section class="section split-section" id="section-7" style="height: 150vh;">
-      <div class="content-wrapper split-left"
-        style="top: 65%; left: calc(50% - 440px); transform: translate(-50%, -50%); max-width: 25vw; text-align: center;">
-        <div class="arrow-down">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-        </div>
-        <h2 class="main-headline" style="font-size: 2.52rem; line-height: 1.2;">One Tap Away<br>From a Better Price.
-        </h2>
+      <div class="content-wrapper split-top">
+        <h2 class="main-headline">One Tap Away<br>From a Better Price.</h2>
       </div>
-      <div class="content-wrapper split-right"
-        style="top: 35%; left: calc(50% + 440px); transform: translate(-50%, -50%); max-width: 25vw; text-align: center;">
-        <p class="impact-statement gradient-text" style="font-size: 2.52rem; line-height: 1.2;">Enable price
-          alerts<br>and let Pricehop<br>monitor the price for you.</p>
-        <div class="arrow-up">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"></line>
-            <polyline points="5 12 12 5 19 12"></polyline>
-          </svg>
-        </div>
+      <div class="content-wrapper split-bottom">
+        <p class="impact-statement gradient-text">Enable price alerts<br>and let Pricehop<br>monitor the price for you.</p>
       </div>
     </section>
 
-    <section class="section" id="section-8" style="height: 150vh;">
-      <div class="content-wrapper">
-      </div>
+    <section class="section" id="section-8" style="height: 120vh;">
+      <div class="content-wrapper"></div>
     </section>
 
     <footer class="countdown-page" id="section-about">

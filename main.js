@@ -72,10 +72,15 @@ gsap.ticker.add((time) => {
 gsap.ticker.lagSmoothing(0);
 
 // 2. Camera Setup
+// On mobile, use visualViewport for the initial canvas dimensions so the renderer
+// is correctly sized from frame 0 (window.innerHeight can include browser chrome).
+const vvpInit = window.visualViewport;
+const initIsMobile = window.innerWidth <= 768;
 const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+  width:  initIsMobile && vvpInit ? Math.round(vvpInit.width)  : window.innerWidth,
+  height: initIsMobile && vvpInit ? Math.round(vvpInit.height) : window.innerHeight,
 };
+
 const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100);
 camera.position.z = 6;
 scene.add(camera);
@@ -322,19 +327,20 @@ gltfLoader.load(`${import.meta.env.BASE_URL}${import.meta.env.VITE_GLB_MODEL_PAT
     endPhones.push(clone);
   }
 
-  // Setup Initial State (Hero)
-  // Big, front-facing, top 20% visible
-  // To show top 20%, we shift it up relative to the camera
-  // --- SIZE EDITING: Change initialScale to modify the starting size ---
-  let initialScale = 50.0; // Really big scale (was 15.0)
-  if (window.innerWidth < 768) initialScale = 63.0; // Responsive scale (was 9.0)
+  // Setup Initial State (Hero) - Centered in middle of any phone
+  const isMobile = window.innerWidth <= 768;
+  const initialScale = isMobile ? 11.8 : 15.0;
 
   phoneGroup.scale.set(initialScale, initialScale, initialScale);
-  phoneGroup.position.set(0, -4.5, 0); // Moved down so camera sees top
-  phoneGroup.rotation.set(0, Math.PI, 0);
+  phoneGroup.position.set(0, 0, 0); // Positioned right in the middle
+  phoneGroup.rotation.set(0, Math.PI, 0); // Front facing
 
   // Setup GSAP ScrollTrigger Animations
   setupScrollAnimations();
+
+  // Project phone screen-space edges and set CSS custom properties
+  // so text zones are anchored strictly above (left→top) and below (right→bottom) the phone
+  updatePhoneEdgeVars();
 }, undefined, (error) => {
   console.warn("Could not load the 3D phone model. Using fallback image.", error);
   // Show fallback image inside canvas if loading fails
@@ -350,9 +356,8 @@ gltfLoader.load(`${import.meta.env.BASE_URL}${import.meta.env.VITE_GLB_MODEL_PAT
 let mainTimeline;
 
 function setupScrollAnimations() {
-  // We have 6 sections. 
-  // Hero (0) -> Section 2 (1) -> Section 3 (2) -> Section 4 (3) -> Section 5 (4) -> Section 6 (5)
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.innerWidth <= 768;
+  const phoneScale = isMobile ? 11.8 : 15.0;
 
   mainTimeline = gsap.timeline({
     scrollTrigger: {
@@ -363,40 +368,45 @@ function setupScrollAnimations() {
     }
   });
 
-  // --- SIZE EDITING: Modify the 'scale' values in the timelines below (x, y, z must be equal) ---
+  // Ensure phone remains centered at (0, 0, 0)
+  phoneGroup.position.set(0, 0, 0);
+  phoneGroup.scale.set(phoneScale, phoneScale, phoneScale);
+  phoneGroup.rotation.set(0, Math.PI, 0);
 
-  // Section 2: Minimizes, remains in center, front-facing
-  mainTimeline.to(phoneGroup.position, { x: 0, y: 0, z: 0, ease: 'power1.inOut' }, 0)
-    .to(phoneGroup.scale, { x: 18.5, y: 18.5, z: 18.5, ease: 'power1.inOut' }, 0)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 0);
-
-  gsap.set(['#popup-image', '#popout-1', '#popout-2', '#alert-popout', '#cmp-popout'], { xPercent: -50, yPercent: -50 });
-  gsap.set('#drow-text', { xPercent: -50, yPercent: -50 });
-  gsap.set('#logo-strip', { xPercent: -50, yPercent: -50 });
-  gsap.set('#dday-text', { xPercent: -50, yPercent: -50 });
-  gsap.set('#logo-strip-2', { xPercent: -50, yPercent: -50 });
-  // --- NEW DEALSROW POPOUT ---
-  gsap.set('#drow-popup', {
-    xPercent: -50,
-    yPercent: -50,
-    left: '50%',
-    x: -65, // Shifted 5 pixels further right
-    y: 35,
-    scale: 0.35, // Decreased size by 75%
-    opacity: 0, // Initially hidden
-    zIndex: -1
-  });
-
-  gsap.set('#dday-popup', {
-    xPercent: -50,
-    yPercent: -50,
-    left: '50%',
+  // Set all popout elements centered at scale 0.2 and hidden
+  gsap.set(['#popup-image', '#popout-1', '#popout-2', '#alert-popout', '#cmp-popout', '#drow-popup', '#dday-popup'], {
     x: 0,
-    y: 45, // Bring entirely down 10 pixels initially
-    scale: 0.43, // Scaled up 30% larger than DROW
+    y: 0,
+    scale: 0.2,
     opacity: 0,
-    zIndex: -1
+    transformOrigin: 'center center'
   });
+
+  gsap.set(['#drow-text', '#dday-text', '#logo-strip', '#logo-strip-2'], {
+    x: 0,
+    y: 0,
+    opacity: 0,
+    transformOrigin: 'center center'
+  });
+
+  // Select text wrappers
+  const text1 = document.querySelector('#section-1 .content-wrapper');
+  const text2 = document.querySelector('#section-2 .content-wrapper');
+  const text2bTop = document.querySelector('#section-2b .split-top');
+  const text2bBottom = document.querySelector('#section-2b .split-bottom');
+  const text3Top = document.querySelector('#section-3 .split-top');
+  const text3Bottom = document.querySelector('#section-3 .split-bottom');
+  const text7Top = document.querySelector('#section-7 .split-top');
+  const text7Bottom = document.querySelector('#section-7 .split-bottom');
+
+  if (text1) gsap.set(text1, { opacity: 1, y: 0 });
+  if (text2) gsap.set(text2, { opacity: 0, y: 25 });
+  if (text2bTop) gsap.set(text2bTop, { opacity: 0, y: -20 });
+  if (text2bBottom) gsap.set(text2bBottom, { opacity: 0, y: 20 });
+  if (text3Top) gsap.set(text3Top, { opacity: 0, y: -20 });
+  if (text3Bottom) gsap.set(text3Bottom, { opacity: 0, y: 20 });
+  if (text7Top) gsap.set(text7Top, { opacity: 0, y: -20 });
+  if (text7Bottom) gsap.set(text7Bottom, { opacity: 0, y: 20 });
 
   let screenAnim = { frame: 0 };
 
@@ -414,329 +424,90 @@ function setupScrollAnimations() {
     }
   };
 
-  // --- DROW POPUP ---
-  // Screen Anim to 5
-  mainTimeline.to(screenAnim, { frame: 5, ease: "none", duration: 0.1, onUpdate: updateScreenShader }, 0.5);
+  // 1. HERO -> FEED (Time 0.0 - 0.6)
+  if (text1) mainTimeline.to(text1, { opacity: 0, y: -25, duration: 0.3, ease: 'power2.in' }, 0.1);
+  if (text2) mainTimeline.to(text2, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 0.25);
+  if (text2) mainTimeline.to(text2, { opacity: 0, y: -25, duration: 0.3, ease: 'power2.in' }, 0.55);
 
-  // Pop out drow popup
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 0.6);
-  mainTimeline.to('#drow-popup', { scale: 0.38, opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 0.6);
-  mainTimeline.set('#drow-popup', { zIndex: 10 }, 0.75);
+  // 2. DROW POPOUT (Time 0.6 - 1.4)
+  mainTimeline.to(screenAnim, { frame: 5, ease: "none", duration: 0.1, onUpdate: updateScreenShader }, 0.6);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 0.7);
+  mainTimeline.to('#drow-popup', { scale: isMobile ? 0.44 : 0.50, opacity: 1, duration: 0.35, ease: 'back.out(1.2)' }, 0.7);
+  mainTimeline.fromTo('#drow-text', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 0.7);
+  mainTimeline.fromTo('#logo-strip', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 0.7);
 
-  // Shift phone left, drow popup moves right
-  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : -1.5, ease: 'power1.inOut', duration: 0.3 }, 0.9);
-  mainTimeline.to(phoneGroup.rotation, { y: Math.PI + Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 0.9);
-  mainTimeline.to('#drow-popup', { x: '25vw', scale: 0.42, ease: 'power2.inOut', duration: 0.3 }, 0.9);
-  // Slide text and logo strip in from right
-  mainTimeline.fromTo('#drow-text',
-    { opacity: 0, x: '75vw', y: 0 },
-    { opacity: 1, x: '25vw', y: 0, ease: 'power2.out', duration: 0.3 },
-    0.9
-  );
-  mainTimeline.fromTo('#logo-strip',
-    { opacity: 0, x: '75vw', y: 0 },
-    { opacity: 1, x: '25vw', y: 0, ease: 'power2.out', duration: 0.3 },
-    0.9
-  );
+  // Drow Popout Retracts Back In
+  mainTimeline.to('#drow-popup', { scale: 0.2, opacity: 0, duration: 0.3, ease: 'power2.in' }, 1.15);
+  mainTimeline.to('#drow-text', { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }, 1.15);
+  mainTimeline.to('#logo-strip', { opacity: 0, y: 20, duration: 0.3, ease: 'power2.in' }, 1.15);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.3, ease: 'power2.inOut' }, 1.15);
 
-  // Slide drow popup, text, and logo strip out to the right, phone returns to center
-  mainTimeline.to('#drow-popup', { x: -65, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.3);
-  mainTimeline.to('#drow-text', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
-  mainTimeline.to('#logo-strip', { opacity: 0, x: '100vw', duration: 0.4, ease: 'power2.in' }, 1.3);
-  mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 1.3);
-  mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 1.3);
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 1.3);
+  // 3. DDAY POPOUT (Time 1.5 - 2.4)
+  mainTimeline.to(screenAnim, { frame: 225, ease: "none", duration: 0.3, onUpdate: updateScreenShader }, 1.5);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 1.6);
+  mainTimeline.to('#dday-popup', { scale: isMobile ? 0.52 : 0.58, opacity: 1, duration: 0.35, ease: 'back.out(1.2)' }, 1.6);
+  mainTimeline.fromTo('#dday-text', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 1.6);
+  mainTimeline.fromTo('#logo-strip-2', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 1.6);
 
-  // --- DDAY POPUP ---
-  // Screen Anim to 225
-  mainTimeline.to(screenAnim, { frame: 225, ease: "none", duration: 0.4, onUpdate: updateScreenShader }, 1.7);
+  // Dday Popout Retracts Back In
+  mainTimeline.to('#dday-popup', { scale: 0.2, opacity: 0, duration: 0.3, ease: 'power2.in' }, 2.1);
+  mainTimeline.to('#dday-text', { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }, 2.1);
+  mainTimeline.to('#logo-strip-2', { opacity: 0, y: 20, duration: 0.3, ease: 'power2.in' }, 2.1);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.3, ease: 'power2.inOut' }, 2.1);
 
-  // Pop out dday popup
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(3px)', duration: 0.3, ease: 'power2.inOut' }, 2.1);
-  mainTimeline.to('#dday-popup', { scale: 0.49, opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 2.1);
-  mainTimeline.set('#dday-popup', { zIndex: 10 }, 2.25);
+  // 4. SHOE CARD POPOUT (Time 2.5 - 3.8)
+  mainTimeline.to(screenAnim, { frame: seqUrls.length, ease: "none", duration: 0.2, onUpdate: updateScreenShader }, 2.5);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(4px)', duration: 0.35, ease: 'power2.inOut' }, 2.6);
+  mainTimeline.to('#popup-image', { scale: isMobile ? 0.95 : 1.1, opacity: 1, duration: 0.4, ease: 'back.out(1.2)' }, 2.6);
 
-  // Shift phone right, dday popup moves left
-  mainTimeline.to(phoneGroup.position, { x: isMobile ? 0 : 1.5, ease: 'power1.inOut', duration: 0.3 }, 2.5);
-  mainTimeline.to(phoneGroup.rotation, { y: Math.PI - Math.PI / 6, ease: 'power1.inOut', duration: 0.3 }, 2.5);
-  mainTimeline.to('#dday-popup', { x: '-25vw', scale: 0.55, ease: 'power2.inOut', duration: 0.3 }, 2.5);
+  // Shoe Card Retracts Back In
+  mainTimeline.to('#popup-image', { scale: 0.2, opacity: 0, duration: 0.35, ease: 'power2.in' }, 3.35);
+  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.35, ease: 'power2.inOut' }, 3.35);
 
-  // Slide text and logo strip 2 in from left
-  mainTimeline.fromTo('#dday-text',
-    { opacity: 0, x: '-75vw', y: 0 },
-    { opacity: 1, x: '-25vw', y: 0, ease: 'power2.out', duration: 0.3 },
-    2.5
-  );
-  mainTimeline.fromTo('#logo-strip-2',
-    { opacity: 0, x: '-75vw', y: 0 },
-    { opacity: 1, x: '-25vw', y: 0, ease: 'power2.out', duration: 0.3 },
-    2.5
-  );
+  // 5. SECTION 2B: DISCOVER & SWIPE (Time 3.9 - 5.1)
+  if (text2bTop) mainTimeline.to(text2bTop, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 3.9);
+  if (text2bBottom) mainTimeline.to(text2bBottom, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 3.9);
+  if (text2bTop) mainTimeline.to(text2bTop, { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in' }, 4.7);
+  if (text2bBottom) mainTimeline.to(text2bBottom, { opacity: 0, y: 20, duration: 0.4, ease: 'power2.in' }, 4.7);
 
-  // Slide dday popup, text, and logo strip 2 out to the left, phone returns to center
-  mainTimeline.to('#dday-popup', { x: 0, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.9);
-  mainTimeline.to('#dday-text', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
-  mainTimeline.to('#logo-strip-2', { opacity: 0, x: '-100vw', duration: 0.4, ease: 'power2.in' }, 2.9);
-  mainTimeline.to(phoneGroup.position, { x: 0, ease: 'power1.inOut', duration: 0.4 }, 2.9);
-  mainTimeline.to(phoneGroup.rotation, { y: Math.PI, ease: 'power1.inOut', duration: 0.4 }, 2.9);
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.4, ease: 'power2.inOut' }, 2.9);
-
-  // Finish screen animation
-  mainTimeline.to(screenAnim, {
-    frame: seqUrls.length,
-    ease: "none",
-    duration: 0.2,
-    onUpdate: updateScreenShader
-  }, 3.3);
-
-  // Blur canvas and show popup image
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(6px)', duration: 0.5, ease: 'power2.inOut' }, 3.5);
-  mainTimeline.to('#popup-image', { scale: 1.38, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 3.5);
-  mainTimeline.set('#popup-image', { zIndex: 10 }, 3.75);
-
-  // Undo blur and hide popup when moving to next section
-  mainTimeline.to('#webgl-canvas', { filter: 'blur(0px)', duration: 0.5, ease: 'power2.inOut' }, 5.0);
-  mainTimeline.to('#popup-image', { scale: 1.15, duration: 0.5, ease: 'power2.inOut' }, 5.0);
-  mainTimeline.set('#popup-image', { zIndex: 0 }, 5.25);
-  mainTimeline.set('#popup-image', { opacity: 0 }, 5.5);
-
-  // Section 3: Zooms back in to center, top 40% seen (Old T=1)
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -2.2, z: 0, ease: 'power1.inOut' }, 5.5)
-    .to(phoneGroup.scale, { x: 36.5, y: 36.5, z: 36.5, ease: 'power1.inOut' }, 5.5)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI, z: 0, ease: 'power1.inOut' }, 5.5);
-
-  mainTimeline.to(screenAnim, {
-    frame: seqUrls.length + 161,
-    ease: "none",
-    onUpdate: updateScreenShader
-  }, 5.95);
-
+  // 6. SECTION 3: SEARCH (Time 5.2 - 6.7)
   mainTimeline.to(screenAnim, {
     frame: seqUrls.length + secondSeqUrls.length,
     ease: "none",
     duration: 0.8,
     onUpdate: updateScreenShader
-  }, 6.7);
+  }, 5.2);
+  if (text3Top) mainTimeline.to(text3Top, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 5.2);
+  if (text3Bottom) mainTimeline.to(text3Bottom, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 5.2);
+  if (text3Top) mainTimeline.to(text3Top, { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in' }, 6.3);
+  if (text3Bottom) mainTimeline.to(text3Bottom, { opacity: 0, y: 20, duration: 0.4, ease: 'power2.in' }, 6.3);
 
-  mainTimeline.call(() => {
-    targetRotation = Math.round(targetRotation / (Math.PI * 2)) * (Math.PI * 2);
-  }, null, 6.5);
-
-  // Section 4: 360-Degree Spinning Circle (Carousel)
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -0.9, z: 0, ease: 'power1.inOut' }, 6.5)
-    .to(phoneGroup.scale, { x: 11.7, y: 11.7, z: 11.7, ease: 'power1.inOut' }, 6.5);
-
-  const radius = 0.143;
-
-  const mainPhone = phoneGroup.children[0];
-  mainTimeline.to(mainPhone.position, {
-    x: Math.sin(0) * radius,
-    y: 0,
-    z: -Math.cos(0) * radius,
-    ease: 'power1.inOut'
-  }, 6.5);
-  mainTimeline.to(mainPhone.rotation, {
-    y: 0,
-    ease: 'power1.inOut'
-  }, 6.5);
-
-  extraPhones.forEach((phone, i) => {
-    const index = i + 1;
-    const angle = -index * (Math.PI * 2 / 5);
-    const startTime = 6.5 + (i * 0.1);
-
-    const targetX = Math.sin(angle) * radius;
-    const targetZ = -Math.cos(angle) * radius;
-
-    phone.position.set(targetX, 0, targetZ);
-    phone.rotation.set(0, -angle, 0);
-
-    mainTimeline.set(phone, { visible: true }, startTime);
-
-    mainTimeline.fromTo(phone.scale, {
-      x: 0.001, y: 0.001, z: 0.001
-    }, {
-      x: 1, y: 1, z: 1,
-      ease: 'power2.out'
-    }, startTime);
-  });
-
-  mainTimeline.to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, duration: 0.8, ease: 'power1.inOut' }, 6.7);
-
-  mainTimeline.call(() => {
-    targetRotation = Math.round(targetRotation / (Math.PI * 2)) * (Math.PI * 2);
-  }, null, 7.5);
-
-  // Section 5: Extra phones go up and disappear, main phone back to normal center
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 7.5)
-    .to(phoneGroup.scale, { x: 18.0, y: 18.0, z: 18.0, ease: 'power1.inOut' }, 7.5);
-
-  mainTimeline.to(screenAnim, {
-    frame: allSeqUrls.length - fourthSeqUrls.length,
-    ease: "none",
-    duration: 1.0,
-    onUpdate: updateScreenShader
-  }, 7.5);
-
-  mainTimeline.to(mainPhone.position, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 7.5);
-  mainTimeline.to(mainPhone.rotation, { x: 0, y: 0, z: 0, ease: 'power2.inOut' }, 7.5);
-
-  extraPhones.forEach((phone, i) => {
-    mainTimeline.to(phone.position, {
-      y: 1.5,
-      x: Math.sin(-i * Math.PI) * 0.5,
-      ease: 'power2.inOut'
-    }, 7.5);
-    mainTimeline.to(phone.scale, {
-      x: 0.001, y: 0.001, z: 0.001,
-      ease: 'power2.inOut'
-    }, 7.5);
-    mainTimeline.set(phone, { visible: false }, 8.5);
-  });
-
-  // Section 6: Keep at center, straight and front facing
-  mainTimeline.to(phoneGroup.position, { x: 0, y: -1.5, z: 0, ease: 'power1.inOut' }, 8.5)
-    .to(phoneGroup.rotation, { x: 0, y: Math.PI * 3, z: 0, ease: 'power1.inOut' }, 8.5);
-
+  // 7. SECTIONS 4, 5, 6: FEATURES SHOWCASE (Time 6.8 - 8.5)
   mainTimeline.to(screenAnim, {
     frame: allSeqUrls.length,
     ease: "none",
-    duration: 1.0,
+    duration: 1.4,
     onUpdate: updateScreenShader
-  }, 8.5);
+  }, 6.8);
+  mainTimeline.to(phoneGroup.rotation, { y: Math.PI * 3, duration: 1.4, ease: 'power1.inOut' }, 6.9);
 
-  // Section 7: Popout images split
-  // Show popup images (no blur)
-  mainTimeline.to(['#popout-1', '#popout-2'], { scale: 1.3, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 9.5);
-  mainTimeline.set(['#popout-1', '#popout-2'], { zIndex: 10 }, 9.75);
+  // 8. SECTION 7: PRICE ALERTS & COMPARE (Time 8.7 - 11.2)
+  if (text7Top) mainTimeline.to(text7Top, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 8.7);
+  if (text7Bottom) mainTimeline.to(text7Bottom, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 8.7);
 
-  // Split left and right
-  mainTimeline.to('#popout-1', { x: -440, duration: 0.5, ease: 'power2.inOut' }, 10.0);
-  mainTimeline.to('#popout-2', { x: 440, duration: 0.5, ease: 'power2.inOut' }, 10.0);
+  // Popout 1 & 2: Pop out in center & retract back in
+  mainTimeline.to(['#popout-1', '#popout-2'], { scale: isMobile ? 0.88 : 1.0, opacity: 1, duration: 0.35, ease: 'back.out(1.2)' }, 9.0);
+  mainTimeline.to(['#popout-1', '#popout-2'], { scale: 0.2, opacity: 0, duration: 0.35, ease: 'power2.in' }, 9.5);
 
-  // Grab specific text wrappers
-  const text2 = document.querySelector('#section-2 .content-wrapper');
-  const text2bLeft = document.querySelector('#section-2b .split-left');
-  const text2bRight = document.querySelector('#section-2b .split-right');
-  const text3Left = document.querySelector('#section-3 .split-left');
-  const text3Right = document.querySelector('#section-3 .split-right');
-  const text4 = document.querySelector('#section-4 .content-wrapper');
-  const text5 = document.querySelector('#section-5 .content-wrapper');
-  const text6 = document.querySelector('#section-6 .content-wrapper');
-  const text7Left = document.querySelector('#section-7 .split-left');
-  const text7Right = document.querySelector('#section-7 .split-right');
+  // Compare & Alert Popouts: Pop out in center & retract back in
+  mainTimeline.to(['#cmp-popout', '#alert-popout'], { scale: isMobile ? 0.88 : 1.0, opacity: 1, duration: 0.35, ease: 'back.out(1.2)' }, 10.0);
+  mainTimeline.to(['#cmp-popout', '#alert-popout'], { scale: 0.2, opacity: 0, duration: 0.35, ease: 'power2.in' }, 10.5);
 
-  // Text 2: Fade in, slide in from the left, float slightly
-  mainTimeline.fromTo(text2, { opacity: 0, y: -80, x: -100 }, { opacity: 1, y: -95, x: -20, duration: 0.5, ease: 'power2.out' }, 0.25);
-  mainTimeline.to(text2, { y: -100, duration: 0.65, ease: 'none' }, 0.75);
-  mainTimeline.to(text2, { opacity: 0, x: -500, duration: 0.3, ease: 'power2.inOut' }, 0.9);
+  if (text7Top) mainTimeline.to(text7Top, { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in' }, 10.9);
+  if (text7Bottom) mainTimeline.to(text7Bottom, { opacity: 0, y: 20, duration: 0.4, ease: 'power2.in' }, 10.9);
 
-  const glowingBtn = document.querySelector('.glowing-btn');
-  if (glowingBtn) {
-    mainTimeline.set(glowingBtn, { opacity: 0 }, 0);
-    mainTimeline.set(glowingBtn, { opacity: 1 }, 3.98); // Appear at completely popped out state
-    mainTimeline.set(glowingBtn, { opacity: 0 }, 5.01); // Disappear if it goes back in even by a pixel
-  }
-
-  if (text2bLeft) mainTimeline.fromTo(text2bLeft, { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 3.5);
-  if (text2bRight) mainTimeline.fromTo(text2bRight, { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 3.5);
-
-  if (text2bLeft) mainTimeline.to(text2bLeft, { opacity: 0, x: -300, duration: 0.5, ease: 'power2.in' }, 5.0);
-  if (text2bRight) mainTimeline.to(text2bRight, { opacity: 0, x: 300, duration: 0.5, ease: 'power2.in' }, 5.0);
-
-  // Text 3: Slide in from the sides
-  mainTimeline.fromTo(text3Left, { opacity: 0, x: -100 }, { opacity: 1, x: -40, duration: 0.5, ease: 'power2.out' }, 5.75);
-  mainTimeline.fromTo(text3Right, { opacity: 0, x: 100 }, { opacity: 1, x: 40, duration: 0.5, ease: 'power2.out' }, 5.75);
-  mainTimeline.to([text3Left, text3Right], { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 6.5);
-
-  mainTimeline.to(text4, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 6.75);
-  mainTimeline.to(text4, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 7.5);
-
-  mainTimeline.to(text5, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 7.75);
-  mainTimeline.to(text5, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 8.5);
-
-  mainTimeline.to(text6, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, 8.75);
-  mainTimeline.to(text6, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, 9.5);
-
-  // Text 7: Fade in text blocks
-  if (text7Left) mainTimeline.fromTo(text7Left, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
-  if (text7Right) mainTimeline.fromTo(text7Right, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 10.0);
-
-  // Calculate exact X position to center on popout1 and popout2 (which are at +/- 440px)
-  // View height at camera z=5, fov=45 is approx 4.142
-  const viewHeight = 2 * 5 * Math.tan((45 * Math.PI) / 360);
-  // Decrease horizontal distance by 10% (multiplier 0.9)
-  const targetPhoneX = ((440 / window.innerHeight) * viewHeight / 18.0) * 0.9;
-  // Left phone: Top-Left to Middle-Left (Strictly vertical)
-  mainTimeline.set(endPhones[0], { visible: true }, 10.6);
-  mainTimeline.fromTo(endPhones[0].position,
-    { x: -targetPhoneX, y: 0.3, z: 0 },
-    { x: -targetPhoneX, y: 0, z: 0, duration: 0.5, ease: 'power2.out' },
-    10.6
-  );
-  // Phone enters front-facing
-  mainTimeline.set(endPhones[0].rotation, { x: 0, y: 0, z: 0 }, 10.6);
-
-  // Right phone: Bottom-Right to Middle-Right (Strictly vertical)
-  mainTimeline.set(endPhones[1], { visible: true }, 10.6);
-  mainTimeline.fromTo(endPhones[1].position,
-    { x: targetPhoneX, y: -0.3, z: 0 },
-    { x: targetPhoneX, y: 0, z: 0, duration: 0.5, ease: 'power2.out' },
-    10.6
-  );
-  // Phone enters front-facing
-  mainTimeline.set(endPhones[1].rotation, { x: 0, y: 0, z: 0 }, 10.6);
-
-  // Slide main phone completely DOWN and off-screen
-  mainTimeline.to(phoneGroup.children[0].position, { y: -3.0, duration: 0.5, ease: 'power2.out' }, 10.6);
-
-  // Left elements slide UP (Reversed)
-  mainTimeline.to('#popout-1', { y: -window.innerHeight * 0.5 - 200, opacity: 0, duration: 0.5, ease: 'power2.out' }, 10.6);
-  if (text7Left) {
-    mainTimeline.to(text7Left, { opacity: 0, y: -window.innerHeight * 0.5, duration: 0.5, ease: 'power2.out' }, 10.6);
-  }
-
-  // Right elements slide DOWN (Reversed)
-  mainTimeline.to('#popout-2', { y: window.innerHeight * 0.5 + 200, opacity: 0, duration: 0.5, ease: 'power2.out' }, 10.6);
-  if (text7Right) {
-    mainTimeline.to(text7Right, { opacity: 0, y: window.innerHeight * 0.5, duration: 0.5, ease: 'power2.out' }, 10.6);
-  }
-
-  // Setup new popouts behind the phones (shifted 40px outward total)
-  mainTimeline.set('#alert-popout', { opacity: 0, x: -480, y: 15, zIndex: -1, scale: 1 }, 10.6);
-  mainTimeline.set('#cmp-popout', { opacity: 0, x: 480, zIndex: -1, scale: 1 }, 10.6);
-
-  // Section 9: New Popouts Slide to Center & Phones Rotate
-  const popoutEmergeTime = 11.1;
-  const popoutEmergeDuration = 0.4;
-  const popoutSlideTime = 11.5;
-  const popoutSlideDuration = 1.0;
-
-  // Step 1: Images emerge (pop out) from behind the phones
-  mainTimeline.to('#alert-popout', { x: -440, y: 35, scale: 1.03, opacity: 1, duration: popoutEmergeDuration, ease: 'back.out(1.5)' }, popoutEmergeTime);
-  mainTimeline.to('#cmp-popout', { x: 440, y: 45, scale: 1.03, opacity: 1, duration: popoutEmergeDuration, ease: 'back.out(1.5)' }, popoutEmergeTime);
-
-  // Bring images to the front (over the phones) right before they slide to the center
-  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: 10 }, popoutSlideTime);
-
-  // Step 2: Once visible, they slide to the center (offset by 20px)
-  mainTimeline.to('#alert-popout', { x: 20, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
-  mainTimeline.to('#cmp-popout', { x: 20, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
-
-  // Phones rotate synchronously while the images slide to the center
-  mainTimeline.to(endPhones[0].rotation, { y: -Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
-  mainTimeline.to(endPhones[1].rotation, { y: Math.PI / 12, duration: popoutSlideDuration, ease: 'power2.inOut' }, popoutSlideTime);
-
-  // 1. Remove Old Animation: Delete the lateral exit animations
-  // 2. New Scroll-Triggered Transition: Entire previous section slides UP vertically
-  const slideUpTime = 12.8;
-  const slideUpDuration = 2.2; // Match the dummy padding duration to sync with footer scrolling in
-
-  // Lower z-index so the scrolling footer page (z-index 2) can cover them
-  mainTimeline.set(['#alert-popout', '#cmp-popout'], { zIndex: 1 }, slideUpTime);
-
-  mainTimeline.to('#webgl-canvas', { y: "-100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
-  mainTimeline.to(['#alert-popout', '#cmp-popout'], { y: "-=100vh", duration: slideUpDuration, ease: 'none' }, slideUpTime);
+  // 9. TRANSITION INTO COUNTDOWN FOOTER (Time 11.2 - 12.4)
+  mainTimeline.to('#webgl-canvas', { y: "-100vh", duration: 1.2, ease: 'none' }, 11.2);
 }
 
 // 6. Interaction Logic for Hover (formerly Dragging)
@@ -821,19 +592,28 @@ window.addEventListener('pointermove', (e) => {
   }
 });
 
-// 7. Resize Handler (Optimized to ignore vertical shift from mobile address bars)
+// 7. Resize Handler — uses visualViewport on mobile for pixel-accurate canvas sizing.
+// window.innerHeight includes browser chrome (address bars, gesture handles) on some
+// mobile browsers, causing the canvas to be sized incorrectly and the GLB to appear
+// off-centre. visualViewport.height is the true rendered rectangle height.
 let lastWidth = window.innerWidth;
-window.addEventListener('resize', () => {
-  const currentWidth = window.innerWidth;
-  const currentHeight = window.innerHeight;
 
-  // Ignore small vertical-only changes caused by mobile browser URL bars hiding/showing
-  if (currentWidth === lastWidth && Math.abs(currentHeight - sizes.height) < 120) {
+function handleResize() {
+  // On mobile, prefer visualViewport which excludes browser chrome.
+  // Fall back to window dimensions on desktop or where API isn't available.
+  const vvp = window.visualViewport;
+  const isMobileBreakpoint = window.innerWidth <= 768;
+
+  const currentWidth  = isMobileBreakpoint && vvp ? Math.round(vvp.width)  : window.innerWidth;
+  const currentHeight = isMobileBreakpoint && vvp ? Math.round(vvp.height) : window.innerHeight;
+
+  // For desktop: still skip vertical-only changes caused by URL bar jitter.
+  if (!isMobileBreakpoint && currentWidth === lastWidth && Math.abs(currentHeight - sizes.height) < 120) {
     return;
   }
 
   lastWidth = currentWidth;
-  sizes.width = currentWidth;
+  sizes.width  = currentWidth;
   sizes.height = currentHeight;
 
   camera.aspect = sizes.width / sizes.height;
@@ -841,7 +621,64 @@ window.addEventListener('resize', () => {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
+
+  // Re-project phone edges after canvas resize
+  updatePhoneEdgeVars();
+
+  ScrollTrigger.refresh();
+}
+
+window.addEventListener('resize', handleResize);
+
+// visualViewport fires when the address bar appears/hides on mobile — window.resize
+// often doesn't fire for those sub-threshold changes, so this is the reliable source.
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', handleResize);
+}
+
+// 7b. Dynamic Phone Edge Projection
+// Projects the 3D phone's bounding box top/bottom into screen-space pixel Y values
+// and exposes them as CSS custom properties so text can be anchored strictly above/below.
+// Left-side text (desktop) = top text (mobile). Right-side text = bottom text.
+function updatePhoneEdgeVars() {
+  if (!phoneGroup || phoneGroup.children.length === 0) return;
+
+  // Force matrix updates so projection is accurate after any resize
+  phoneGroup.updateWorldMatrix(true, true);
+
+  // Compute world-space bounding box of the phone group
+  const box = new THREE.Box3().setFromObject(phoneGroup);
+
+  // Project the top-center and bottom-center points of the bounding box
+  const topPoint    = new THREE.Vector3(
+    (box.min.x + box.max.x) / 2,
+    box.max.y,
+    (box.min.z + box.max.z) / 2
+  );
+  const bottomPoint = new THREE.Vector3(
+    (box.min.x + box.max.x) / 2,
+    box.min.y,
+    (box.min.z + box.max.z) / 2
+  );
+
+  // Project from 3D world space → NDC [-1, 1] → screen pixel Y
+  topPoint.project(camera);
+  bottomPoint.project(camera);
+
+  // NDC Y: +1 = top of screen, -1 = bottom of screen
+  // Convert to CSS pixel: pixelY = (1 - ndcY) / 2 * viewportHeight
+  const vh = sizes.height;
+  const topPx    = Math.round((1 - topPoint.y)    / 2 * vh);
+  const bottomPx = Math.round((1 - bottomPoint.y) / 2 * vh);
+
+  // Clamp to sane range to avoid text going fully off-screen
+  const safeTopPx    = Math.max(0,  Math.min(topPx,    vh * 0.45));
+  const safeBottomPx = Math.max(vh * 0.55, Math.min(bottomPx, vh));
+
+  document.documentElement.style.setProperty('--phone-top-edge',    `${safeTopPx}px`);
+  document.documentElement.style.setProperty('--phone-bottom-edge', `${safeBottomPx}px`);
+}
+
 
 // 8. Animation Loop
 const clock = new THREE.Clock();
@@ -896,7 +733,7 @@ const tick = () => {
 
   // Check global popout state
   let isAnyPopoutVisible = false;
-  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2'];
+  const popouts = ['#drow-popup', '#dday-popup', '#popup-image', '#popout-1', '#popout-2', '#cmp-popout', '#alert-popout'];
   for (let selector of popouts) {
     const el = document.querySelector(selector);
     if (el) {

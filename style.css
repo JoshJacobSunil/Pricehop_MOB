@@ -27,18 +27,71 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 2;
   /* behind text */
   pointer-events: none;
   /* Let clicks pass through */
   filter: blur(0px); /* Safety default — GSAP animates this; ensures no stuck blur on init */
 }
 
+/* Popout Elements - Perfectly centered in viewport */
+.popout-element {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 15; /* Above canvas (z-index: 2) */
+  max-width: 86vw;
+  max-height: 60vh;
+  object-fit: contain;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.popout-shadow {
+  filter: drop-shadow(0px 15px 30px rgba(0, 0, 0, 0.25));
+}
+
+/* Popout Headlines - Positioned ABOVE the phone (left-side text → top) */
+.popout-headline-text {
+  position: fixed;
+  /* Sit above the phone: bottom of text block = phone top edge - 12px */
+  bottom: calc(100vh - var(--phone-top-edge, 30vh) + 12px);
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  width: 90vw;
+  max-width: 440px;
+  max-height: calc(var(--phone-top-edge, 30vh) - 16px);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Popout Logo Strips - Positioned BELOW the phone (right-side text → bottom) */
+.popout-logo {
+  position: fixed;
+  /* Sit below the phone: top of element = phone bottom edge + 12px */
+  top: calc(var(--phone-bottom-edge, 70vh) + 12px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50vw;
+  max-width: 220px;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+}
+
 /* Scroll Container */
 .scroll-container {
   position: relative;
-  z-index: 2;
-  /* above canvas */
+  z-index: 3;
 }
 
 .section {
@@ -48,7 +101,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5vw;
+  pointer-events: none;
 }
 
 .about-us {
@@ -56,91 +109,77 @@ body {
   align-items: center;
 }
 
+/* Content Wrappers - Fixed Top/Bottom anchored to actual 3D phone edges */
 .content-wrapper {
-  min-width: max-content;
-  z-index: 2;
-  opacity: 0;
-  /* Hidden initially for GSAP */
-  text-align: center;
-
-  /* Fixed to the center of the viewport */
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90vw;
+  max-width: 440px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0; /* Animated by GSAP */
+  pointer-events: none;
 }
 
+.content-wrapper * {
+  pointer-events: auto;
+}
+
+/* TOP zone — left-side text moves above the phone
+   Anchored so the bottom edge of this block sits just above the phone's top bezel.
+   --phone-top-edge is set in JS by projecting the 3D bounding box through the camera.
+   Fallback 30vh keeps text safe before JS fires. */
+.content-wrapper.pos-top,
+.content-wrapper.split-top,
 .hero .content-wrapper {
-  position: relative;
+  /* Sit above the phone: bottom edge of text = phone's top pixel edge - 12px gap */
+  bottom: calc(100vh - var(--phone-top-edge, 30vh) + 12px);
   top: auto;
-  left: auto;
-  transform: translateY(20px);
-  /* Initial state for fadeUp */
-  text-align: center;
-  margin-top: -30vh;
-  max-width: 100%;
-  animation: fadeUp 1s ease forwards 0.5s;
+  /* Prevent overflowing upward off-screen */
+  max-height: calc(var(--phone-top-edge, 30vh) - 16px);
+  overflow: hidden;
+}
+
+/* BOTTOM zone — right-side text moves below the phone
+   Anchored so the top edge of this block sits just below the phone's bottom bezel.
+   --phone-bottom-edge is set in JS. Fallback 70vh. */
+.content-wrapper.pos-bottom,
+.content-wrapper.split-bottom {
+  /* Sit below the phone: top edge of text = phone's bottom pixel edge + 12px gap */
+  top: calc(var(--phone-bottom-edge, 70vh) + 12px);
+  bottom: auto;
+  /* Prevent overflowing downward off-screen */
+  max-height: calc(100vh - var(--phone-bottom-edge, 70vh) - 16px);
+  overflow: hidden;
 }
 
 .title {
-  font-size: 4.5rem;
+  font-size: clamp(2.4rem, 10vw, 3.6rem);
   font-weight: 800;
   letter-spacing: -2px;
-  background: linear-gradient(-165deg, #fff, #0b631a);
+  background: linear-gradient(-165deg, #111111, #0b631a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  font-size: 1.35rem;
-  font-weight: 300;
+  font-size: clamp(0.95rem, 4.2vw, 1.25rem);
+  font-weight: 400;
   color: var(--text-secondary);
 }
 
 h2 {
-  font-size: 2.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-size: clamp(1.4rem, 6vw, 2.1rem);
+  font-weight: 700;
+  margin-bottom: 0.8rem;
 }
 
 p {
-  font-size: 0.99rem;
+  font-size: clamp(0.88rem, 3.8vw, 1rem);
   color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Alignments for fixed positioning */
-.align-left,
-.split-left {
-  left: 10vw;
-}
-
-.align-right,
-.split-right {
-  right: 10vw;
-}
-
-.split-left,
-.split-right {
-  top: 25%;
-}
-
-.align-center {
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .title {
-    font-size: 2.7rem;
-  }
+  line-height: 1.5;
 }
 
 /* Lenis Recommended CSS */
@@ -165,9 +204,9 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Typography Enhancements */
+/* Typography Enhancements — all clamp() so they scale across any device without media queries */
 .eyebrow {
-  font-size: 0.765rem;
+  font-size: clamp(0.6rem, 2.4vw, 0.8rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -176,34 +215,34 @@ html.lenis body {
 }
 
 .main-headline {
-  font-size: 3.15rem;
+  font-size: clamp(1.25rem, 5.5vw, 2.0rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  margin-bottom: 1rem;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.8rem;
   color: var(--text-primary);
 }
 
 .sub-headline {
-  font-size: 1.35rem;
+  font-size: clamp(0.82rem, 3.6vw, 1.1rem);
   font-weight: 400;
   color: #444444;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   line-height: 1.4;
 }
 
 .body-text {
-  font-size: 0.99rem;
+  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
   font-weight: 300;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .impact-statement {
-  font-size: 2.25rem;
+  font-size: clamp(1.05rem, 4.6vw, 1.55rem);
   font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
+  line-height: 1.15;
+  margin-bottom: 1rem;
 }
 
 .gradient-text {
@@ -219,10 +258,10 @@ html.lenis body {
 }
 
 .rapid-fire-list li {
-  font-size: 1.08rem;
+  font-size: clamp(0.82rem, 3.5vw, 1.05rem);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   display: flex;
   align-items: center;
 }
@@ -234,19 +273,7 @@ html.lenis body {
   font-weight: 800;
 }
 
-@media (max-width: 768px) {
-  .main-headline {
-    font-size: 2.25rem;
-  }
-
-  .sub-headline {
-    font-size: 1.08rem;
-  }
-
-  .impact-statement {
-    font-size: 1.8rem;
-  }
-}
+/* Remove the old fixed-rem media-query overrides — clamp() handles all device sizes now */
 
 /* Glass Box for Popouts */
 .glass-box {
@@ -892,3 +919,128 @@ html.lenis body {
   opacity: 1;
   transform: translateY(-50%) translateX(0);
 }
+/* ═══════════════════════════════════════════════════════
+   MOBILE LAYOUT — Vertical stack: Top Text → Phone → Bottom Text
+   All positioning driven by --phone-top-edge / --phone-bottom-edge CSS vars set in JS.
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Pop-out images: perfectly centered on mobile ─────────── */
+  .popout-element,
+  img#drow-popup,
+  img#dday-popup,
+  img#popup-image,
+  img#popout-1,
+  img#popout-2,
+  img#alert-popout,
+  img#cmp-popout {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(0.2) !important;
+    margin: 0 !important;
+    max-width: 86vw !important;
+    max-height: 60vh !important;
+    object-fit: contain;
+    z-index: 15 !important;
+    transform-origin: center center;
+  }
+
+  /* Popout headlines — above the phone (left-side → top) */
+  .popout-headline-text {
+    position: fixed !important;
+    bottom: calc(100vh - var(--phone-top-edge, 30vh) + 12px) !important;
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    width: 90vw !important;
+    max-width: 440px !important;
+    max-height: calc(var(--phone-top-edge, 30vh) - 16px) !important;
+    overflow: hidden !important;
+    z-index: 20 !important;
+    text-align: center !important;
+  }
+
+  /* Popout logo strips — below the phone (right-side → bottom) */
+  .popout-logo {
+    position: fixed !important;
+    top: calc(var(--phone-bottom-edge, 70vh) + 12px) !important;
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    width: 50vw !important;
+    max-width: 220px !important;
+    z-index: 20 !important;
+    text-align: center !important;
+  }
+
+  /* ── Hide desktop side-nav ─────────────────────────── */
+  #section-nav {
+    display: none !important;
+  }
+
+  /* ── 3D Phone canvas: full viewport fixed behind content */
+  #webgl-canvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 2 !important;
+  }
+
+  /* ── Content wrappers: anchored above/below phone ── */
+  .content-wrapper {
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90vw !important;
+    max-width: 440px !important;
+    text-align: center !important;
+    z-index: 10 !important;
+  }
+
+  /* TOP zone: left-side text → above phone */
+  .content-wrapper.pos-top,
+  .content-wrapper.split-top,
+  .hero .content-wrapper {
+    bottom: calc(100vh - var(--phone-top-edge, 30vh) + 12px) !important;
+    top: auto !important;
+    max-height: calc(var(--phone-top-edge, 30vh) - 16px) !important;
+    overflow: hidden !important;
+  }
+
+  /* BOTTOM zone: right-side text → below phone */
+  .content-wrapper.pos-bottom,
+  .content-wrapper.split-bottom {
+    top: calc(var(--phone-bottom-edge, 70vh) + 12px) !important;
+    bottom: auto !important;
+    max-height: calc(100vh - var(--phone-bottom-edge, 70vh) - 16px) !important;
+    overflow: hidden !important;
+  }
+
+  /* ── Typography: clamp() handles all device sizes — no fixed overrides needed ── */
+  .title {
+    font-size: clamp(2.0rem, 8.5vw, 3.2rem) !important;
+    letter-spacing: -1.5px !important;
+  }
+
+  .subtitle {
+    font-size: clamp(0.82rem, 3.6vw, 1.05rem) !important;
+  }
+
+  /* h2 inside content wrappers inherits from .main-headline clamp() in base */
+  .content-wrapper h2 {
+    font-size: clamp(1.1rem, 5vw, 1.7rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  .content-wrapper p {
+    font-size: clamp(0.78rem, 3.4vw, 0.95rem) !important;
+    line-height: 1.45 !important;
+  }
+}
+
+

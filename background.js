@@ -4,6 +4,12 @@
  */
 
 (function initBackground() {
+  // ── Mobile guard: disable cursor-tracking fabric bump on small screens ────────
+  // Evaluated once at load. If the viewport is ≤768 px we bail immediately —
+  // no canvas is injected, no mousemove listener, no rAF render loop.
+  const mobileQuery = window.matchMedia('(max-width: 768px)');
+  if (mobileQuery.matches) return;
+
   const canvas = document.createElement('canvas');
   canvas.id = 'bg-canvas';
   canvas.style.cssText = [
