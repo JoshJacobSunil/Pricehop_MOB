@@ -31,7 +31,7 @@ body {
 /* Scrollytelling Track */
 .mobile-sticky-container {
   position: relative;
-  height: 900vh; /* Extremely long track so user scrubs through 10 steps */
+  height: 1100vh; /* Exactly 11 full viewports for the 11 steps */
 }
 
 .phone-mockup-wrapper {
@@ -68,74 +68,18 @@ body {
   width: 100%; height: 100%; object-fit: cover;
 }
 
-/* Popouts */
-.popout-element {
-  position: absolute; left: 50%; transform: translate(-50%, 20px); width: 80%;
-  opacity: 0; transition: opacity 0.4s ease-in-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-radius: 10px; z-index: 5;
-}
-#pop-drow { top: 10%; }
-#pop-dday { top: 35%; width: 90%; }
-#pop-shoe { bottom: 10%; width: 95%; transform: translate(-50%, 20px) scale(0.9); }
-
-/* Data Step CSS Triggers */
-body[data-step="0"] #screen-hero { opacity: 1; }
-
-body[data-step="1"] #screen-first,
-body[data-step="2"] #screen-first,
-body[data-step="3"] #screen-first,
-body[data-step="4"] #screen-first { opacity: 1; }
-
-body[data-step="2"] #pop-drow,
-body[data-step="3"] #pop-drow,
-body[data-step="4"] #pop-drow { opacity: 1; transform: translate(-50%, 0); }
-
-body[data-step="3"] #pop-dday,
-body[data-step="4"] #pop-dday { opacity: 1; transform: translate(-50%, 0); }
-
-body[data-step="4"] #pop-shoe { opacity: 1; transform: translate(-50%, 0) scale(1.05); z-index:10; }
-
-body[data-step="5"] #screen-second { opacity: 1; }
-body[data-step="6"] #screen-carousel { opacity: 1; }
-body[data-step="7"] #screen-third { opacity: 1; }
-body[data-step="8"] #screen-fourth { opacity: 1; }
-body[data-step="9"] #screen-split,
-body[data-step="10"] #screen-split { opacity: 1; }
-
-
-/* Carousel Grid */
-.carousel-grid {
-  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-  width: 100%; height: 100%; gap: 5px; background: #eee; padding: 5px;
-}
-.carousel-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-
-/* Split Screen */
-.split-screen-container { display: flex; width: 100%; height: 100%; background: #fafafa; }
-.split-half { position: relative; flex: 1; height: 100%; border-right: 1px solid #ccc; overflow: hidden; }
-.split-img { width: 100%; height: 100%; object-fit: cover; }
-
-/* Behind Popouts */
-.pop-behind {
-  position: absolute; top: 20%; width: 150px; z-index: 1; opacity: 0;
-  transition: opacity 0.4s ease-in-out, transform 0.8s ease-out;
-}
-.pop-behind.left { left: -80px; transform: translateX(0) rotate(0deg); }
-.pop-behind.right { right: -80px; transform: translateX(0) rotate(0deg); }
-
-body[data-step="9"] .pop-behind.left,
-body[data-step="10"] .pop-behind.left { opacity: 1; transform: translateX(-40px) rotate(-15deg); }
-
-body[data-step="9"] .pop-behind.right,
-body[data-step="10"] .pop-behind.right { opacity: 1; transform: translateX(40px) rotate(15deg); }
-
-/* Front Popouts */
-.pop-front {
-  position: absolute; width: 90%; left: 5%; bottom: 20%; opacity: 0;
-  transform: translateY(20px); transition: all 0.4s ease-out;
-}
-body[data-step="10"] .pop-front { opacity: 1; transform: translateY(0); }
-
+/* Data Step CSS Triggers - Strictly 1 at a time */
+body[data-step="0"] #screen-0,
+body[data-step="1"] #screen-1,
+body[data-step="2"] #screen-2,
+body[data-step="3"] #screen-3,
+body[data-step="4"] #screen-4,
+body[data-step="5"] #screen-5,
+body[data-step="6"] #screen-6,
+body[data-step="7"] #screen-7,
+body[data-step="8"] #screen-8,
+body[data-step="9"] #screen-9,
+body[data-step="10"] #screen-10 { opacity: 1; }
 
 /* Footer */
 .footer-section { background: #f9f9f9; padding-top: 50px; }

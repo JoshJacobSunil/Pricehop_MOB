@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Scrollytelling Tracker
     const scrollyContainer = document.getElementById('scrolly-container');
-    const totalSteps = 10; // We have data-step 0 through 10
+    const totalSteps = 10; // Steps 0 to 10 (11 total)
     
     function updateScrollState() {
         const rect = scrollyContainer.getBoundingClientRect();
@@ -16,19 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (rect.bottom < windowHeight) {
             document.body.setAttribute('data-step', totalSteps.toString());
         } 
-        // Inside container (scrubbing)
+        // Inside container
         else {
-            // Distance scrolled within the container
             const scrollDistance = Math.abs(rect.top);
-            // Total scrollable distance (subtract window height so it finishes when bottom hits)
-            const scrollableHeight = rect.height - windowHeight;
+            // Exactly 1 step per viewport height scrolled
+            let currentStep = Math.floor(scrollDistance / windowHeight);
             
-            // Calculate progress (0 to 1)
-            let progress = scrollDistance / scrollableHeight;
-            
-            // Map progress to steps
-            let currentStep = Math.floor(progress * (totalSteps + 1)); // +1 so the last step can actually be reached
             if (currentStep > totalSteps) currentStep = totalSteps;
+            if (currentStep < 0) currentStep = 0;
             
             document.body.setAttribute('data-step', currentStep.toString());
         }
@@ -36,12 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', updateScrollState, { passive: true });
     window.addEventListener('resize', updateScrollState);
-    
-    // Initial call in case user loads page midway
     updateScrollState();
 
 
-    // Progress Bar (Top)
+    // Progress Bar
     const progressBar = document.getElementById('progress-bar');
     window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
