@@ -1,26 +1,19 @@
 :root {
   --font-hero: clamp(2.5rem, 8vw, 4rem);
   --font-heading: clamp(1.5rem, 5vw, 2rem);
-  --font-body: 1rem;
-  --bg-color: #fff;
-  --text-color: #000;
   --accent-color: #007aff;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden;
+  background-color: #fff; color: #000; overflow-x: hidden;
 }
 
 .top-navbar {
   position: fixed; top: 0; width: 100%; padding: 15px 20px; z-index: 100;
   background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee;
 }
-
 .logo { font-weight: 700; letter-spacing: 1px; }
-
 #progress-bar {
   position: fixed; top: 0; left: 0; height: 3px; background: var(--accent-color);
   width: 0%; z-index: 101; transition: width 0.1s;
@@ -30,103 +23,133 @@ body {
   min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
   align-items: center; padding: 20px; text-align: center;
 }
-
 .hero .title { font-size: var(--font-hero); line-height: 1.1; animation: fadeInUp 1s ease-out; }
 .hero .subtitle { font-size: var(--font-heading); margin-top: 10px; color: #555; animation: fadeInUp 1.2s ease-out; }
 
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.mobile-sticky-container { position: relative; height: 400vh; }
-.scroll-text-section {
-  height: 100vh; display: flex; align-items: flex-start; justify-content: center;
-  padding-top: 20vh; text-align: center; z-index: 20; position: relative; pointer-events: none;
+/* Scrollytelling Track */
+.mobile-sticky-container {
+  position: relative;
+  height: 900vh; /* Extremely long track so user scrubs through 10 steps */
 }
-.scroll-text-section h2 { font-size: var(--font-heading); max-width: 80%; margin: 0 auto; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 10px;}
 
 .phone-mockup-wrapper {
-  position: sticky; top: 30vh; height: 60vh; display: flex; justify-content: center; z-index: 10;
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
+/* Perfect Aspect Ratio Phone */
 .phone-frame {
-  position: relative; width: 280px; height: 100%; border: 12px solid #ddd;
-  border-radius: 40px; background-color: #fff; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); z-index: 2;
+  width: 85vw;
+  max-width: 320px;
+  aspect-ratio: 9 / 19.5;
+  border: 12px solid #ddd;
+  border-radius: 40px;
+  background-color: #fff;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  z-index: 2;
 }
 
-.phone-screen {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  transition: opacity 0.5s ease-in-out;
+.screen-container {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity 0.4s ease-in-out;
+  pointer-events: none;
 }
-.screen-img { width: 100%; height: 100%; object-fit: cover; }
-.screen-active { opacity: 1; pointer-events: auto; }
-.screen-hidden { opacity: 0; pointer-events: none; }
-
-/* STATE 1: Layered Popouts */
-.floating-img-layered {
-  position: absolute; left: 50%; transform: translateX(-50%); width: 80%;
-  transition: opacity 0.3s, transform 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-radius: 10px;
+.screen-img {
+  width: 100%; height: 100%; object-fit: cover;
 }
-.float-drow { top: 10%; animation: floatY 4s infinite alternate ease-in-out; }
-.float-dday { top: 35%; width: 90%; animation: floatY 3s infinite alternate-reverse ease-in-out; }
-.float-shoe { bottom: 10%; width: 95%; animation: floatY 5s infinite alternate ease-in-out; z-index: 5; }
 
-/* STATE 2: Carousel Grid */
+/* Popouts */
+.popout-element {
+  position: absolute; left: 50%; transform: translate(-50%, 20px); width: 80%;
+  opacity: 0; transition: opacity 0.4s ease-in-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-radius: 10px; z-index: 5;
+}
+#pop-drow { top: 10%; }
+#pop-dday { top: 35%; width: 90%; }
+#pop-shoe { bottom: 10%; width: 95%; transform: translate(-50%, 20px) scale(0.9); }
+
+/* Data Step CSS Triggers */
+body[data-step="0"] #screen-hero { opacity: 1; }
+
+body[data-step="1"] #screen-first,
+body[data-step="2"] #screen-first,
+body[data-step="3"] #screen-first,
+body[data-step="4"] #screen-first { opacity: 1; }
+
+body[data-step="2"] #pop-drow,
+body[data-step="3"] #pop-drow,
+body[data-step="4"] #pop-drow { opacity: 1; transform: translate(-50%, 0); }
+
+body[data-step="3"] #pop-dday,
+body[data-step="4"] #pop-dday { opacity: 1; transform: translate(-50%, 0); }
+
+body[data-step="4"] #pop-shoe { opacity: 1; transform: translate(-50%, 0) scale(1.05); z-index:10; }
+
+body[data-step="5"] #screen-second { opacity: 1; }
+body[data-step="6"] #screen-carousel { opacity: 1; }
+body[data-step="7"] #screen-third { opacity: 1; }
+body[data-step="8"] #screen-fourth { opacity: 1; }
+body[data-step="9"] #screen-split,
+body[data-step="10"] #screen-split { opacity: 1; }
+
+
+/* Carousel Grid */
 .carousel-grid {
   display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
   width: 100%; height: 100%; gap: 5px; background: #eee; padding: 5px;
 }
 .carousel-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
-/* STATE 3: Split Screen */
-.split-screen-container {
-  display: flex; width: 100%; height: 100%; background: #fafafa;
-}
-.split-half {
-  position: relative; flex: 1; height: 100%; overflow: hidden;
-  border-right: 1px solid #ccc;
-}
-.split-half:last-child { border-right: none; }
+/* Split Screen */
+.split-screen-container { display: flex; width: 100%; height: 100%; background: #fafafa; }
+.split-half { position: relative; flex: 1; height: 100%; border-right: 1px solid #ccc; overflow: hidden; }
 .split-img { width: 100%; height: 100%; object-fit: cover; }
 
-.split-popout {
-  position: absolute; width: 90%; left: 5%; bottom: 20%;
-  animation: floatY 3s infinite alternate ease-in-out;
+/* Behind Popouts */
+.pop-behind {
+  position: absolute; top: 20%; width: 150px; z-index: 1; opacity: 0;
+  transition: opacity 0.4s ease-in-out, transform 0.8s ease-out;
 }
+.pop-behind.left { left: -80px; transform: translateX(0) rotate(0deg); }
+.pop-behind.right { right: -80px; transform: translateX(0) rotate(0deg); }
 
-/* Floating Behind (For State 3) */
-.floating-behind {
-  position: absolute; top: 20%; width: 150px; z-index: 1;
-  transition: opacity 0.5s ease-in-out, transform 0.8s ease-out;
-}
-.pop-behind-1 { left: -100px; transform: translateX(-50px) rotate(-10deg); }
-.pop-behind-2 { right: -100px; transform: translateX(50px) rotate(10deg); }
-.screen-active.pop-behind-1 { transform: translateX(0) rotate(-10deg); opacity: 1; }
-.screen-active.pop-behind-2 { transform: translateX(0) rotate(10deg); opacity: 1; }
+body[data-step="9"] .pop-behind.left,
+body[data-step="10"] .pop-behind.left { opacity: 1; transform: translateX(-40px) rotate(-15deg); }
 
-@keyframes floatY {
-  0% { transform: translate(-50%, 0); }
-  100% { transform: translate(-50%, -10px); }
-}
-.split-popout { transform: none; }
-@keyframes floatY {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-10px); }
-}
+body[data-step="9"] .pop-behind.right,
+body[data-step="10"] .pop-behind.right { opacity: 1; transform: translateX(40px) rotate(15deg); }
 
-.footer-section { background: #f9f9f9; justify-content: space-around; padding-top: 50px; }
-.ticker-wrap { width: 100%; overflow: hidden; background-color: #eee; padding: 10px 0; margin-bottom: 40px; }
+/* Front Popouts */
+.pop-front {
+  position: absolute; width: 90%; left: 5%; bottom: 20%; opacity: 0;
+  transform: translateY(20px); transition: all 0.4s ease-out;
+}
+body[data-step="10"] .pop-front { opacity: 1; transform: translateY(0); }
+
+
+/* Footer */
+.footer-section { background: #f9f9f9; padding-top: 50px; }
+.ticker-wrap { width: 100%; overflow: hidden; background: #eee; padding: 10px 0; margin-bottom: 40px; }
 .ticker { display: flex; width: 200%; animation: scroll-left 15s linear infinite; }
 .ticker__item { flex-shrink: 0; padding: 0 40px; font-size: 1.1rem; font-weight: bold; }
 @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 .countdown-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
-.countdown-item {
-  display: flex; flex-direction: column; background: #fff; padding: 20px;
-  border-radius: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
+.countdown-item { display: flex; flex-direction: column; background: #fff; padding: 20px; border-radius: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .countdown-item span { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); }
+
 .waitlist-form { display: flex; flex-direction: column; width: 100%; max-width: 400px; gap: 15px; margin-bottom: 60px; }
-.waitlist-form input { padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; background: #fff; color: #000; }
+.waitlist-form input { padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
 .waitlist-form button { padding: 15px; border-radius: 8px; border: none; background: var(--accent-color); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
-.footer-links { display: flex; flex-direction: column; gap: 10px; text-align: center; }
+.footer-links { display: flex; flex-direction: column; gap: 10px; text-align: center; margin-bottom:20px; }
 .footer-links a { color: #555; text-decoration: none; font-size: 0.9rem; }

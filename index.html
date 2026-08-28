@@ -3,50 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricehop</title>
+    <title>Pricehop Mobile</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Global Elements -->
     <nav class="top-navbar">
         <div class="logo">PRICEHOP</div>
     </nav>
     <div id="progress-bar"></div>
 
     <main>
-        <!-- Section 1: Hero -->
         <section class="section hero">
             <h1 class="title">PRICEHOP</h1>
             <h2 class="subtitle">WE DON'T JUST COMPARE, WE VALUE.</h2>
         </section>
 
-        <!-- Sticky Phone Sections Container -->
-        <div class="mobile-sticky-container">
+        <!-- Long scroll track for scrollytelling -->
+        <div class="mobile-sticky-container" id="scrolly-container">
             
-            <!-- Sticky Phone Wrapper -->
             <div class="phone-mockup-wrapper">
                 
-                <!-- Popouts that go BEHIND the phone (State 3) -->
-                <img src="assets/pop out 1.png" class="floating-behind pop-behind-1 screen-hidden" id="bg-pop-1" alt="">
-                <img src="assets/pop out 2.png" class="floating-behind pop-behind-2 screen-hidden" id="bg-pop-2" alt="">
+                <!-- Popouts that go BEHIND the phone (Step 9/10) -->
+                <img src="assets/pop out 1.png" class="pop-behind left" alt="">
+                <img src="assets/pop out 2.png" class="pop-behind right" alt="">
 
                 <div class="phone-frame">
                     
-                    <!-- State 0: Hero / Initial -->
-                    <div class="phone-screen screen-active" id="screen-0">
-                        <img src="assets/hero.png" alt="Hero Screen" class="screen-img">
+                    <!-- Step 0: Hero Screen -->
+                    <div class="screen-container" id="screen-hero">
+                        <img src="assets/hero.png" class="screen-img" alt="Hero">
                     </div>
 
-                    <!-- State 1: Deals (Section 2) -->
-                    <div class="phone-screen screen-hidden" id="screen-1">
-                        <img src="assets/hero.png" alt="Deals Screen" class="screen-img">
-                        <img src="assets/drow.png" class="floating-img-layered float-drow" alt="Drow">
-                        <img src="assets/dday.png" class="floating-img-layered float-dday" alt="Dday">
-                        <img src="assets/shoe_card.png" class="floating-img-layered float-shoe" alt="Shoe Card">
+                    <!-- Step 1-4: First Mesh & Popouts -->
+                    <div class="screen-container" id="screen-first">
+                        <img src="assets/First_phone_mesh/ezgif-frame-001.jpg" class="screen-img" alt="First Mesh">
+                        <img src="assets/drow.png" class="popout-element" id="pop-drow" alt="Drow">
+                        <img src="assets/dday.png" class="popout-element" id="pop-dday" alt="Dday">
+                        <img src="assets/shoe_card.png" class="popout-element" id="pop-shoe" alt="Shoe">
                     </div>
 
-                    <!-- State 2: Carousel (Section 4) -->
-                    <div class="phone-screen screen-hidden" id="screen-2">
+                    <!-- Step 5: Second Mesh -->
+                    <div class="screen-container" id="screen-second">
+                        <img src="assets/Second_phone_mesh/ezgif-frame-107.jpg" class="screen-img" alt="Second Mesh">
+                    </div>
+
+                    <!-- Step 6: Carousel -->
+                    <div class="screen-container" id="screen-carousel">
                         <div class="carousel-grid">
                             <img src="assets/ip1.png" alt="Phone 1">
                             <img src="assets/ip2.png" alt="Phone 2">
@@ -55,16 +57,26 @@
                         </div>
                     </div>
 
-                    <!-- State 3: Split Screen (Section 7) -->
-                    <div class="phone-screen screen-hidden" id="screen-3">
+                    <!-- Step 7: Third Mesh -->
+                    <div class="screen-container" id="screen-third">
+                        <img src="assets/Third_phone_mesh/ezgif-frame-001.jpg" class="screen-img" alt="Third Mesh">
+                    </div>
+
+                    <!-- Step 8: Fourth Mesh -->
+                    <div class="screen-container" id="screen-fourth">
+                        <img src="assets/Fourth_phone_mesh/ezgif-frame-053.jpg" class="screen-img" alt="Fourth Mesh">
+                    </div>
+
+                    <!-- Step 9-10: Split Screen -->
+                    <div class="screen-container" id="screen-split">
                         <div class="split-screen-container">
                             <div class="split-half">
-                                <img src="assets/Pr_comp/P_comp.png" alt="Compare Screen" class="split-img">
-                                <img src="assets/cmp_popout.png" alt="Compare Popout" class="split-popout pop-cmp">
+                                <img src="assets/Pr_comp/P_comp.png" class="split-img" alt="Compare">
+                                <img src="assets/cmp_popout.png" class="pop-front" id="pop-cmp" alt="Compare Popout">
                             </div>
                             <div class="split-half">
-                                <img src="assets/Pr_alert/P_alert.png" alt="Alert Screen" class="split-img">
-                                <img src="assets/alert_popout.png" alt="Alert Popout" class="split-popout pop-alert">
+                                <img src="assets/Pr_alert/P_alert.png" class="split-img" alt="Alert">
+                                <img src="assets/alert_popout.png" class="pop-front" id="pop-alert" alt="Alert Popout">
                             </div>
                         </div>
                     </div>
@@ -72,38 +84,8 @@
                 </div>
             </div>
 
-            <!-- Scroll Text Sections -->
-            <!-- Section 1 -->
-            <div class="scroll-text-section" data-index="0">
-                <div class="text-content">
-                    <h2>Initial View</h2>
-                </div>
-            </div>
-            
-            <!-- Section 2 -->
-            <div class="scroll-text-section" data-index="1">
-                <div class="text-content">
-                    <h2>The Best Deals, All in One Feed.</h2>
-                </div>
-            </div>
-
-            <!-- Section 3 -->
-            <div class="scroll-text-section" data-index="2">
-                <div class="text-content">
-                    <h2>Carousel View</h2>
-                </div>
-            </div>
-
-            <!-- Section 4 -->
-            <div class="scroll-text-section" data-index="3">
-                <div class="text-content">
-                    <h2>Compare & Alert</h2>
-                </div>
-            </div>
-
         </div>
 
-        <!-- Section 5: Waitlist & Footer -->
         <section class="section footer-section">
             <div class="ticker-wrap">
                 <div class="ticker">
@@ -132,7 +114,6 @@
             </footer>
         </section>
     </main>
-
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,50 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('.scroll-text-section');
-    const screens = document.querySelectorAll('.phone-screen');
-    const bgPops = document.querySelectorAll('.floating-behind');
     
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const targetIndex = entry.target.dataset.index;
-          
-          // Toggle phone screens
-          screens.forEach((screen, index) => {
-            if(index == targetIndex) {
-              screen.classList.add('screen-active');
-              screen.classList.remove('screen-hidden');
-            } else {
-              screen.classList.remove('screen-active');
-              screen.classList.add('screen-hidden');
-            }
-          });
+    // Scrollytelling Tracker
+    const scrollyContainer = document.getElementById('scrolly-container');
+    const totalSteps = 10; // We have data-step 0 through 10
+    
+    function updateScrollState() {
+        const rect = scrollyContainer.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
 
-          // Toggle background popouts for State 3 (index 3)
-          if(targetIndex == 3) {
-            bgPops.forEach(pop => {
-                pop.classList.add('screen-active');
-                pop.classList.remove('screen-hidden');
-            });
-          } else {
-            bgPops.forEach(pop => {
-                pop.classList.remove('screen-active');
-                pop.classList.add('screen-hidden');
-            });
-          }
+        // If above container
+        if (rect.top > 0) {
+            document.body.setAttribute('data-step', '0');
+        } 
+        // If below container
+        else if (rect.bottom < windowHeight) {
+            document.body.setAttribute('data-step', totalSteps.toString());
+        } 
+        // Inside container (scrubbing)
+        else {
+            // Distance scrolled within the container
+            const scrollDistance = Math.abs(rect.top);
+            // Total scrollable distance (subtract window height so it finishes when bottom hits)
+            const scrollableHeight = rect.height - windowHeight;
+            
+            // Calculate progress (0 to 1)
+            let progress = scrollDistance / scrollableHeight;
+            
+            // Map progress to steps
+            let currentStep = Math.floor(progress * (totalSteps + 1)); // +1 so the last step can actually be reached
+            if (currentStep > totalSteps) currentStep = totalSteps;
+            
+            document.body.setAttribute('data-step', currentStep.toString());
         }
-      });
-    }, { threshold: 0.5 });
-    
-    sections.forEach(sec => observer.observe(sec));
+    }
 
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+    
+    // Initial call in case user loads page midway
+    updateScrollState();
+
+
+    // Progress Bar (Top)
     const progressBar = document.getElementById('progress-bar');
     window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
         const docHeight = document.body.scrollHeight - window.innerHeight;
         const scrollPercent = (scrollTop / docHeight) * 100;
-        progressBar.style.width = scrollPercent + '%';
-    });
+        if(progressBar) progressBar.style.width = scrollPercent + '%';
+    }, { passive: true });
 
+
+    // Countdown Timer
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minsEl = document.getElementById('minutes');
