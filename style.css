@@ -2,6 +2,10 @@
   --font-hero: clamp(2.5rem, 8vw, 4rem);
   --font-heading: clamp(1.5rem, 5vw, 2rem);
   --accent-color: #0a6201; /* Pricehop Dark Green */
+  --stepper-height: 120px;
+  --stepper-bottom-margin: 10px;
+  --gap-between: 15px;
+  --phone-top-margin: 10px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body {
@@ -39,8 +43,8 @@ body {
 
 .phone-mockup-wrapper {
   position: sticky;
-  top: 5vh; 
-  height: 87.6vh; 
+  top: var(--phone-top-margin); 
+  height: calc(100vh - var(--stepper-height) - var(--stepper-bottom-margin) - var(--gap-between) - var(--phone-top-margin)); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +90,8 @@ body[data-step="8"] #screen-8 { opacity: 1; }
 /* Stepper Overlay */
 .stepper-overlay {
     position: fixed;
-    bottom: 2vh;
+    bottom: var(--stepper-bottom-margin);
+    height: var(--stepper-height);
     left: 5vw;
     width: 90vw;
     background: rgba(26, 26, 28, 0.95);
