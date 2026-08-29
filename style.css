@@ -4,6 +4,9 @@
   --accent-color: #0a6201; /* Pricehop Dark Green */
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  overscroll-behavior: none;
+}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #fff; color: #000; overflow-x: hidden;
@@ -36,8 +39,8 @@ body {
 
 .phone-mockup-wrapper {
   position: sticky;
-  top: 10vh; /* Moved 5% higher from 15vh */
-  height: 73vh; /* Increased height by 5% from 68vh */
+  top: 5vh; 
+  height: 87.6vh; 
   display: flex;
   align-items: center;
   justify-content: center;
