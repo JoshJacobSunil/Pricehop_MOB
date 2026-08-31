@@ -3,9 +3,9 @@
   --font-heading: clamp(1.5rem, 5vw, 2rem);
   --accent-color: #0a6201; /* Pricehop Dark Green */
   --stepper-height: 120px;
-  --stepper-bottom-margin: 10px;
-  --gap-between: 15px;
-  --phone-top-margin: 10px;
+  --stepper-bottom-margin: 15px;
+  --gap-between: 20px;
+  --phone-top-margin: 20px; /* Account for navbar previously, now just padding */
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -13,11 +13,6 @@ body {
   background-color: #fff; color: #000; overflow-x: hidden;
 }
 
-.top-navbar {
-  position: fixed; top: 0; width: 100%; padding: 15px 20px; z-index: 100;
-  background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee;
-}
-.logo { font-weight: 700; letter-spacing: 1px; }
 #progress-bar {
   position: fixed; top: 0; left: 0; height: 3px; background: var(--accent-color);
   width: 0%; z-index: 101; transition: width 0.1s;
@@ -51,8 +46,8 @@ body {
 /* Perfect Aspect Ratio Phone */
 .phone-frame {
   width: auto;
-  max-width: 85vw;
-  height: 100%;
+  max-width: 76.5vw;
+  height: 90%;
   aspect-ratio: 9 / 19.5;
   border: 10px solid #ddd; /* Gray border */
   border-radius: 35px;
