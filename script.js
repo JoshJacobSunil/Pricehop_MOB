@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6 Logical UI Steps mapping to 9 frames
     const stepData = {
         0: null, // Hidden on hero
-        1: { num: 1, title: "1st Step: The Feed", desc: "Best Deals, One Feed." },
-        2: { num: 1, title: "1st Step: The Feed", desc: "Best Deals, One Feed." },
-        3: { num: 2, title: "2nd Step: Swipe & Save", desc: "Swipe right to like, left to pass." },
-        4: { num: 3, title: "3rd Step: Smart Search", desc: "Everything Starts With a Search." },
-        5: { num: 4, title: "4th Step: Quick Access", desc: "One Tap Away From a Better Price." },
-        6: { num: 4, title: "4th Step: Quick Access", desc: "Explore features directly in-app." },
-        7: { num: 5, title: "5th Step: Compare", desc: "See Best Deals in Best Platforms." },
-        8: { num: 6, title: "6th Step: Price Alerts", desc: "Discover Today's Biggest Deal." }
+        1: { num: 1, title: "1st Step: Swipe & Save", desc: "Swipe right to like, left to pass." },
+        2: { num: 1, title: "1st Step: Swipe & Save", desc: "Swipe right to like, left to pass." },
+        3: { num: 2, title: "2nd Step: Smart Search", desc: "Everything Starts With a Search." },
+        4: { num: 2, title: "2nd Step: Smart Search", desc: "Everything Starts With a Search." },
+        5: { num: 2, title: "2nd Step: Smart Search", desc: "Everything Starts With a Search." },
+        6: { num: 3, title: "3rd Step: Quick Access", desc: "One Tap Away From a Better Price." },
+        7: { num: 4, title: "4th Step: Compare", desc: "See Best Deals in Best Platforms." },
+        8: { num: 5, title: "5th Step: Price Alerts", desc: "Discover Today's Biggest Deal." }
     };
 
     function updateScrollState() {
@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update progress line (Percentage relative to 5 intervals between 6 nodes)
-        const linePercent = (activeIndex / 5) * 100;
+        // Update progress line (Percentage relative to 4 intervals between 5 nodes)
+        const linePercent = (activeIndex / 4) * 100;
         document.getElementById('step-line-active').style.width = linePercent + '%';
     }
 
