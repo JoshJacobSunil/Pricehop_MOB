@@ -3,89 +3,729 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricehop Mobile</title>
+    <title>PriceHop — Your Shortcut to Every Deal</title>
+    <meta name="description" content="A powerful intelligent price comparison tool for mobile. Compare 50+ stores in real-time, track price history, and catch instant price drop alerts.">
+    <meta name="theme-color" content="#060709">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="progress-bar"></div>
+<body class="raycast-theme">
+
+    <!-- Ambient Gradient Backdrops -->
+    <div class="ambient-glow glow-top-center"></div>
+    <div class="ambient-glow glow-hero-right"></div>
+    <div class="ambient-glow glow-bottom"></div>
+
+    <!-- Floating Glassmorphic Navbar -->
+    <header class="navbar-wrapper" id="navbar">
+        <nav class="navbar-container">
+            <a href="#" class="nav-brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="28" height="28" rx="8" fill="url(#logo-grad)"/>
+                        <path d="M7 19L13.5 8L16.5 13L21 6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="21" cy="6" r="2" fill="#FFFFFF"/>
+                        <defs>
+                            <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4D4D"/>
+                                <stop offset="1" stop-color="#FF2A54"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="brand-name">PRICEHOP</span>
+                <span class="version-pill">v2.0</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#simulator" class="nav-link">How it Works</a>
+                <a href="#comparison" class="nav-link">Advantage</a>
+                <a href="#reviews" class="nav-link">Reviews</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn btn-ghost" id="open-qr-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M1 1h6v6H1V1zm2 2v2h2V3H3zm6-2h6v6H9V1zm2 2v2h2V3h-2zM1 9h6v6H1V9zm2 2v2h2v-2H3zm8 0h2v2h-2v-2zm-2 0h1v1H9v-1zm4 0h2v4h-2v-2h-1v-1h1v-1zm-3 2h2v1h-2v-1zm-1 1h1v2H8v-2zm4 1h1v1h-1v-1z"/>
+                    </svg>
+                    <span>Get App</span>
+                </button>
+                <a href="#waitlist" class="btn btn-primary">Join Early Access</a>
+                <button class="mobile-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
     <main>
-        <section class="section hero">
-            <h1 class="title">PRICEHOP</h1>
-            <h2 class="subtitle">WE DON'T JUST COMPARE, WE VALUE.</h2>
+        <!-- ================= HERO SECTION ================= -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <!-- Floating Announcement Pill -->
+                <div class="announcement-pill">
+                    <span class="pill-spark">⚡</span>
+                    <span class="pill-text">PriceHop 2.0 for iOS & Android is live</span>
+                    <span class="pill-arrow">→</span>
+                </div>
+
+                <h1 class="hero-title">
+                    Your shortcut to <br>
+                    <span class="gradient-text">every deal.</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    A collection of intelligent shopping tools built into a hyper-fast launcher. 
+                    Real-time price comparisons, automated drop alerts, and true value tracking.
+                </p>
+
+                <!-- Hero CTA Controls -->
+                <div class="hero-actions">
+                    <a href="#waitlist" class="btn btn-light-glow btn-hero">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 3.5c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.65-.06 1.72-.94 2.76 1.01.08 2.03-.51 2.65-1.26z"/>
+                        </svg>
+                        <span>
+                            <small>Download for</small>
+                            <strong>iOS & Android</strong>
+                        </span>
+                    </a>
+
+                    <button class="btn btn-secondary btn-hero" id="hero-demo-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <span>Interactive Demo</span>
+                    </button>
+                </div>
+
+                <div class="hero-meta">
+                    <div class="rating-stars">
+                        <span>★★★★★</span>
+                        <span class="rating-num">4.9 / 5.0</span>
+                    </div>
+                    <span class="meta-separator">•</span>
+                    <span>100,000+ Deals Tracked Daily</span>
+                    <span class="meta-separator">•</span>
+                    <span>100% Ad-Free</span>
+                </div>
+            </div>
+
+            <!-- Hero Phone Showcase with Interactive Depth -->
+            <div class="hero-device-wrapper">
+                <div class="device-ambient-backdrop"></div>
+                
+                <!-- Floating Popout 1 (Left) -->
+                <div class="floating-badge badge-left-top float-anim-1">
+                    <div class="badge-icon green-glow">📉</div>
+                    <div class="badge-info">
+                        <span class="badge-label">Price Dropped</span>
+                        <span class="badge-value">₹24,999 <del>₹31,999</del></span>
+                    </div>
+                    <span class="badge-store">Amazon</span>
+                </div>
+
+                <!-- Floating Popout 2 (Right) -->
+                <div class="floating-badge badge-right-bottom float-anim-2">
+                    <div class="badge-icon cyan-glow">⚡</div>
+                    <div class="badge-info">
+                        <span class="badge-label">Lowest Ever Recorded</span>
+                        <span class="badge-value">Save ₹7,000 Today</span>
+                    </div>
+                    <span class="badge-store">Flipkart</span>
+                </div>
+
+                <!-- Realistic iPhone 16 Pro Frame -->
+                <div class="iphone-pro-frame">
+                    <div class="iphone-bezel">
+                        <div class="dynamic-island">
+                            <div class="island-camera"></div>
+                            <div class="island-mic"></div>
+                        </div>
+                        <div class="screen-viewport">
+                            <img src="assets/ip1.png" alt="PriceHop Mobile App Interface" class="hero-screen-img" id="hero-main-screen">
+                        </div>
+                        <div class="screen-glare"></div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Long scroll track for scrollytelling -->
-        <div class="mobile-sticky-container" id="scrolly-container">
-            
-            <div class="phone-mockup-wrapper">
-                <div class="phone-frame">
-                    
-                    <!-- 9 Sequential Screens -->
-                    <div class="screen-container" id="screen-0"><img src="assets/hero.png" class="screen-img" alt="Hero"></div>
-                    <div class="screen-container" id="screen-1"><img src="assets/First_phone_mesh/ezgif-frame-400.jpg" class="screen-img" alt="First Mesh 400"></div>
-                    <div class="screen-container" id="screen-2"><img src="assets/Second_phone_mesh/ezgif-frame-107.jpg" class="screen-img" alt="Second Mesh 107"></div>
-                    <div class="screen-container" id="screen-3"><img src="assets/Second_phone_mesh/ezgif-frame-185.jpg" class="screen-img" alt="Second Mesh 185"></div>
-                    <div class="screen-container" id="screen-4"><img src="assets/Third_phone_mesh/ezgif-frame-001.jpg" class="screen-img" alt="Third Mesh"></div>
-                    <div class="screen-container" id="screen-5"><img src="assets/Fourth_phone_mesh/ezgif-frame-053.jpg" class="screen-img" alt="Fourth Mesh"></div>
-                    <div class="screen-container" id="screen-6"><img src="assets/Fourth_phone_mesh/ezgif-frame-150.jpg" class="screen-img" alt="Fourth Mesh 150"></div>
-                    <div class="screen-container" id="screen-7"><img src="assets/Pr_comp/P_comp.png" class="screen-img" alt="Compare"></div>
-                    <div class="screen-container" id="screen-8"><img src="assets/Pr_alert/P_alert.png" class="screen-img" alt="Alert"></div>
-
-                </div>
+        <!-- ================= LIVE DEAL DROP PULSE TICKER ================= -->
+        <section class="live-ticker-section">
+            <div class="ticker-header">
+                <span class="live-indicator">
+                    <span class="live-dot"></span>
+                    LIVE PRICE DROPS DETECTED NOW
+                </span>
             </div>
-
-            <!-- Stepper Overlay UI -->
-            <div class="stepper-overlay" id="stepper-overlay">
-                <div class="stepper-progress">
-                    <div class="step-line-container">
-                        <div class="step-line"></div>
-                        <div class="step-line-active" id="step-line-active"></div>
+            <div class="ticker-rail-container">
+                <div class="ticker-rail" id="ticker-rail">
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag amazon">Amazon</span>
+                        <span class="ticker-title">Sony WH-1000XM5</span>
+                        <span class="ticker-price">₹26,990</span>
+                        <span class="ticker-drop">-23% Drop</span>
                     </div>
-                    <div class="step-node" data-node="1"><div class="node-inner">1</div></div>
-                    <div class="step-node" data-node="2"><div class="node-inner">2</div></div>
-                    <div class="step-node" data-node="3"><div class="node-inner">3</div></div>
-                    <div class="step-node" data-node="4"><div class="node-inner">4</div></div>
-                    <div class="step-node" data-node="5"><div class="node-inner">5</div></div>
-                </div>
-                
-                <div class="stepper-content">
-                    <span class="stepper-badge" id="stepper-badge">In Progress</span>
-                    <div class="stepper-title" id="stepper-title">1st Step: Swipe & Save</div>
-                    <div class="stepper-desc" id="stepper-desc">Swipe right to like, left to pass.</div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag flipkart">Flipkart</span>
+                        <span class="ticker-title">Apple MacBook Air M3</span>
+                        <span class="ticker-price">₹99,990</span>
+                        <span class="ticker-drop">-15% Drop</span>
+                    </div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag myntra">Myntra</span>
+                        <span class="ticker-title">Nike Pegasus 40</span>
+                        <span class="ticker-price">₹6,499</span>
+                        <span class="ticker-drop">-40% Drop</span>
+                    </div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag apple">Apple Store</span>
+                        <span class="ticker-title">iPad Air 11" M2</span>
+                        <span class="ticker-price">₹54,900</span>
+                        <span class="ticker-drop">-10% Drop</span>
+                    </div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag croma">Croma</span>
+                        <span class="ticker-title">LG C3 55" OLED 4K</span>
+                        <span class="ticker-price">₹1,14,990</span>
+                        <span class="ticker-drop">-32% Drop</span>
+                    </div>
+                    <!-- Duplicate items for seamless continuous marquee loop -->
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag amazon">Amazon</span>
+                        <span class="ticker-title">Sony WH-1000XM5</span>
+                        <span class="ticker-price">₹26,990</span>
+                        <span class="ticker-drop">-23% Drop</span>
+                    </div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag flipkart">Flipkart</span>
+                        <span class="ticker-title">Apple MacBook Air M3</span>
+                        <span class="ticker-price">₹99,990</span>
+                        <span class="ticker-drop">-15% Drop</span>
+                    </div>
+                    <div class="ticker-card">
+                        <span class="ticker-store-tag myntra">Myntra</span>
+                        <span class="ticker-title">Nike Pegasus 40</span>
+                        <span class="ticker-price">₹6,499</span>
+                        <span class="ticker-drop">-40% Drop</span>
+                    </div>
                 </div>
             </div>
+        </section>
 
+        <!-- ================= STORE PARTNER STRIP ================= -->
+        <div class="partner-ribbon-section">
+            <p class="partner-label">INTELLIGENT MONITORING ACROSS TOP RETAILERS</p>
+            <div class="partner-logo-strip">
+                <img src="assets/logo strip.png" alt="Supported Stores - Amazon, Flipkart, Myntra, Tata CliQ, Croma" class="partner-logos-img">
+            </div>
         </div>
 
-        <section class="section footer-section">
-            <div class="ticker-wrap">
-                <div class="ticker">
-                    <div class="ticker__item">🔥 iPhone 15 Pro - Price Dropped ₹5000</div>
-                    <div class="ticker__item">🔥 Sony WH-1000XM5 - Lowest Price Today</div>
-                    <div class="ticker__item">🔥 MacBook Air M2 - Save 15%</div>
+        <!-- ================= RAYCAST-STYLE BENTO GRID FEATURES ================= -->
+        <section class="section-container" id="features">
+            <div class="section-heading-block text-center">
+                <span class="section-tag">CORE CAPABILITIES</span>
+                <h2 class="section-title">Built for speed.<br>Engineered for savings.</h2>
+                <p class="section-desc">Everything you need to outsmart dynamic pricing, all in one fluid application.</p>
+            </div>
+
+            <!-- Bento 12-Column Grid -->
+            <div class="bento-grid">
+                
+                <!-- Bento Card 1 (Large - 8 Cols) -->
+                <div class="bento-card bento-col-8 spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner">
+                        <div class="bento-header">
+                            <span class="bento-badge">REAL-TIME ENGINE</span>
+                            <h3 class="bento-title">Instant Cross-Store Comparison</h3>
+                            <p class="bento-text">
+                                Don't open 10 tabs. Search once and get live, verified pricing across Amazon, Flipkart, Myntra, Croma, and official stores side-by-side.
+                            </p>
+                        </div>
+                        <div class="bento-graphic graphic-comparison-preview">
+                            <img src="assets/cmp_popout.png" alt="Price comparison sheet" class="bento-img bento-cmp-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Card 2 (Medium - 4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner">
+                        <div class="bento-header">
+                            <span class="bento-badge">RADAR ALERTS</span>
+                            <h3 class="bento-title">Price Drop Radar</h3>
+                            <p class="bento-text">
+                                Set your target price. Our cloud engine checks prices 24/7 and triggers sub-second push notifications the moment it drops.
+                            </p>
+                        </div>
+                        <div class="bento-graphic graphic-alert-preview">
+                            <img src="assets/alert_popout.png" alt="Price drop alert trigger" class="bento-img bento-alert-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3 (Medium - 4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner">
+                        <div class="bento-header">
+                            <span class="bento-badge">ONE-TAP HOP</span>
+                            <h3 class="bento-title">Direct Cart Checkout</h3>
+                            <p class="bento-text">
+                                Hop directly to the store app with the best deal. Automatic coupon code detection saves you extra at checkout.
+                            </p>
+                        </div>
+                        <div class="bento-graphic graphic-card-preview">
+                            <img src="assets/shoe_card.png" alt="Direct store deal card" class="bento-img bento-shoe-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Card 4 (Medium - 4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner">
+                        <div class="bento-header">
+                            <span class="bento-badge">VOICE & SCAN</span>
+                            <h3 class="bento-title">Barcode & Voice AI</h3>
+                            <p class="bento-text">
+                                Shopping in a physical store? Point your camera at any barcode to instantly see if it's cheaper online.
+                            </p>
+                        </div>
+                        <div class="bento-graphic graphic-voice-wave">
+                            <div class="audio-wave-container">
+                                <div class="wave-bar bar-1"></div>
+                                <div class="wave-bar bar-2"></div>
+                                <div class="wave-bar bar-3"></div>
+                                <div class="wave-bar bar-4"></div>
+                                <div class="wave-bar bar-5"></div>
+                                <div class="wave-bar bar-6"></div>
+                                <div class="wave-bar bar-7"></div>
+                            </div>
+                            <div class="voice-search-pill">
+                                <span class="voice-dot"></span>
+                                <span>"Find lowest price on AirPods Pro 2"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Card 5 (Medium - 4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner">
+                        <div class="bento-header">
+                            <span class="bento-badge">INTELLIGENCE</span>
+                            <h3 class="bento-title">True Value History</h3>
+                            <p class="bento-text">
+                                Spot fake discounts. View historical 90-day price trends and avoid misleading "sale" markups.
+                            </p>
+                        </div>
+                        <div class="bento-graphic graphic-sparkline">
+                            <div class="chart-mockup">
+                                <div class="chart-header">
+                                    <span class="chart-lowest">Lowest: ₹18,499</span>
+                                    <span class="chart-current">Now: ₹18,499 🔥</span>
+                                </div>
+                                <svg class="sparkline-svg" viewBox="0 0 300 80">
+                                    <defs>
+                                        <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.4"/>
+                                            <stop offset="100%" stop-color="#00F0FF" stop-opacity="0.0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 0 50 Q 50 40 100 60 T 200 30 T 300 70 L 300 80 L 0 80 Z" fill="url(#chart-grad)"/>
+                                    <path d="M 0 50 Q 50 40 100 60 T 200 30 T 300 70" fill="none" stroke="#00F0FF" stroke-width="2.5"/>
+                                    <circle cx="300" cy="70" r="4" fill="#00F0FF"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Card 6 (Full Width - 12 Cols) -->
+                <div class="bento-card bento-col-12 spotlight-card bento-continuity">
+                    <div class="card-glow"></div>
+                    <div class="bento-inner bento-horizontal">
+                        <div class="bento-header">
+                            <span class="bento-badge">SYNC & CONTINUITY</span>
+                            <h3 class="bento-title">iPhone • Android • iPad • Browser Extension</h3>
+                            <p class="bento-text">
+                                Create your universal watchlist. Save a deal on your phone and open it on your laptop with your alerts synced everywhere.
+                            </p>
+                            <div class="platform-chips">
+                                <span class="chip active">iOS 17+</span>
+                                <span class="chip">Android 14+</span>
+                                <span class="chip">Chrome Extension</span>
+                                <span class="chip">Safari Extension</span>
+                            </div>
+                        </div>
+                        <div class="bento-graphic graphic-continuity-devices">
+                            <img src="assets/dday.png" alt="Cross-device sync" class="bento-img continuity-img">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= INTERACTIVE PRODUCT SIMULATOR ================= -->
+        <section class="section-container" id="simulator">
+            <div class="section-heading-block text-center">
+                <span class="section-tag">EXPERIENCE PRICEHOP</span>
+                <h2 class="section-title">Touch, tap, and save.</h2>
+                <p class="section-desc">Explore how simple saving money becomes with PriceHop's interactive workflows.</p>
+            </div>
+
+            <div class="simulator-container">
+                <!-- Left: Stepper Navigation -->
+                <div class="simulator-stepper">
+                    <div class="step-item active" data-step="0">
+                        <div class="step-num">01</div>
+                        <div class="step-details">
+                            <h4>Discover & Swipe Deals</h4>
+                            <p>Swipe right to bookmark, left to pass. Curated for your interests.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" data-step="1">
+                        <div class="step-num">02</div>
+                        <div class="step-details">
+                            <h4>Compare Real-Time Stores</h4>
+                            <p>Instant price lookup across 50+ stores with one search.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" data-step="2">
+                        <div class="step-num">03</div>
+                        <div class="step-details">
+                            <h4>Set Price Drop Radars</h4>
+                            <p>Lock in notifications when items reach your target budget.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" data-step="3">
+                        <div class="step-num">04</div>
+                        <div class="step-details">
+                            <h4>One-Tap Deal Hop</h4>
+                            <p>Deep-link directly to checkout with auto-applied promo codes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Device Viewport -->
+                <div class="simulator-device-view">
+                    <div class="iphone-pro-frame simulator-frame">
+                        <div class="iphone-bezel">
+                            <div class="dynamic-island">
+                                <div class="island-camera"></div>
+                                <div class="island-mic"></div>
+                            </div>
+                            <div class="screen-viewport">
+                                <img src="assets/ip1.png" alt="Simulator step 1" class="simulator-screen active" id="sim-screen-0">
+                                <img src="assets/ip2.png" alt="Simulator step 2" class="simulator-screen" id="sim-screen-1">
+                                <img src="assets/ip3.png" alt="Simulator step 3" class="simulator-screen" id="sim-screen-2">
+                                <img src="assets/ip4.png" alt="Simulator step 4" class="simulator-screen" id="sim-screen-3">
+                            </div>
+                            <div class="screen-glare"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Step Badge -->
+                    <div class="simulator-status-card" id="sim-status-card">
+                        <span class="sim-badge" id="sim-badge">STEP 1 OF 4</span>
+                        <div class="sim-card-title" id="sim-title">Discover & Swipe Deals</div>
+                        <div class="sim-card-desc" id="sim-desc">Smart recommendation algorithm learns what you love.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= COMPARISON MATRIX ================= -->
+        <section class="section-container" id="comparison">
+            <div class="section-heading-block text-center">
+                <span class="section-tag">WHY PRICEHOP</span>
+                <h2 class="section-title">The PriceHop Advantage.</h2>
+                <p class="section-desc">See how we stack up against traditional price comparison websites and manual searching.</p>
+            </div>
+
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th class="feature-col">Feature</th>
+                            <th class="highlight-col">
+                                <div class="th-brand">
+                                    <span>PriceHop Mobile</span>
+                                    <span class="pro-tag">Winner</span>
+                                </div>
+                            </th>
+                            <th>Traditional Websites</th>
+                            <th>Manual Tab Checking</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-name">Speed & Refresh Rate</td>
+                            <td class="highlight-cell"><span class="check-icon">✓</span> Sub-second Live Sync</td>
+                            <td><span class="cross-icon">✕</span> Cached / 24h Old</td>
+                            <td><span class="cross-icon">✕</span> Tedious & Slow</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Instant Drop Alerts</td>
+                            <td class="highlight-cell"><span class="check-icon">✓</span> Real-Time Push</td>
+                            <td><span class="partial-icon">~</span> Clunky Email Only</td>
+                            <td><span class="cross-icon">✕</span> None</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Ad-Free & Zero Bias</td>
+                            <td class="highlight-cell"><span class="check-icon">✓</span> 100% Unbiased</td>
+                            <td><span class="cross-icon">✕</span> Sponsored Listings</td>
+                            <td><span class="cross-icon">✕</span> Tracked by Cookies</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Barcode Physical Scan</td>
+                            <td class="highlight-cell"><span class="check-icon">✓</span> Instant In-App</td>
+                            <td><span class="cross-icon">✕</span> Not Available</td>
+                            <td><span class="cross-icon">✕</span> Not Available</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Auto Coupon Detection</td>
+                            <td class="highlight-cell"><span class="check-icon">✓</span> Included</td>
+                            <td><span class="cross-icon">✕</span> Expired Codes</td>
+                            <td><span class="partial-icon">~</span> Manual Search</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ================= TESTIMONIALS & SOCIAL PROOF ================= -->
+        <section class="section-container" id="reviews">
+            <div class="section-heading-block text-center">
+                <span class="section-tag">COMMUNITY</span>
+                <h2 class="section-title">Loved by power shoppers.</h2>
+                <p class="section-desc">Join thousands of people who never pay full price again.</p>
+            </div>
+
+            <div class="reviews-grid">
+                <div class="review-card spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-body">
+                        "Saved ₹8,500 on my Sony headphones within 48 hours of installing. The price drop alert woke me up and I grabbed it before it sold out."
+                    </p>
+                    <div class="reviewer-meta">
+                        <div class="avatar-circle">AR</div>
+                        <div>
+                            <div class="reviewer-name">Ananya R.</div>
+                            <div class="reviewer-sub">Tech Enthusiast • Bangalore</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-body">
+                        "The barcode scanner is insane. I was at the mall looking at running shoes, scanned the box, and bought them online for 35% less right from the store aisle."
+                    </p>
+                    <div class="reviewer-meta">
+                        <div class="avatar-circle">VK</div>
+                        <div>
+                            <div class="reviewer-name">Vikram K.</div>
+                            <div class="reviewer-sub">Product Designer • Mumbai</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card spotlight-card">
+                    <div class="card-glow"></div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-body">
+                        "The UI feels like Raycast or Linear for shopping. Fast, silky smooth, and no spammy banner ads. Hands down the best mobile shopping utility."
+                    </p>
+                    <div class="reviewer-meta">
+                        <div class="avatar-circle">SM</div>
+                        <div>
+                            <div class="reviewer-name">Siddharth M.</div>
+                            <div class="reviewer-sub">Founder • Delhi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HIGH-CONVERSION BOTTOM CTA ================= -->
+        <section class="section-container cta-section-wrapper" id="waitlist">
+            <div class="cta-banner-container">
+                <div class="cta-glow-mesh"></div>
+                <div class="cta-content">
+                    <span class="cta-mini-tag">GET EARLY ACCESS</span>
+                    <h2 class="cta-title">Stop overpaying today.<br>Hop into smarter savings.</h2>
+                    <p class="cta-subtitle">
+                        Get the iOS & Android app. Join 100,000+ smart shoppers saving millions every month.
+                    </p>
+
+                    <!-- Waitlist Input Form -->
+                    <form class="waitlist-form" id="waitlist-form">
+                        <div class="input-container">
+                            <svg class="email-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            <input type="email" id="waitlist-email" placeholder="Enter your email address..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <span>Get Early Access</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </form>
+
+                    <div class="waitlist-success-msg" id="waitlist-success">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span>You're on the list! We've sent your VIP invite link to your inbox.</span>
+                    </div>
+
+                    <div class="cta-footnote">
+                        <span>🔒 100% Privacy. Zero spam. Cancel anytime.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer-wrapper">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo-icon small">
+                        <svg viewBox="0 0 28 28" fill="none">
+                            <rect width="28" height="28" rx="8" fill="url(#footer-logo-grad)"/>
+                            <path d="M7 19L13.5 8L16.5 13L21 6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="footer-logo-grad" x1="0" y1="0" x2="28" y2="28">
+                                    <stop stop-color="#FF4D4D"/>
+                                    <stop offset="1" stop-color="#FF2A54"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="brand-name">PRICEHOP</span>
+                    <p class="footer-tagline">Your shortcut to every deal.</p>
+                    <div class="system-status">
+                        <span class="status-indicator-dot"></span>
+                        <span>All price radar systems normal</span>
+                    </div>
+                </div>
+
+                <div class="footer-nav-cols">
+                    <div class="footer-col">
+                        <h5>Product</h5>
+                        <a href="#features">Features</a>
+                        <a href="#simulator">Simulator</a>
+                        <a href="#comparison">Advantage</a>
+                        <a href="#waitlist">Early Access</a>
+                    </div>
+                    <div class="footer-col">
+                        <h5>Platforms</h5>
+                        <a href="#">iOS App</a>
+                        <a href="#">Android App</a>
+                        <a href="#">Chrome Extension</a>
+                        <a href="#">Safari Extension</a>
+                    </div>
+                    <div class="footer-col">
+                        <h5>Legal & Trust</h5>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Affiliate Disclosures</a>
+                        <a href="#">Security</a>
+                    </div>
                 </div>
             </div>
 
-            <div class="countdown-container">
-                <div class="countdown-item"><span id="days">00</span>Days</div>
-                <div class="countdown-item"><span id="hours">00</span>Hours</div>
-                <div class="countdown-item"><span id="minutes">00</span>Minutes</div>
-                <div class="countdown-item"><span id="seconds">00</span>Seconds</div>
+            <div class="footer-bottom">
+                <p class="copyright">© 2026 PriceHop Technologies, Inc. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter / X">𝕏</a>
+                    <a href="#" aria-label="GitHub">GitHub</a>
+                    <a href="#" aria-label="Discord">Discord</a>
+                </div>
             </div>
+        </div>
+    </footer>
 
-            <div class="waitlist-form">
-                <input type="email" placeholder="Enter your email" required>
-                <button type="submit">Notify Me</button>
+    <!-- ================= QR CODE MODAL ================= -->
+    <div class="qr-modal-overlay" id="qr-modal">
+        <div class="qr-modal-card">
+            <button class="modal-close-btn" id="close-qr-btn">✕</button>
+            <div class="qr-modal-content">
+                <div class="qr-badge">SCAN TO INSTALL</div>
+                <h3 class="qr-modal-title">Get PriceHop on your Phone</h3>
+                <p class="qr-modal-desc">Point your iPhone or Android camera at the QR code below for instant download.</p>
+                
+                <div class="qr-code-box">
+                    <svg viewBox="0 0 160 160" width="160" height="160" class="qr-svg">
+                        <!-- Stylized modern QR Code vector -->
+                        <rect width="160" height="160" rx="12" fill="#0A0B0E"/>
+                        <!-- Top Left Anchor -->
+                        <rect x="16" y="16" width="40" height="40" rx="8" fill="#FF4D4D"/>
+                        <rect x="24" y="24" width="24" height="24" rx="4" fill="#0A0B0E"/>
+                        <rect x="30" y="30" width="12" height="12" rx="2" fill="#FF4D4D"/>
+                        <!-- Top Right Anchor -->
+                        <rect x="104" y="16" width="40" height="40" rx="8" fill="#FF4D4D"/>
+                        <rect x="112" y="24" width="24" height="24" rx="4" fill="#0A0B0E"/>
+                        <rect x="118" y="30" width="12" height="12" rx="2" fill="#FF4D4D"/>
+                        <!-- Bottom Left Anchor -->
+                        <rect x="16" y="104" width="40" height="40" rx="8" fill="#FF4D4D"/>
+                        <rect x="24" y="112" width="24" height="24" rx="4" fill="#0A0B0E"/>
+                        <rect x="30" y="118" width="12" height="12" rx="2" fill="#FF4D4D"/>
+                        <!-- Random data matrix patterns -->
+                        <rect x="68" y="16" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="84" y="16" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="68" y="32" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="68" y="48" width="8" height="16" rx="2" fill="#FFFFFF"/>
+                        <rect x="84" y="48" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="16" y="68" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="40" y="68" width="8" height="16" rx="2" fill="#FFFFFF"/>
+                        <rect x="64" y="68" width="32" height="24" rx="6" fill="#00F0FF"/>
+                        <rect x="104" y="68" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="128" y="68" width="16" height="16" rx="2" fill="#FFFFFF"/>
+                        <rect x="16" y="88" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="32" y="88" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="104" y="88" width="8" height="24" rx="2" fill="#FFFFFF"/>
+                        <rect x="120" y="96" width="24" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="68" y="104" width="8" height="16" rx="2" fill="#FFFFFF"/>
+                        <rect x="84" y="112" width="8" height="16" rx="2" fill="#FFFFFF"/>
+                        <rect x="68" y="128" width="24" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="104" y="120" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                        <rect x="128" y="120" width="16" height="24" rx="2" fill="#FFFFFF"/>
+                        <rect x="104" y="136" width="16" height="8" rx="2" fill="#FFFFFF"/>
+                    </svg>
+                </div>
+
+                <div class="qr-app-badges">
+                    <span class="qr-sub-text">Available on iOS 17+ and Android 14+</span>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <footer class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Disclosures</a>
-                <a href="#">Copyright © 2026 Pricehop</a>
-            </footer>
-        </section>
-    </main>
+    <!-- JavaScript Bundle -->
     <script src="script.js"></script>
 </body>
 </html>
