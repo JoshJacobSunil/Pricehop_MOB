@@ -184,12 +184,12 @@ function initNavbarScroll() {
     if (!navbar) return;
 
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(10, 11, 15, 0.85)';
-            navbar.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12)';
+        if (window.scrollY > 40) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = '0 12px 35px rgba(11, 59, 36, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1)';
         } else {
-            navbar.style.background = 'rgba(12, 13, 18, 0.65)';
-            navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+            navbar.style.background = 'rgba(255, 255, 255, 0.88)';
+            navbar.style.boxShadow = '0 8px 25px rgba(11, 59, 36, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
         }
     }, { passive: true });
 }
@@ -207,15 +207,15 @@ function initMobileMenu() {
         
         if (!isOpen) {
             navLinks.style.position = 'absolute';
-            navLinks.style.top = '70px';
-            navLinks.style.left = '20px';
-            navLinks.style.right = '20px';
+            navLinks.style.top = '65px';
+            navLinks.style.left = '16px';
+            navLinks.style.right = '16px';
             navLinks.style.flexDirection = 'column';
-            navLinks.style.background = '#0E1017';
+            navLinks.style.background = '#FFFFFF';
             navLinks.style.padding = '20px';
-            navLinks.style.borderRadius = '16px';
-            navLinks.style.border = '1px solid rgba(255, 255, 255, 0.1)';
-            navLinks.style.boxShadow = '0 20px 50px rgba(0,0,0,0.8)';
+            navLinks.style.borderRadius = '20px';
+            navLinks.style.border = '1px solid rgba(11, 59, 36, 0.12)';
+            navLinks.style.boxShadow = '0 15px 40px rgba(11, 59, 36, 0.15)';
         }
     });
 
