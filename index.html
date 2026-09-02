@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=2.4">
+    <link rel="stylesheet" href="style.css?v=2.5">
 </head>
 <body class="forest-theme">
 
@@ -104,16 +104,6 @@
                         <span class="badge-value">₹24,999 <del>₹31,999</del></span>
                     </div>
                     <span class="badge-store">Amazon</span>
-                </div>
-
-                <!-- Floating Popout 2 (Right) -->
-                <div class="floating-badge badge-right-bottom float-anim-2">
-                    <div class="badge-icon emerald-glow">⚡</div>
-                    <div class="badge-info">
-                        <span class="badge-label">Lowest Ever Recorded</span>
-                        <span class="badge-value">Save ₹7,000 Today</span>
-                    </div>
-                    <span class="badge-store">Flipkart</span>
                 </div>
 
                 <!-- Realistic iPhone 16 Pro Frame (Emerald Titanium) -->
@@ -310,39 +300,39 @@
             </div>
 
             <div class="simulator-container">
-                <!-- Left: Stepper Navigation -->
-                <div class="simulator-stepper">
-                    <div class="step-item active" data-step="0">
+                <!-- Stepper Navigation -->
+                <div class="simulator-stepper" id="simulator-stepper">
+                    <button class="step-item active" data-step="0" type="button" aria-label="Step 1: Discover and Swipe Deals">
                         <div class="step-num">01</div>
                         <div class="step-details">
-                            <h4>Discover & Swipe Deals</h4>
+                            <h4>Discover & Swipe</h4>
                             <p>Swipe right to bookmark, left to pass. Curated for your interests.</p>
                         </div>
-                    </div>
+                    </button>
 
-                    <div class="step-item" data-step="1">
+                    <button class="step-item" data-step="1" type="button" aria-label="Step 2: Compare Real-Time Stores">
                         <div class="step-num">02</div>
                         <div class="step-details">
-                            <h4>Compare Real-Time Stores</h4>
-                            <p>Instant price lookup across 50+ stores with one search.</p>
+                            <h4>Live Compare</h4>
+                            <p>Instant price lookup across Amazon, Flipkart & 50+ stores.</p>
                         </div>
-                    </div>
+                    </button>
 
-                    <div class="step-item" data-step="2">
+                    <button class="step-item" data-step="2" type="button" aria-label="Step 3: Set Price Drop Radars">
                         <div class="step-num">03</div>
                         <div class="step-details">
-                            <h4>Set Price Drop Radars</h4>
-                            <p>Lock in notifications when items reach your target budget.</p>
+                            <h4>Drop Radars</h4>
+                            <p>Sub-second push notifications the moment prices drop.</p>
                         </div>
-                    </div>
+                    </button>
 
-                    <div class="step-item" data-step="3">
+                    <button class="step-item" data-step="3" type="button" aria-label="Step 4: One-Tap Deal Hop">
                         <div class="step-num">04</div>
                         <div class="step-details">
-                            <h4>One-Tap Deal Hop</h4>
-                            <p>Deep-link directly to checkout with auto-applied promo codes.</p>
+                            <h4>One-Tap Hop</h4>
+                            <p>Deep-link to checkout with auto-applied promo codes.</p>
                         </div>
-                    </div>
+                    </button>
                 </div>
 
                 <!-- Right: Interactive Device Viewport -->
@@ -593,6 +583,6 @@
     </div>
 
     <!-- JavaScript Bundle -->
-    <script src="script.js?v=2.4"></script>
+    <script src="script.js?v=2.5"></script>
 </body>
 </html>

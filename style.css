@@ -947,23 +947,29 @@ button, input {
 
 .step-item {
     display: flex;
+    align-items: center;
     gap: 16px;
-    padding: 18px;
+    padding: 18px 22px;
     border-radius: var(--radius-lg);
-    background: transparent;
-    border: 1px solid transparent;
+    background: #FFFFFF;
+    border: 1px solid var(--border-card);
     cursor: pointer;
     transition: var(--transition-smooth);
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    box-shadow: 0 2px 8px rgba(11, 59, 36, 0.03);
 }
 
 .step-item:hover {
-    background: var(--bg-secondary);
+    background: var(--bg-card-hover);
+    border-color: var(--border-highlight);
 }
 
 .step-item.active {
-    background: var(--bg-secondary);
-    border-color: rgba(11, 59, 36, 0.18);
-    box-shadow: 0 4px 16px rgba(11, 59, 36, 0.05);
+    background: #FFFFFF;
+    border-color: var(--emerald);
+    box-shadow: 0 8px 25px rgba(11, 59, 36, 0.08);
 }
 
 .step-num {
@@ -972,10 +978,11 @@ button, input {
     font-weight: 800;
     color: var(--text-muted);
     transition: color 0.3s ease;
+    flex-shrink: 0;
 }
 
 .step-item.active .step-num {
-    color: var(--dark-green);
+    color: var(--emerald-dark);
 }
 
 .step-details h4 {
@@ -1012,18 +1019,20 @@ button, input {
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
-    transform: scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: scale(0.97);
 }
 
 .simulator-screen.active {
     opacity: 1;
+    pointer-events: auto;
     transform: scale(1);
-    position: relative;
+    position: absolute;
 }
 
 .simulator-status-card {
-    margin-top: 42px;
+    margin-top: 36px;
     background: var(--bg-card);
     border: 1px solid var(--border-highlight);
     border-radius: var(--radius-lg);
@@ -1493,9 +1502,67 @@ button, input {
         flex-direction: column;
     }
     .simulator-container {
-        grid-template-columns: 1fr;
-        gap: 36px;
-        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding: clamp(20px, 4vw, 36px);
+    }
+    .simulator-stepper {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        order: 1;
+    }
+    .step-item {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 4px;
+        border-radius: var(--radius-md);
+        text-align: center;
+        gap: 4px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-subtle);
+    }
+    .step-item:hover {
+        background: #FFFFFF;
+    }
+    .step-item.active {
+        background: #FFFFFF;
+        border-color: var(--emerald);
+        box-shadow: 0 4px 14px rgba(11, 59, 36, 0.1);
+    }
+    .step-item.active .step-num {
+        color: var(--emerald-dark);
+    }
+    .step-num {
+        font-size: 0.82rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+    .step-details h4 {
+        font-size: 0.72rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 80px;
+    }
+    .step-details p {
+        display: none;
+    }
+    .simulator-device-view {
+        order: 2;
+        width: 100%;
+        margin-top: 6px;
+    }
+    .simulator-status-card {
+        margin-top: 24px;
     }
 }
 
@@ -1503,26 +1570,72 @@ button, input {
     /* Navbar Mobile */
     .navbar-wrapper {
         top: 10px;
-        padding: 0 12px;
+        padding: 0 10px;
     }
     .navbar-container {
-        padding: 6px 12px;
+        padding: 6px 10px 6px 14px;
+        height: 48px;
+        gap: 10px;
+    }
+    .nav-brand {
+        gap: 6px;
+    }
+    .brand-name {
+        font-size: 0.84rem;
+    }
+    .version-pill {
+        display: none; /* Keep clean space on phone */
     }
     .nav-links {
         display: none;
     }
+    .nav-links.mobile-open {
+        display: flex;
+        position: absolute;
+        top: 56px;
+        left: 10px;
+        right: 10px;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        padding: 20px 24px;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border-highlight);
+        box-shadow: 0 20px 45px rgba(11, 59, 36, 0.15);
+        gap: 16px;
+        z-index: 1001;
+    }
+    .nav-links.mobile-open .nav-link {
+        font-size: 1rem;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-actions {
+        gap: 6px;
+    }
+    .nav-actions #open-qr-btn {
+        display: none; /* Hide QR modal trigger on phone */
+    }
+    .nav-actions .btn-primary {
+        height: 32px;
+        padding: 0 12px;
+        font-size: 0.78rem;
+    }
     .mobile-toggle {
         display: flex;
+        width: 32px;
+        height: 32px;
     }
     
     /* Hero Screen Scaling */
     .hero-section {
-        padding-top: 105px;
+        padding-top: 95px;
         padding-bottom: 40px;
     }
     .hero-device-wrapper {
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
     }
     
     /* Responsive Phone Chassis Fitting */
@@ -1549,14 +1662,11 @@ button, input {
         width: 100%;
         max-width: 290px;
         padding: 10px 14px;
-        margin: 4px auto;
+        margin: 12px auto 0;
         box-shadow: 0 4px 15px rgba(11, 59, 36, 0.08);
     }
     .badge-left-top {
         order: 2;
-    }
-    .badge-right-bottom {
-        order: 3;
     }
     .iphone-pro-frame {
         order: 1;

@@ -35,6 +35,7 @@ function initSimulator() {
     const simTitle = document.getElementById('sim-title');
     const simDesc = document.getElementById('sim-desc');
     const simulatorContainer = document.querySelector('.simulator-container');
+    const simFrame = document.querySelector('.simulator-frame');
 
     const stepData = [
         {
@@ -61,12 +62,14 @@ function initSimulator() {
 
     let currentStep = 0;
     let autoPlayInterval = null;
-    let isHovered = false;
+    let isInteracting = false;
 
     function activateStep(index) {
+        if (index < 0) index = stepItems.length - 1;
+        if (index >= stepItems.length) index = 0;
         currentStep = index;
 
-        // Update Stepper List
+        // Update Stepper List / Tabs
         stepItems.forEach((item, i) => {
             item.classList.toggle('active', i === index);
         });
@@ -84,18 +87,52 @@ function initSimulator() {
         }
     }
 
-    // Step Item Click Handlers
+    // Step Item Click / Tap Handlers
     stepItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
             activateStep(index);
             resetAutoPlay();
         });
     });
 
+    // Touch Swipe Gesture on Phone Mockup
+    if (simFrame) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        simFrame.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            isInteracting = true;
+        }, { passive: true });
+
+        simFrame.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+
+            // Horizontal swipe detected (more than 40px and predominantly horizontal)
+            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX < 0) {
+                    // Swiped Left -> Next Step
+                    activateStep(currentStep + 1);
+                } else {
+                    // Swiped Right -> Prev Step
+                    activateStep(currentStep - 1);
+                }
+                resetAutoPlay();
+            }
+            setTimeout(() => { isInteracting = false; }, 1000);
+        }, { passive: true });
+    }
+
     // Auto-advance loop every 4.5 seconds
     function startAutoPlay() {
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
         autoPlayInterval = setInterval(() => {
-            if (!isHovered) {
+            if (!isInteracting) {
                 const nextStep = (currentStep + 1) % stepItems.length;
                 activateStep(nextStep);
             }
@@ -103,13 +140,12 @@ function initSimulator() {
     }
 
     function resetAutoPlay() {
-        clearInterval(autoPlayInterval);
         startAutoPlay();
     }
 
     if (simulatorContainer) {
-        simulatorContainer.addEventListener('mouseenter', () => { isHovered = true; });
-        simulatorContainer.addEventListener('mouseleave', () => { isHovered = false; });
+        simulatorContainer.addEventListener('mouseenter', () => { isInteracting = true; });
+        simulatorContainer.addEventListener('mouseleave', () => { isInteracting = false; });
     }
 
     startAutoPlay();
@@ -200,30 +236,22 @@ function initMobileMenu() {
 
     if (!toggle || !navLinks) return;
 
-    toggle.addEventListener('click', () => {
-        const isOpen = navLinks.style.display === 'flex';
-        navLinks.style.display = isOpen ? 'none' : 'flex';
-        
-        if (!isOpen) {
-            navLinks.style.position = 'absolute';
-            navLinks.style.top = '65px';
-            navLinks.style.left = '16px';
-            navLinks.style.right = '16px';
-            navLinks.style.flexDirection = 'column';
-            navLinks.style.background = '#FFFFFF';
-            navLinks.style.padding = '20px';
-            navLinks.style.borderRadius = '20px';
-            navLinks.style.border = '1px solid rgba(11, 59, 36, 0.12)';
-            navLinks.style.boxShadow = '0 15px 40px rgba(11, 59, 36, 0.15)';
-        }
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navLinks.classList.toggle('mobile-open');
     });
 
     // Close on link click
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                navLinks.style.display = 'none';
-            }
+            navLinks.classList.remove('mobile-open');
         });
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !toggle.contains(e.target)) {
+            navLinks.classList.remove('mobile-open');
+        }
     });
 }
