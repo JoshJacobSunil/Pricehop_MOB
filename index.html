@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=2.2">
+    <link rel="stylesheet" href="style.css?v=2.3">
 </head>
 <body class="forest-theme">
 
@@ -69,13 +69,6 @@
         <!-- ================= HERO SECTION ================= -->
         <section class="hero-section">
             <div class="hero-content">
-                <!-- Floating Announcement Pill -->
-                <div class="announcement-pill">
-                    <span class="pill-spark">⚡</span>
-                    <span class="pill-text">PriceHop 2.0 for iOS & Android is live</span>
-                    <span class="pill-arrow">→</span>
-                </div>
-
                 <h1 class="hero-title">
                     Your shortcut to <br>
                     <span class="gradient-text">every deal.</span>
@@ -97,24 +90,6 @@
                             <strong>iOS & Android</strong>
                         </span>
                     </a>
-
-                    <button class="btn btn-secondary btn-hero" id="hero-demo-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
-                        </svg>
-                        <span>Interactive Demo</span>
-                    </button>
-                </div>
-
-                <div class="hero-meta">
-                    <div class="rating-stars">
-                        <span>★★★★★</span>
-                        <span class="rating-num">4.9 / 5.0</span>
-                    </div>
-                    <span class="meta-separator">•</span>
-                    <span>100,000+ Deals Tracked Daily</span>
-                    <span class="meta-separator">•</span>
-                    <span>100% Ad-Free</span>
                 </div>
             </div>
 
@@ -237,11 +212,11 @@
                 <p class="section-desc">Everything you need to outsmart dynamic pricing, all in one fluid application.</p>
             </div>
 
-            <!-- Bento 12-Column Grid -->
+            <!-- Bento 12-Column Grid (Balanced 2x2 Layout) -->
             <div class="bento-grid">
                 
-                <!-- Bento Card 1 (Large - 8 Cols) -->
-                <div class="bento-card bento-col-8 spotlight-card">
+                <!-- Bento Card 1: Real-Time Engine (6 Cols) -->
+                <div class="bento-card bento-col-6 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -252,13 +227,13 @@
                             </p>
                         </div>
                         <div class="bento-graphic graphic-comparison-preview">
-                            <img src="assets/cmp_popout.png" alt="Price comparison sheet" class="bento-img bento-cmp-img">
+                            <img src="assets/cmp_popout.png" alt="Price comparison popup" class="bento-img bento-cmp-img">
                         </div>
                     </div>
                 </div>
 
-                <!-- Bento Card 2 (Medium - 4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
+                <!-- Bento Card 2: Radar Alerts (6 Cols) -->
+                <div class="bento-card bento-col-6 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -269,13 +244,13 @@
                             </p>
                         </div>
                         <div class="bento-graphic graphic-alert-preview">
-                            <img src="assets/alert_popout.png" alt="Price drop alert trigger" class="bento-img bento-alert-img">
+                            <img src="assets/alert_popout.png" alt="Price drop alert popup" class="bento-img bento-alert-img">
                         </div>
                     </div>
                 </div>
 
-                <!-- Bento Card 3 (Medium - 4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
+                <!-- Bento Card 3: One-Tap Hop (6 Cols) -->
+                <div class="bento-card bento-col-6 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -291,37 +266,8 @@
                     </div>
                 </div>
 
-                <!-- Bento Card 4 (Medium - 4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner">
-                        <div class="bento-header">
-                            <span class="bento-badge">VOICE & SCAN</span>
-                            <h3 class="bento-title">Barcode & Voice AI</h3>
-                            <p class="bento-text">
-                                Shopping in a physical store? Point your camera at any barcode to instantly see if it's cheaper online.
-                            </p>
-                        </div>
-                        <div class="bento-graphic graphic-voice-wave">
-                            <div class="audio-wave-container">
-                                <div class="wave-bar bar-1"></div>
-                                <div class="wave-bar bar-2"></div>
-                                <div class="wave-bar bar-3"></div>
-                                <div class="wave-bar bar-4"></div>
-                                <div class="wave-bar bar-5"></div>
-                                <div class="wave-bar bar-6"></div>
-                                <div class="wave-bar bar-7"></div>
-                            </div>
-                            <div class="voice-search-pill">
-                                <span class="voice-dot"></span>
-                                <span>"Find lowest price on AirPods Pro 2"</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bento Card 5 (Medium - 4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
+                <!-- Bento Card 4: Intelligence (6 Cols) -->
+                <div class="bento-card bento-col-6 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -349,29 +295,6 @@
                                     <circle cx="300" cy="70" r="4" fill="#059669"/>
                                 </svg>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bento Card 6 (Full Width - 12 Cols) -->
-                <div class="bento-card bento-col-12 spotlight-card bento-continuity">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner bento-horizontal">
-                        <div class="bento-header">
-                            <span class="bento-badge">SYNC & CONTINUITY</span>
-                            <h3 class="bento-title">iPhone • Android • iPad • Browser Extension</h3>
-                            <p class="bento-text">
-                                Create your universal watchlist. Save a deal on your phone and open it on your laptop with your alerts synced everywhere.
-                            </p>
-                            <div class="platform-chips">
-                                <span class="chip active">iOS 17+</span>
-                                <span class="chip">Android 14+</span>
-                                <span class="chip">Chrome Extension</span>
-                                <span class="chip">Safari Extension</span>
-                            </div>
-                        </div>
-                        <div class="bento-graphic graphic-continuity-devices">
-                            <img src="assets/dday.png" alt="Cross-device sync" class="bento-img continuity-img">
                         </div>
                     </div>
                 </div>
@@ -727,6 +650,6 @@
     </div>
 
     <!-- JavaScript Bundle -->
-    <script src="script.js?v=2.2"></script>
+    <script src="script.js?v=2.3"></script>
 </body>
 </html>

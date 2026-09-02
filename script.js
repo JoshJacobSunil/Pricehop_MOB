@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initWaitlistForm();
     initNavbarScroll();
     initMobileMenu();
-    initHeroDemo();
 });
 
 /* ================= 1. MOUSE-TRACKING SPOTLIGHT EFFECT ================= */
@@ -227,16 +226,4 @@ function initMobileMenu() {
             }
         });
     });
-}
-
-/* ================= 7. HERO DEMO SCROLL ================= */
-function initHeroDemo() {
-    const heroDemoBtn = document.getElementById('hero-demo-btn');
-    const simulatorSection = document.getElementById('simulator');
-
-    if (heroDemoBtn && simulatorSection) {
-        heroDemoBtn.addEventListener('click', () => {
-            simulatorSection.scrollIntoView({ behavior: 'smooth' });
-        });
-    }
 }
