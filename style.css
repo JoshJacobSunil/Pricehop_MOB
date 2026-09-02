@@ -1510,14 +1510,17 @@ button, input {
     }
     .simulator-stepper {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 1fr;
+        gap: 12px;
         width: 100%;
         max-width: 440px;
         margin: 0 auto 24px;
         order: 1;
+        box-sizing: border-box;
     }
     .step-item {
+        display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
@@ -1528,6 +1531,9 @@ button, input {
         background: var(--bg-secondary);
         border: 1px solid var(--border-subtle);
         box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+        min-height: 56px;
     }
     .step-item:hover {
         background: #FFFFFF;
@@ -1546,6 +1552,10 @@ button, input {
         color: var(--text-muted);
         line-height: 1;
         flex-shrink: 0;
+    }
+    .step-details {
+        flex: 1;
+        min-width: 0;
     }
     .step-details h4 {
         font-size: 0.84rem;
