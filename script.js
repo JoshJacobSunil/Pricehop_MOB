@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initSpotlightEffect();
     initSimulator();
+    initBentoScrollAnimation();
     initQRModal();
     initWaitlistForm();
     initCountdownTimer();
@@ -64,6 +65,7 @@ function initSimulator() {
     let currentStep = 0;
     let autoPlayInterval = null;
     let isInteracting = false;
+    let manualOverrideTimeout = null;
 
     function activateStep(index) {
         if (index < 0) index = stepItems.length - 1;
@@ -93,6 +95,9 @@ function initSimulator() {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             activateStep(index);
+            isInteracting = true;
+            if (manualOverrideTimeout) clearTimeout(manualOverrideTimeout);
+            manualOverrideTimeout = setTimeout(() => { isInteracting = false; }, 3500);
             resetAutoPlay();
         });
     });
@@ -125,11 +130,37 @@ function initSimulator() {
                 }
                 resetAutoPlay();
             }
-            setTimeout(() => { isInteracting = false; }, 1000);
+            if (manualOverrideTimeout) clearTimeout(manualOverrideTimeout);
+            manualOverrideTimeout = setTimeout(() => { isInteracting = false; }, 3500);
         }, { passive: true });
     }
 
-    // Auto-advance loop every 4.5 seconds
+    // Scroll-Driven Step Changing: As user scrolls through the phone/simulator section
+    let lastScrollStep = -1;
+    window.addEventListener('scroll', () => {
+        if (!simFrame || isInteracting) return;
+        const rect = simFrame.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // When simulator is active in the viewport
+        if (rect.bottom > 80 && rect.top < windowHeight - 80) {
+            // Calculate progress as the phone travels across the viewport midpoint
+            const phoneCenter = rect.top + rect.height / 2;
+            const screenCenter = windowHeight / 2;
+            
+            // Progress ranges from 0 (entering screen) to 1 (leaving top)
+            const progress = (windowHeight - rect.top) / (windowHeight + rect.height * 0.7);
+            const clamped = Math.max(0, Math.min(0.999, progress));
+            const targetStep = Math.floor(clamped * 4);
+
+            if (targetStep !== currentStep && targetStep !== lastScrollStep) {
+                lastScrollStep = targetStep;
+                activateStep(targetStep);
+            }
+        }
+    }, { passive: true });
+
+    // Auto-advance loop every 4 seconds
     function startAutoPlay() {
         if (autoPlayInterval) clearInterval(autoPlayInterval);
         autoPlayInterval = setInterval(() => {
@@ -137,7 +168,7 @@ function initSimulator() {
                 const nextStep = (currentStep + 1) % stepItems.length;
                 activateStep(nextStep);
             }
-        }, 4500);
+        }, 4000);
     }
 
     function resetAutoPlay() {
@@ -294,4 +325,42 @@ function initCountdownTimer() {
 
     updateTimer();
     setInterval(updateTimer, 1000);
+}
+
+/* ================= 8. CORE CAPABILITIES CENTER-SCROLL SPOTLIGHT ================= */
+function initBentoScrollAnimation() {
+    const bentoCards = document.querySelectorAll('#features .bento-card');
+    if (!bentoCards.length) return;
+
+    let ticking = false;
+
+    function updateBentoFocus() {
+        const screenCenter = window.innerHeight / 2;
+
+        bentoCards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.top + rect.height / 2;
+            const distanceToCenter = Math.abs(cardCenter - screenCenter);
+
+            // Trigger clicked/spotlight animation when card center aligns with screen center
+            if (distanceToCenter < rect.height * 0.45 && rect.bottom > 80 && rect.top < window.innerHeight - 80) {
+                card.classList.add('scroll-active');
+                card.style.setProperty('--mouse-x', '50%');
+                card.style.setProperty('--mouse-y', '50%');
+            } else {
+                card.classList.remove('scroll-active');
+            }
+        });
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(updateBentoFocus);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    updateBentoFocus();
 }

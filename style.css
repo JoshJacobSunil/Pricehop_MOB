@@ -49,6 +49,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 html, body {
@@ -74,6 +75,7 @@ body.forest-theme {
 a {
     color: inherit;
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 img {
@@ -82,10 +84,17 @@ img {
     display: block;
 }
 
-button, input {
+button, input, select, textarea, .btn, .step-item {
     font-family: inherit;
     border: none;
-    outline: none;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:focus-visible, .step-item:focus, .step-item:focus-visible {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    box-shadow: none;
 }
 
 /* ================= AMBIENT EMERALD & FOREST GLOWS ================= */
@@ -145,10 +154,10 @@ button, input {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-subtle);
-    padding: 6px 12px 6px 18px;
+    padding: 6px 14px 6px 20px;
     border-radius: 14px;
-    max-width: 1040px;
-    width: 100%;
+    max-width: 1350px;
+    width: 94%;
     height: 56px;
     box-shadow: 0 8px 24px rgba(11, 59, 36, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.8);
     transition: var(--transition-smooth);
@@ -357,18 +366,18 @@ button, input {
 }
 
 .hero-content {
-    max-width: 820px;
-    margin: 0 auto 36px;
+    max-width: 860px;
+    margin: 0 auto 12px;
     width: 100%;
 }
 
 .hero-title {
-    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    font-size: clamp(2.9rem, 7.2vw, 5.5rem);
     font-weight: 900;
-    line-height: 1.08;
+    line-height: 1.06;
     letter-spacing: -0.035em;
     color: var(--dark-green);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .gradient-text {
@@ -381,18 +390,9 @@ button, input {
     font-size: clamp(1rem, 2vw, 1.25rem);
     color: var(--text-secondary);
     max-width: 640px;
-    margin: 0 auto 32px;
+    margin: 0 auto 0;
     line-height: 1.55;
     font-weight: 400;
-}
-
-.hero-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    margin-bottom: 0;
-    flex-wrap: wrap;
 }
 
 .meta-separator {
@@ -402,7 +402,7 @@ button, input {
 /* ================= HERO PHONE HARDWARE MOCKUP ================= */
 .hero-device-wrapper {
     position: relative;
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -775,7 +775,7 @@ button, input {
 }
 
 #features {
-    padding-top: 0;
+    padding-top: 10px;
     padding-bottom: 24px;
 }
 
@@ -807,9 +807,9 @@ button, input {
 }
 
 .section-title {
-    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    font-size: clamp(2.3rem, 4.8vw, 3.5rem);
     font-weight: 900;
-    line-height: 1.15;
+    line-height: 1.12;
     letter-spacing: -0.025em;
     color: var(--dark-green);
     margin-bottom: 12px;
@@ -848,10 +848,11 @@ button, input {
     flex-direction: column;
 }
 
-.bento-card:hover {
-    border-color: rgba(11, 59, 36, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(11, 59, 36, 0.09);
+.bento-card:hover,
+.bento-card.scroll-active {
+    border-color: rgba(11, 59, 36, 0.4);
+    transform: translateY(-3px) scale(1.015);
+    box-shadow: 0 12px 35px rgba(11, 59, 36, 0.12);
 }
 
 .spotlight-card {
@@ -870,7 +871,8 @@ button, input {
     transition: opacity 0.4s ease;
 }
 
-.spotlight-card:hover::before {
+.spotlight-card:hover::before,
+.spotlight-card.scroll-active::before {
     opacity: 1;
 }
 
@@ -1076,8 +1078,8 @@ button, input {
     object-fit: cover;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    transform: scale(0.97);
+    transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+    transform: scale(0.985);
 }
 
 .simulator-screen.active {
@@ -1235,9 +1237,9 @@ button, input {
 }
 
 .cta-title {
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-size: clamp(2.4rem, 5.2vw, 3.8rem);
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.08;
     letter-spacing: -0.03em;
     color: #FFFFFF;
     margin-bottom: 14px;
@@ -1367,11 +1369,11 @@ button, input {
 }
 
 .countdown-title {
-    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-size: clamp(2.2rem, 4.2vw, 2.9rem);
     font-weight: 900;
     color: var(--dark-green);
     margin: 12px 0 8px;
-    line-height: 1.2;
+    line-height: 1.15;
 }
 
 .countdown-subtitle {
