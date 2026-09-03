@@ -636,12 +636,18 @@ button, input {
 
 .ticker-rail-container {
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
     user-select: none;
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.ticker-rail-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .ticker-rail {
@@ -722,7 +728,7 @@ button, input {
     color: var(--text-muted);
     letter-spacing: 0.12em;
     font-weight: 700;
-    margin-bottom: 24px;
+    margin-bottom: 44px;
     text-transform: uppercase;
 }
 
@@ -754,14 +760,22 @@ button, input {
 .section-container {
     position: relative;
     z-index: 10;
-    padding: clamp(85px, 10vw, 130px) 24px;
+    padding: clamp(80px, 9vw, 120px) 24px;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
 }
 
+#features {
+    padding-bottom: 24px;
+}
+
+#simulator {
+    padding-top: 24px;
+}
+
 .section-heading-block {
-    margin-bottom: 52px;
+    margin-bottom: 48px;
 }
 
 .text-center {
@@ -1316,9 +1330,13 @@ button, input {
     color: rgba(255, 255, 255, 0.7);
 }
 
+.cta-section-wrapper {
+    padding-bottom: 12px;
+}
+
 /* ================= LAUNCH COUNTDOWN SECTION ================= */
 .countdown-section {
-    padding: clamp(60px, 8vw, 95px) 24px;
+    padding: 12px 24px clamp(60px, 7vw, 90px);
     max-width: 900px;
     margin: 0 auto;
 }
@@ -1432,6 +1450,28 @@ button, input {
 
 .footer-brand {
     max-width: 300px;
+}
+
+.footer-brand-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-brand-title .brand-name {
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    color: var(--dark-green);
+    line-height: 1;
+}
+
+.footer-brand-title .brand-logo-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    border-radius: 5px;
+    display: block;
 }
 
 .footer-tagline {
