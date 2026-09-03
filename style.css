@@ -161,15 +161,31 @@ button, input {
     flex-shrink: 0;
 }
 
-.logo-icon svg {
-    width: 26px;
-    height: 26px;
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-logo-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
     display: block;
 }
 
-.logo-icon.small svg {
-    width: 22px;
-    height: 22px;
+.logo-icon.small .brand-logo-img {
+    width: 24px;
+    height: 24px;
+}
+
+.th-logo-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 .brand-name {
@@ -689,28 +705,45 @@ button, input {
 
 /* ================= STORE PARTNER STRIP ================= */
 .partner-ribbon-section {
-    padding: 36px 20px 20px;
+    padding: clamp(52px, 7vw, 80px) 20px clamp(40px, 6vw, 65px);
     text-align: center;
     max-width: 1000px;
     margin: 0 auto;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .partner-label {
-    font-size: 0.72rem;
+    font-size: 0.84rem;
     font-family: var(--font-mono);
     color: var(--text-muted);
-    letter-spacing: 0.1em;
-    font-weight: 600;
-    margin-bottom: 18px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+.partner-logo-strip {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .partner-logos-img {
-    max-height: 44px;
+    max-width: 680px;
+    width: 90%;
+    height: auto;
+    max-height: 64px;
+    object-fit: contain;
     margin: 0 auto;
-    opacity: 0.75;
-    filter: contrast(1.1);
+    opacity: 0.88;
+    filter: contrast(1.08);
     transition: var(--transition-smooth);
+    display: block;
 }
 
 .partner-logos-img:hover {
@@ -1283,6 +1316,97 @@ button, input {
     color: rgba(255, 255, 255, 0.7);
 }
 
+/* ================= LAUNCH COUNTDOWN SECTION ================= */
+.countdown-section {
+    padding: clamp(60px, 8vw, 95px) 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.countdown-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(11, 59, 36, 0.06);
+    padding: clamp(32px, 5vw, 54px) clamp(20px, 4vw, 44px);
+    text-align: center;
+}
+
+.countdown-inner {
+    position: relative;
+    z-index: 2;
+}
+
+.countdown-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-weight: 900;
+    color: var(--dark-green);
+    margin: 12px 0 8px;
+    line-height: 1.2;
+}
+
+.countdown-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.5;
+}
+
+.timer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(10px, 2.5vw, 20px);
+    max-width: 620px;
+    margin: 0 auto 32px;
+}
+
+.timer-segment {
+    background: #FFFFFF;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: clamp(16px, 3vw, 26px) clamp(10px, 2vw, 16px);
+    box-shadow: 0 4px 16px rgba(11, 59, 36, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.timer-segment:hover {
+    border-color: var(--emerald);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(11, 59, 36, 0.09);
+}
+
+.timer-number {
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--dark-green);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.timer-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 1.1vw, 0.78rem);
+    font-weight: 700;
+    color: var(--emerald-dark);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.countdown-cta-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+}
+
 /* ================= FOOTER ================= */
 .footer-wrapper {
     position: relative;
@@ -1742,5 +1866,20 @@ button, input {
     }
     .footer-nav-cols {
         gap: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .timer-grid {
+        gap: 8px;
+    }
+    .timer-segment {
+        padding: 12px 6px;
+    }
+    .timer-number {
+        font-size: 1.6rem;
+    }
+    .timer-label {
+        font-size: 0.65rem;
     }
 }

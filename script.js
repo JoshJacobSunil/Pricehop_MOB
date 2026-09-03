@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSimulator();
     initQRModal();
     initWaitlistForm();
+    initCountdownTimer();
     initNavbarScroll();
     initMobileMenu();
 });
@@ -254,4 +255,43 @@ function initMobileMenu() {
             navLinks.classList.remove('mobile-open');
         }
     });
+}
+
+/* ================= 7. LAUNCH COUNTDOWN TIMER (OCTOBER 2, 2026 AFTERNOON) ================= */
+function initCountdownTimer() {
+    // Target: October 2, 2026 at 12:00:00 PM IST (Afternoon)
+    const targetDate = new Date('2026-10-02T12:00:00+05:30').getTime();
+
+    const daysEl = document.getElementById('timer-days');
+    const hoursEl = document.getElementById('timer-hours');
+    const minutesEl = document.getElementById('timer-minutes');
+    const secondsEl = document.getElementById('timer-seconds');
+
+    if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference <= 0) {
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            return;
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
 }

@@ -7,12 +7,16 @@
     <meta name="description" content="Intelligent price comparison tool for mobile. Compare 50+ stores in real-time, track price history, and catch instant price drop alerts.">
     <meta name="theme-color" content="#0B3B24">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/Pricehop Logo.png">
+    <link rel="apple-touch-icon" href="assets/Pricehop Logo.png">
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=2.9">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body class="forest-theme">
 
@@ -26,17 +30,7 @@
         <nav class="navbar-container">
             <a href="#" class="nav-brand">
                 <div class="logo-icon">
-                    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="28" height="28" rx="8" fill="url(#logo-grad)"/>
-                        <path d="M7 19L13.5 8L16.5 13L21 6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="21" cy="6" r="2" fill="#FFFFFF"/>
-                        <defs>
-                            <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#0B3B24"/>
-                                <stop offset="1" stop-color="#10B981"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img src="assets/Pricehop Logo.png" alt="PriceHop Logo" class="brand-logo-img">
                 </div>
                 <span class="brand-name">PRICEHOP</span>
                 <span class="version-pill">v2.0</span>
@@ -201,11 +195,11 @@
                 <p class="section-desc">Everything you need to outsmart dynamic pricing, all in one fluid application.</p>
             </div>
 
-            <!-- Bento 12-Column Grid (Balanced 2x2 Layout) -->
+            <!-- Bento 12-Column Grid (Symmetrical 3-Card Layout) -->
             <div class="bento-grid">
                 
-                <!-- Bento Card 1: Real-Time Engine (6 Cols) -->
-                <div class="bento-card bento-col-6 spotlight-card">
+                <!-- Bento Card 1: Real-Time Engine (4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -221,8 +215,8 @@
                     </div>
                 </div>
 
-                <!-- Bento Card 2: Radar Alerts (6 Cols) -->
-                <div class="bento-card bento-col-6 spotlight-card">
+                <!-- Bento Card 2: Radar Alerts (4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -238,8 +232,8 @@
                     </div>
                 </div>
 
-                <!-- Bento Card 3: One-Tap Hop (6 Cols) -->
-                <div class="bento-card bento-col-6 spotlight-card">
+                <!-- Bento Card 3: One-Tap Hop (4 Cols) -->
+                <div class="bento-card bento-col-4 spotlight-card">
                     <div class="card-glow"></div>
                     <div class="bento-inner">
                         <div class="bento-header">
@@ -251,39 +245,6 @@
                         </div>
                         <div class="bento-graphic graphic-card-preview">
                             <img src="assets/shoe_card.png" alt="Direct store deal card" class="bento-img bento-shoe-img">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bento Card 4: Intelligence (6 Cols) -->
-                <div class="bento-card bento-col-6 spotlight-card">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner">
-                        <div class="bento-header">
-                            <span class="bento-badge">INTELLIGENCE</span>
-                            <h3 class="bento-title">True Value History</h3>
-                            <p class="bento-text">
-                                Spot fake discounts. View historical 90-day price trends and avoid misleading "sale" markups.
-                            </p>
-                        </div>
-                        <div class="bento-graphic graphic-sparkline">
-                            <div class="chart-mockup">
-                                <div class="chart-header">
-                                    <span class="chart-lowest">Lowest: ₹18,499</span>
-                                    <span class="chart-current">Now: ₹18,499 🔥</span>
-                                </div>
-                                <svg class="sparkline-svg" viewBox="0 0 300 80">
-                                    <defs>
-                                        <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="#10B981" stop-opacity="0.3"/>
-                                            <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 0 50 Q 50 40 100 60 T 200 30 T 300 70 L 300 80 L 0 80 Z" fill="url(#chart-grad)"/>
-                                    <path d="M 0 50 Q 50 40 100 60 T 200 30 T 300 70" fill="none" stroke="#059669" stroke-width="2.5"/>
-                                    <circle cx="300" cy="70" r="4" fill="#059669"/>
-                                </svg>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -380,6 +341,7 @@
                             <th class="feature-col">Feature</th>
                             <th class="highlight-col">
                                 <div class="th-brand">
+                                    <img src="assets/Pricehop Logo.png" alt="PriceHop" class="th-logo-img">
                                     <span>PriceHop Mobile</span>
                                     <span class="pro-tag">Winner</span>
                                 </div>
@@ -464,6 +426,45 @@
                 </div>
             </div>
         </section>
+
+        <!-- ================= APP RELEASE COUNTDOWN TIMER ================= -->
+        <section class="section-container countdown-section text-center" id="launch-timer">
+            <div class="countdown-card spotlight-card">
+                <div class="card-glow"></div>
+                <div class="countdown-inner">
+                    <span class="section-tag">APP LAUNCH COUNTDOWN</span>
+                    <h2 class="countdown-title">PriceHop App Release</h2>
+                    <p class="countdown-subtitle">Get ready to discover real-time savings. Launching October 2nd, 2026:</p>
+
+                    <!-- Timer Grid -->
+                    <div id="release-timer" class="timer-grid">
+                        <div class="timer-segment">
+                            <span id="timer-days" class="timer-number">00</span>
+                            <span class="timer-label">DAYS</span>
+                        </div>
+                        <div class="timer-segment">
+                            <span id="timer-hours" class="timer-number">00</span>
+                            <span class="timer-label">HOURS</span>
+                        </div>
+                        <div class="timer-segment">
+                            <span id="timer-minutes" class="timer-number">00</span>
+                            <span class="timer-label">MINUTES</span>
+                        </div>
+                        <div class="timer-segment">
+                            <span id="timer-seconds" class="timer-number">00</span>
+                            <span class="timer-label">SECONDS</span>
+                        </div>
+                    </div>
+
+                    <div class="countdown-cta-wrap">
+                        <a href="#waitlist" class="btn btn-primary btn-hero">
+                            <span>Reserve Your Spot</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- ================= FOOTER ================= -->
@@ -472,16 +473,7 @@
             <div class="footer-top">
                 <div class="footer-brand">
                     <div class="logo-icon small">
-                        <svg viewBox="0 0 28 28" fill="none">
-                            <rect width="28" height="28" rx="8" fill="url(#footer-logo-grad)"/>
-                            <path d="M7 19L13.5 8L16.5 13L21 6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <defs>
-                                <linearGradient id="footer-logo-grad" x1="0" y1="0" x2="28" y2="28">
-                                    <stop stop-color="#0B3B24"/>
-                                    <stop offset="1" stop-color="#10B981"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
+                        <img src="assets/Pricehop Logo.png" alt="PriceHop Logo" class="brand-logo-img">
                     </div>
                     <span class="brand-name">PRICEHOP</span>
                     <p class="footer-tagline">Your shortcut to every deal.</p>
@@ -583,6 +575,6 @@
     </div>
 
     <!-- JavaScript Bundle -->
-    <script src="script.js?v=2.9"></script>
+    <script src="script.js?v=3.0"></script>
 </body>
 </html>
