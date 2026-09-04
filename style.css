@@ -943,9 +943,10 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     object-fit: contain;
 }
 
+.bento-dis-img,
 .bento-shoe-img {
     width: 100%;
-    max-width: 240px;
+    max-width: 280px;
     height: auto;
     object-fit: contain;
 }
@@ -1087,6 +1088,14 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     pointer-events: auto;
     transform: scale(1);
     position: absolute;
+}
+
+#sim-screen-1 {
+    transform: scale(0.885);
+}
+
+#sim-screen-1.active {
+    transform: scale(0.9);
 }
 
 .simulator-status-card {
