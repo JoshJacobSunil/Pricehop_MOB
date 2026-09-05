@@ -389,5 +389,42 @@ function initBentoScrollAnimation() {
         });
     });
 
+    // Auto-scroll hint teaser when user scrolls section into center of screen
+    let hasAutoNudged = false;
+    let userInteracted = false;
+
+    track.addEventListener('touchstart', () => { userInteracted = true; }, { passive: true });
+    track.addEventListener('mousedown', () => { userInteracted = true; }, { passive: true });
+    track.addEventListener('wheel', () => { userInteracted = true; }, { passive: true });
+
+    const featuresSection = document.getElementById('features');
+    if (featuresSection && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasAutoNudged && !userInteracted && track.scrollLeft < 30) {
+                    hasAutoNudged = true;
+
+                    // Slight natural pause before smooth auto-scroll to card 2
+                    setTimeout(() => {
+                        if (!userInteracted && bentoCards.length > 1 && track.scrollLeft < 30) {
+                            const targetCard = bentoCards[1];
+                            if (targetCard) {
+                                const targetLeft = targetCard.offsetLeft - track.offsetLeft - (track.clientWidth - targetCard.offsetWidth) / 2;
+                                track.scrollTo({
+                                    left: Math.max(0, targetLeft),
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    }, 500);
+                }
+            });
+        }, {
+            threshold: 0.35
+        });
+
+        observer.observe(featuresSection);
+    }
+
     updateActiveCard();
 }
