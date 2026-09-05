@@ -286,6 +286,13 @@ function initMobileMenu() {
             navLinks.classList.remove('mobile-open');
         }
     });
+
+    // Close on scroll
+    window.addEventListener('scroll', () => {
+        if (navLinks.classList.contains('mobile-open')) {
+            navLinks.classList.remove('mobile-open');
+        }
+    }, { passive: true });
 }
 
 /* ================= 7. LAUNCH COUNTDOWN TIMER (OCTOBER 2, 2026 AFTERNOON) ================= */
