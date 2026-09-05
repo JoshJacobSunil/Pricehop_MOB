@@ -95,7 +95,7 @@
                             <div class="island-mic"></div>
                         </div>
                         <div class="screen-viewport">
-                            <img src="assets/firstph.png" alt="PriceHop Mobile App Interface" class="hero-screen-img" id="hero-main-screen">
+                            <img src="assets/firstph.png?v=2" alt="PriceHop Mobile App Interface" class="hero-screen-img" id="hero-main-screen">
                         </div>
                         <div class="screen-glare"></div>
                     </div>
@@ -197,7 +197,7 @@
                             </p>
                         </div>
                         <div class="bento-graphic graphic-comparison-preview">
-                            <img src="assets/comparison.png" alt="Price comparison preview" class="bento-img bento-cmp-img">
+                            <img src="assets/comparison.png?v=2" alt="Price comparison preview" class="bento-img bento-cmp-img">
                         </div>
                     </div>
                 </div>
@@ -325,48 +325,266 @@
                 <table class="comparison-table">
                     <thead>
                         <tr>
-                            <th class="feature-col">Feature</th>
+                            <th class="feature-col">Feature / Capability</th>
                             <th class="highlight-col">
                                 <div class="th-brand">
                                     <img src="assets/Pricehop Logo.png" alt="PriceHop" class="th-logo-img">
-                                    <span>PriceHop Mobile</span>
+                                    <span>Pricehop 🐇</span>
                                     <span class="pro-tag">Winner</span>
                                 </div>
                             </th>
-                            <th>Traditional Websites</th>
-                            <th>Manual Tab Checking</th>
+                            <th>
+                                <div class="th-competitor">
+                                    <span class="comp-title">Traditional Apps</span>
+                                    <span class="comp-sub">Smartprix, MySmartPrice, Buyhatke</span>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-competitor">
+                                    <span class="comp-title">Google Shopping</span>
+                                    <span class="comp-sub">Aggregated merchant ads</span>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-competitor">
+                                    <span class="comp-title">Browser Extensions</span>
+                                    <span class="comp-sub">Keepa, CamelCamelCamel, Honey</span>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-competitor">
+                                    <span class="comp-title">Native Store Apps</span>
+                                    <span class="comp-sub">Amazon, Flipkart</span>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="feature-name">Speed & Refresh Rate</td>
-                            <td class="highlight-cell"><span class="check-icon">✓</span> Sub-second Live Sync</td>
-                            <td><span class="cross-icon">✕</span> Cached / 24h Old</td>
-                            <td><span class="cross-icon">✕</span> Tedious & Slow</td>
+                            <td class="feature-name">
+                                Multi-Store Comparison
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Yes</strong>
+                                <span class="cell-detail">Cross-vertical: Fashion, Tech, Beauty, Grocery</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">~</span> <strong>Partial</strong>
+                                <span class="cell-detail">Mostly Electronics/Mobiles</span>
+                            </td>
+                            <td>
+                                <span class="check-icon">✓</span> <strong>Yes</strong>
+                                <span class="cell-detail">Aggregated merchant ads</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">~</span> <strong>Partial</strong>
+                                <span class="cell-detail">Amazon / single-site focus</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">Walled garden</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="feature-name">Instant Drop Alerts</td>
-                            <td class="highlight-cell"><span class="check-icon">✓</span> Real-Time Push</td>
-                            <td><span class="partial-icon">~</span> Clunky Email Only</td>
-                            <td><span class="cross-icon">✕</span> None</td>
+                            <td class="feature-name">
+                                AI Spec Verification
+                                <span class="feature-sub">e.g., matching 256GB vs 128GB, volume ml</span>
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Yes</strong>
+                                <span class="cell-detail">Gemini LLM + Embeddings</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">Rule-based regex / manual</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Inconsistent</strong>
+                                <span class="cell-detail">Merchant feed dependent</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">ASIN / URL-level only</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>N/A</strong>
+                                <span class="cell-detail">Single catalog only</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="feature-name">Ad-Free & Zero Bias</td>
-                            <td class="highlight-cell"><span class="check-icon">✓</span> 100% Unbiased</td>
-                            <td><span class="cross-icon">✕</span> Sponsored Listings</td>
-                            <td><span class="cross-icon">✕</span> Tracked by Cookies</td>
+                            <td class="feature-name">
+                                Real-Time Cross-Store Search
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Yes</strong>
+                                <span class="cell-detail">Parallel Edge Workers</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Slower</strong>
+                                <span class="cell-detail">Server-side cron queues</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Slower</strong>
+                                <span class="cell-detail">Indexed merchant feeds</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">No cross-store engine</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">Internal search only</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="feature-name">Barcode Physical Scan</td>
-                            <td class="highlight-cell"><span class="check-icon">✓</span> Instant In-App</td>
-                            <td><span class="cross-icon">✕</span> Not Available</td>
-                            <td><span class="cross-icon">✕</span> Not Available</td>
+                            <td class="feature-name">
+                                Fashion & Beauty Coverage
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Deep</strong>
+                                <span class="cell-detail">Myntra, Nykaa, Ajio, Snapdeal</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Weak</strong>
+                                <span class="cell-detail">Heavily skewed to gadgets</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Moderate</strong>
+                                <span class="cell-detail">Merchant ad results</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>Weak</strong>
+                                <span class="cell-detail">Limited coverage</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>No</strong>
+                                <span class="cell-detail">Store-specific</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="feature-name">Auto Coupon Detection</td>
-                            <td class="highlight-cell"><span class="check-icon">✓</span> Included</td>
-                            <td><span class="cross-icon">✕</span> Expired Codes</td>
-                            <td><span class="partial-icon">~</span> Manual Search</td>
+                            <td class="feature-name">
+                                Discovery Experience
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Interactive</strong>
+                                <span class="cell-detail">Swipe Flash Cards & Personalized Feed</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>Static</strong>
+                                <span class="cell-detail">Static banners & category lists</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Ad-Heavy</strong>
+                                <span class="cell-detail">Algorithmic grid</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>Passive</strong>
+                                <span class="cell-detail">Popup / overlay</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">~</span> <strong>Standard</strong>
+                                <span class="cell-detail">Recommendation carousel</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">
+                                Price Drop Push Alerts
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Yes</strong>
+                                <span class="cell-detail">Automated Edge CRON + Push Notifications</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Yes</strong>
+                                <span class="cell-detail">Email / In-app</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Generic</strong>
+                                <span class="cell-detail">Google Alerts</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Limited</strong>
+                                <span class="cell-detail">Email / Desktop only</span>
+                            </td>
+                            <td>
+                                <span class="cross-icon">✕</span> <strong>Limited</strong>
+                                <span class="cell-detail">Wishlists only</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">
+                                App Performance & Latency
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Instant</strong>
+                                <span class="cell-detail">24h Excess Pool + Local First Cache</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Standard</strong>
+                                <span class="cell-detail">API loading states</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Standard</strong>
+                                <span class="cell-detail">Web search latency</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Overhead</strong>
+                                <span class="cell-detail">Desktop browser extension</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Heavy</strong>
+                                <span class="cell-detail">High payload / Heavy app</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">
+                                Ad Intrusiveness
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Clean</strong>
+                                <span class="cell-detail">User-first interface</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>High</strong>
+                                <span class="cell-detail">Heavy banner ads & popups</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>High</strong>
+                                <span class="cell-detail">Sponsored product dominance</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Moderate</strong>
+                                <span class="cell-detail">Affiliate injection</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Sponsored</strong>
+                                <span class="cell-detail">Native sponsored ads</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">
+                                Cross-Platform Availability
+                            </td>
+                            <td class="highlight-cell">
+                                <span class="check-icon">✓</span> <strong>Mobile & Web</strong>
+                                <span class="cell-detail">Flutter iOS/Android & Web</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Limited</strong>
+                                <span class="cell-detail">Mostly Web / Basic Mobile Apps</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Web / App</strong>
+                                <span class="cell-detail">Web & Google App</span>
+                            </td>
+                            <td>
+                                <span class="partial-icon">⚠️</span> <strong>Extension</strong>
+                                <span class="cell-detail">Chrome / Firefox Extension</span>
+                            </td>
+                            <td>
+                                <span class="check-icon">✓</span> <strong>App & Web</strong>
+                                <span class="cell-detail">Mobile App & Web</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
