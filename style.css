@@ -823,21 +823,44 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     line-height: 1.5;
 }
 
-/* ================= BENTO GRID FEATURES ================= */
-.bento-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 24px;
+/* ================= BENTO HORIZONTAL CAROUSEL FEATURES ================= */
+.bento-carousel-wrapper {
+    position: relative;
     width: 100%;
+    margin-top: 24px;
 }
 
-.bento-col-4 { grid-column: span 4; }
-.bento-col-6 { grid-column: span 6; }
-.bento-col-8 { grid-column: span 8; }
-.bento-col-12 { grid-column: span 12; }
+.bento-carousel-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 4px 20px 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(16, 185, 129, 0.25) transparent;
+}
+
+.bento-carousel-track::-webkit-scrollbar {
+    height: 6px;
+}
+
+.bento-carousel-track::-webkit-scrollbar-track {
+    background: rgba(11, 59, 36, 0.04);
+    border-radius: var(--radius-full);
+}
+
+.bento-carousel-track::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.25);
+    border-radius: var(--radius-full);
+}
 
 .bento-card {
     position: relative;
+    flex: 0 0 calc(33.333% - 16px);
+    min-width: 320px;
+    scroll-snap-align: start;
     background: var(--bg-card);
     border: 1px solid var(--border-card);
     border-radius: var(--radius-xl);
@@ -853,6 +876,43 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     border-color: rgba(11, 59, 36, 0.4);
     transform: translateY(-3px) scale(1.015);
     box-shadow: 0 12px 35px rgba(11, 59, 36, 0.12);
+}
+
+.bento-carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 6px;
+}
+
+.bento-scroll-hint {
+    font-size: 0.76rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+}
+
+.bento-nav-dots {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.bento-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: rgba(11, 59, 36, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.bento-dot.active {
+    width: 22px;
+    background: var(--dark-green);
 }
 
 .spotlight-card {
@@ -1715,11 +1775,9 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 
 /* ================= PERFECT PHONE & RESPONSIVE BREAKPOINTS ================= */
 @media (max-width: 1024px) {
-    .bento-col-6, .bento-col-8, .bento-col-4, .bento-col-12 {
-        grid-column: span 12;
-    }
-    .bento-horizontal {
-        flex-direction: column;
+    .bento-carousel-track .bento-card {
+        flex: 0 0 clamp(300px, 46vw, 360px);
+        min-width: 290px;
     }
     .simulator-container {
         display: flex;
@@ -1820,6 +1878,23 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 }
 
 @media (max-width: 768px) {
+    /* Bento Carousel Mobile Track */
+    .bento-carousel-track {
+        gap: 16px;
+        padding-left: 14px;
+        padding-right: 14px;
+        margin-left: -14px;
+        margin-right: -14px;
+        width: calc(100% + 28px);
+    }
+    
+    .bento-carousel-track .bento-card {
+        flex: 0 0 85vw;
+        max-width: 330px;
+        min-width: 260px;
+        scroll-snap-align: center;
+    }
+
     /* Navbar Mobile */
     .navbar-wrapper {
         top: 10px;

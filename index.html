@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=4.0">
+    <link rel="stylesheet" href="style.css?v=4.1">
 </head>
 <body class="forest-theme">
 
@@ -68,8 +68,7 @@
                 </h1>
 
                 <p class="hero-subtitle">
-                    A collection of intelligent shopping tools built into a hyper-fast launcher. 
-                    Real-time price comparisons, automated drop alerts, and true value tracking.
+                    Hyper-fast real-time price comparisons, automated drop alerts, and true value tracking across 50+ stores.
                 </p>
             </div>
 
@@ -95,7 +94,7 @@
                             <div class="island-mic"></div>
                         </div>
                         <div class="screen-viewport">
-                            <img src="assets/firstph.png?v=2" alt="PriceHop Mobile App Interface" class="hero-screen-img" id="hero-main-screen">
+                            <img src="assets/firstph.png?v=4.1" alt="PriceHop Mobile App Interface" class="hero-screen-img" id="hero-main-screen">
                         </div>
                         <div class="screen-glare"></div>
                     </div>
@@ -174,68 +173,80 @@
             </div>
         </div>
 
-        <!-- ================= BENTO GRID FEATURES ================= -->
+        <!-- ================= CORE CAPABILITIES (HORIZONTAL SCROLL) ================= -->
         <section class="section-container" id="features">
             <div class="section-heading-block text-center">
                 <span class="section-tag">CORE CAPABILITIES</span>
                 <h2 class="section-title">Built for speed.<br>Engineered for savings.</h2>
-                <p class="section-desc">Everything you need to outsmart dynamic pricing, all in one fluid application.</p>
+                <p class="section-desc">Outsmart dynamic pricing with instant cross-store intelligence.</p>
             </div>
 
-            <!-- Bento 12-Column Grid (Symmetrical 3-Card Layout) -->
-            <div class="bento-grid">
-                
-                <!-- Bento Card 1: Real-Time Engine (4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner">
-                        <div class="bento-header">
-                            <span class="bento-badge">REAL-TIME ENGINE</span>
-                            <h3 class="bento-title">Instant Cross-Store Comparison</h3>
-                            <p class="bento-text">
-                                Don't open 10 tabs. Search once and get live, verified pricing across Amazon, Flipkart, Myntra, Croma, and official stores side-by-side.
-                            </p>
-                        </div>
-                        <div class="bento-graphic graphic-comparison-preview">
-                            <img src="assets/comparison.png?v=2" alt="Price comparison preview" class="bento-img bento-cmp-img">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bento Card 2: Radar Alerts (4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner">
-                        <div class="bento-header">
-                            <span class="bento-badge">RADAR ALERTS</span>
-                            <h3 class="bento-title">Price Drop Radar</h3>
-                            <p class="bento-text">
-                                Set your target price. Our cloud engine checks prices 24/7 and triggers sub-second push notifications the moment it drops.
-                            </p>
-                        </div>
-                        <div class="bento-graphic graphic-alert-preview">
-                            <img src="assets/alert_card.png" alt="Price drop alert preview" class="bento-img bento-alert-img">
+            <!-- Horizontal Scrollable Row for Core Capabilities (Finite) -->
+            <div class="bento-carousel-wrapper">
+                <div class="bento-carousel-track" id="bento-track">
+                    
+                    <!-- Bento Card 1: Real-Time Engine -->
+                    <div class="bento-card spotlight-card" data-index="0">
+                        <div class="card-glow"></div>
+                        <div class="bento-inner">
+                            <div class="bento-header">
+                                <span class="bento-badge">REAL-TIME ENGINE</span>
+                                <h3 class="bento-title">Instant Cross-Store Comparison</h3>
+                                <p class="bento-text">
+                                    Search once to compare live, verified prices across Amazon, Flipkart, Myntra, Croma, and official stores side-by-side.
+                                </p>
+                            </div>
+                            <div class="bento-graphic graphic-comparison-preview">
+                                <img src="assets/comparison.png?v=4.1" alt="Price comparison preview" class="bento-img bento-cmp-img">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Bento Card 3: Discovery Section (4 Cols) -->
-                <div class="bento-card bento-col-4 spotlight-card">
-                    <div class="card-glow"></div>
-                    <div class="bento-inner">
-                        <div class="bento-header">
-                            <span class="bento-badge">DISCOVERY CARDS</span>
-                            <h3 class="bento-title">Smart Product Discovery</h3>
-                            <p class="bento-text">
-                                Personalized discovery cards help you discover items tailored to your taste. Spot the best deals on products you love simply by swiping <strong><em>left</em></strong> or <strong><em>right</em></strong>.
-                            </p>
-                        </div>
-                        <div class="bento-graphic graphic-card-preview">
-                            <img src="assets/dis_card.png?v=2" alt="Interactive discovery cards preview" class="bento-img bento-dis-img">
+                    <!-- Bento Card 2: Radar Alerts -->
+                    <div class="bento-card spotlight-card" data-index="1">
+                        <div class="card-glow"></div>
+                        <div class="bento-inner">
+                            <div class="bento-header">
+                                <span class="bento-badge">RADAR ALERTS</span>
+                                <h3 class="bento-title">Price Drop Radar</h3>
+                                <p class="bento-text">
+                                    Get instant push notifications the moment prices hit your custom target price.
+                                </p>
+                            </div>
+                            <div class="bento-graphic graphic-alert-preview">
+                                <img src="assets/alert_card.png?v=4.1" alt="Price drop alert preview" class="bento-img bento-alert-img">
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Bento Card 3: Discovery Section -->
+                    <div class="bento-card spotlight-card" data-index="2">
+                        <div class="card-glow"></div>
+                        <div class="bento-inner">
+                            <div class="bento-header">
+                                <span class="bento-badge">DISCOVERY CARDS</span>
+                                <h3 class="bento-title">Smart Product Discovery</h3>
+                                <p class="bento-text">
+                                    Swipe through personalized cards to discover curated deals tailored to your taste.
+                                </p>
+                            </div>
+                            <div class="bento-graphic graphic-card-preview">
+                                <img src="assets/dis_card.png?v=4.1" alt="Interactive discovery cards preview" class="bento-img bento-dis-img">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
+                <!-- Carousel Controls & Scroll Indicators -->
+                <div class="bento-carousel-controls">
+                    <span class="bento-scroll-hint">← Swipe to explore capabilities →</span>
+                    <div class="bento-nav-dots" id="bento-dots">
+                        <button class="bento-dot active" data-index="0" aria-label="Go to capability 1"></button>
+                        <button class="bento-dot" data-index="1" aria-label="Go to capability 2"></button>
+                        <button class="bento-dot" data-index="2" aria-label="Go to capability 3"></button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -244,7 +255,7 @@
             <div class="section-heading-block text-center">
                 <span class="section-tag">EXPERIENCE PRICEHOP</span>
                 <h2 class="section-title">Touch, tap, and save.</h2>
-                <p class="section-desc">Explore how simple saving money becomes with PriceHop's interactive workflows.</p>
+                <p class="section-desc">See how easy finding the best price is in 4 simple steps.</p>
             </div>
 
             <div class="simulator-container">
@@ -254,7 +265,7 @@
                         <div class="step-num">01</div>
                         <div class="step-details">
                             <h4>Discover & Swipe</h4>
-                            <p>Swipe right to bookmark, left to pass. Curated for your interests.</p>
+                            <p>Swipe right to bookmark deals curated for your interests.</p>
                         </div>
                     </button>
 
@@ -262,7 +273,7 @@
                         <div class="step-num">02</div>
                         <div class="step-details">
                             <h4>Live Compare</h4>
-                            <p>Instant price lookup across Amazon, Flipkart & 50+ stores.</p>
+                            <p>Instant live price lookup across 50+ stores.</p>
                         </div>
                     </button>
 
@@ -270,7 +281,7 @@
                         <div class="step-num">03</div>
                         <div class="step-details">
                             <h4>Drop Radars</h4>
-                            <p>Sub-second push notifications the moment prices drop.</p>
+                            <p>Instant push alerts the moment prices drop.</p>
                         </div>
                     </button>
 
@@ -278,7 +289,7 @@
                         <div class="step-num">04</div>
                         <div class="step-details">
                             <h4>One-Tap Hop</h4>
-                            <p>Deep-link to checkout with auto-applied promo codes.</p>
+                            <p>One-tap deep link to checkout with auto-applied promo codes.</p>
                         </div>
                     </button>
                 </div>
@@ -293,7 +304,7 @@
                             </div>
                             <div class="screen-viewport">
                                 <img src="assets/exp_pricehop/1.png" alt="Simulator step 1" class="simulator-screen active" id="sim-screen-0">
-                                <img src="assets/comparison.png?v=3" alt="Simulator step 2 - Live Compare" class="simulator-screen" id="sim-screen-1">
+                                <img src="assets/comparison.png?v=4.1" alt="Simulator step 2 - Live Compare" class="simulator-screen" id="sim-screen-1">
                                 <img src="assets/exp_pricehop/3.png" alt="Simulator step 3" class="simulator-screen" id="sim-screen-2">
                                 <img src="assets/exp_pricehop/4.png" alt="Simulator step 4" class="simulator-screen" id="sim-screen-3">
                             </div>
@@ -316,7 +327,7 @@
             <div class="section-heading-block text-center">
                 <span class="section-tag">WHY PRICEHOP</span>
                 <h2 class="section-title">The PriceHop Advantage.</h2>
-                <p class="section-desc">See how we stack up against traditional price comparison websites and manual searching.</p>
+                <p class="section-desc">How PriceHop outperforms traditional trackers and manual tab searching.</p>
             </div>
 
             <!-- Scrollable Table Wrapper with Touch Drag on Mobile -->
@@ -498,7 +509,7 @@
                     <span class="cta-mini-tag">GET EARLY ACCESS</span>
                     <h2 class="cta-title">Stop overpaying today.<br>Hop into smarter savings.</h2>
                     <p class="cta-subtitle">
-                        Get the iOS & Android app. Join 100,000+ smart shoppers saving millions every month.
+                        Join 100,000+ smart shoppers saving on iOS and Android.
                     </p>
 
                     <!-- Waitlist Input Form -->
@@ -538,7 +549,7 @@
                 <div class="countdown-inner">
                     <span class="section-tag">APP LAUNCH COUNTDOWN</span>
                     <h2 class="countdown-title">PriceHop App Release</h2>
-                    <p class="countdown-subtitle">Get ready to discover real-time savings. Launching October 2nd, 2026:</p>
+                    <p class="countdown-subtitle">Real-time savings arrive October 2nd, 2026.</p>
 
                     <!-- Timer Grid -->
                     <div id="release-timer" class="timer-grid">
@@ -626,7 +637,7 @@
             <div class="qr-modal-content">
                 <div class="qr-badge">SCAN TO INSTALL</div>
                 <h3 class="qr-modal-title">Get PriceHop on your Phone</h3>
-                <p class="qr-modal-desc">Point your iPhone or Android camera at the QR code below for instant download.</p>
+                <p class="qr-modal-desc">Scan with your phone camera for instant app download.</p>
                 
                 <div class="qr-code-box">
                     <svg viewBox="0 0 160 160" width="160" height="160" class="qr-svg">
@@ -675,6 +686,6 @@
     </div>
 
     <!-- JavaScript Bundle -->
-    <script src="script.js?v=4.0"></script>
+    <script src="script.js?v=4.1"></script>
 </body>
 </html>

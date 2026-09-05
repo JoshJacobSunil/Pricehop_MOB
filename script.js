@@ -338,40 +338,51 @@ function initCountdownTimer() {
     setInterval(updateTimer, 1000);
 }
 
-/* ================= 8. CORE CAPABILITIES CENTER-SCROLL SPOTLIGHT ================= */
+/* ================= 8. CORE CAPABILITIES HORIZONTAL CAROUSEL & DOTS ================= */
 function initBentoScrollAnimation() {
+    const track = document.getElementById('bento-track');
     const bentoCards = document.querySelectorAll('#features .bento-card');
-    if (!bentoCards.length) return;
+    const dots = document.querySelectorAll('#bento-dots .bento-dot');
+    if (!track || !bentoCards.length) return;
 
-    let ticking = false;
+    function updateActiveCard() {
+        const scrollLeft = track.scrollLeft;
+        const trackWidth = track.clientWidth;
+        let activeIndex = 0;
+        let minDistance = Infinity;
 
-    function updateBentoFocus() {
-        const screenCenter = window.innerHeight / 2;
+        bentoCards.forEach((card, index) => {
+            const cardLeft = card.offsetLeft - track.offsetLeft;
+            const cardCenter = cardLeft + card.offsetWidth / 2;
+            const visibleCenter = scrollLeft + trackWidth / 2;
+            const distance = Math.abs(cardCenter - visibleCenter);
 
-        bentoCards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            const cardCenter = rect.top + rect.height / 2;
-            const distanceToCenter = Math.abs(cardCenter - screenCenter);
-
-            // Trigger clicked/spotlight animation when card center aligns with screen center
-            if (distanceToCenter < rect.height * 0.45 && rect.bottom > 80 && rect.top < window.innerHeight - 80) {
-                card.classList.add('scroll-active');
-                card.style.setProperty('--mouse-x', '50%');
-                card.style.setProperty('--mouse-y', '50%');
-            } else {
-                card.classList.remove('scroll-active');
+            if (distance < minDistance) {
+                minDistance = distance;
+                activeIndex = index;
             }
         });
 
-        ticking = false;
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
     }
 
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(updateBentoFocus);
-            ticking = true;
-        }
-    }, { passive: true });
+    track.addEventListener('scroll', updateActiveCard, { passive: true });
 
-    updateBentoFocus();
+    // Click dot to navigate
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const targetCard = bentoCards[index];
+            if (targetCard) {
+                const targetLeft = targetCard.offsetLeft - track.offsetLeft - (track.clientWidth - targetCard.offsetWidth) / 2;
+                track.scrollTo({
+                    left: Math.max(0, targetLeft),
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    updateActiveCard();
 }
