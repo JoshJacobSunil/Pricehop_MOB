@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Terms of Service — PriceHop</title>
-    <meta name="description" content="PriceHop Terms of Service - Terms and conditions governing the use of PriceHop.">
+    <title>Terms & Conditions — PriceHop</title>
+    <meta name="description" content="Terms and Conditions for PriceHop - Guidelines and terms governing your use of the PriceHop platform.">
     <meta name="theme-color" content="#0B3B24">
     
     <!-- Favicon -->
@@ -49,13 +49,15 @@
             gap: 12px;
             margin-top: 24px;
             align-items: center;
+            max-width: 440px;
         }
         .legal-tab-btn {
+            flex: 1 1 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 9px 20px;
+            padding: 10px 18px;
             border-radius: var(--radius-full);
             font-size: 0.88rem;
             font-weight: 600;
@@ -64,10 +66,12 @@
             text-decoration: none;
             transition: var(--transition-smooth);
             box-sizing: border-box;
+            white-space: nowrap;
         }
         .legal-tab-btn.active {
             background: var(--dark-green);
             color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(11, 59, 36, 0.2);
         }
         .legal-tab-btn:not(.active) {
             background: var(--bg-secondary);
@@ -82,30 +86,39 @@
             background: var(--bg-card);
             border: 1px solid var(--border-card);
             border-radius: var(--radius-xl);
-            padding: 40px 36px;
+            padding: 44px 40px;
             box-shadow: 0 4px 20px rgba(11, 59, 36, 0.04);
             line-height: 1.75;
             color: var(--text-secondary);
         }
-        .legal-content-card h3 {
-            font-size: 1.25rem;
+        .legal-content-card h2 {
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin: 28px 0 12px;
+            margin: 32px 0 12px;
             letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
         }
-        .legal-content-card h3:first-child {
+        .legal-content-card h2:first-child {
             margin-top: 0;
         }
+        .legal-content-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+            letter-spacing: -0.01em;
+        }
         .legal-content-card p {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 0.96rem;
         }
         .legal-content-card ul {
-            margin: 12px 0 20px 20px;
+            margin: 10px 0 18px 22px;
         }
         .legal-content-card li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 0.95rem;
         }
         .back-nav-link {
@@ -116,11 +129,30 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 600;
+            line-height: 1.1;
             margin-bottom: 16px;
             transition: var(--transition-smooth);
         }
         .back-nav-link:hover {
             transform: translateX(-3px);
+        }
+        .legal-contact-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px 22px;
+            margin: 16px 0;
+        }
+        @media (max-width: 600px) {
+            .legal-content-card {
+                padding: 28px 20px;
+            }
+            .legal-header-card {
+                padding: 28px 20px;
+            }
+            .legal-tabs {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -155,39 +187,178 @@
         
         <div class="legal-header-card">
             <span class="section-tag">LEGAL & PRIVACY</span>
-            <h1 class="legal-title">Terms of Service</h1>
-            <p class="legal-date">Last Updated: October 2026</p>
+            <h1 class="legal-title">Terms & Conditions</h1>
+            <p class="legal-date">Last Updated: August 28, 2026</p>
 
             <div class="legal-tabs">
                 <a href="privacy.html" class="legal-tab-btn">Privacy Policy</a>
-                <a href="terms.html" class="legal-tab-btn active">Terms of Service</a>
+                <a href="terms.html" class="legal-tab-btn active">Terms & Conditions</a>
             </div>
         </div>
 
         <div class="legal-content-card" id="terms-content">
-            <h3>1. Acceptance of Terms</h3>
-            <p>By accessing or using PriceHop via our mobile applications or web platforms, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use PriceHop.</p>
+            <h2>1. Introduction</h2>
+            <p>These Terms and Conditions ("Terms") govern your access to and use of the PriceHop mobile application, website, and related services ("PriceHop", "the App", "we", "us", or "our").</p>
+            <p>PriceHop is a product discovery and price comparison platform that allows users to compare products, prices, ratings, availability, and estimated delivery information across participating third-party ecommerce platforms.</p>
+            <div class="legal-contact-box">
+                <p><strong>Developed & Operated by:</strong> Milan Sojan and Josh Jacob Sunil</p>
+                <p>By accessing or using PriceHop, you agree to these Terms and our Privacy Policy. If you do not agree with these Terms, you should not use PriceHop.</p>
+                <p><strong>For questions regarding these Terms, contact us at:</strong><br>
+                Email: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+            </div>
 
-            <h3>2. Description of Service</h3>
-            <p>PriceHop provides real-time cross-store price lookup, price history comparison, deal discovery, and price drop notifications. PriceHop is an information and discovery platform, not a direct seller or retailer.</p>
+            <h2>2. Eligibility</h2>
+            <p>You must have the legal capacity to enter into an agreement under applicable law to use PriceHop.</p>
+            <p>If you are under the age at which you can legally enter into a binding agreement, you may use PriceHop only with the involvement and consent of a parent or legal guardian where required by applicable law.</p>
+            <p>We may restrict or terminate access if we reasonably believe that a user is not eligible to use the service or has provided false information regarding their eligibility.</p>
 
-            <h3>3. Accuracy of Pricing & Availability</h3>
-            <p>While our algorithms query and index live product prices from multiple online retailers in real time, prices, stock availability, coupons, and shipping fees are determined entirely by third-party retailers and may fluctuate rapidly. Always confirm the final price on the merchant's checkout page before completing a purchase.</p>
+            <h2>3. Nature of PriceHop's Service</h2>
+            <p>PriceHop is a product comparison and discovery platform.</p>
+            <p>PriceHop does not directly sell, manufacture, stock, package, ship, or fulfill the products displayed through the App.</p>
+            <p>We may provide links or redirects to third-party ecommerce platforms, including platforms such as Amazon, Flipkart, Myntra, Nykaa, Tira, AJIO, Snapdeal, Reliance Digital, Tata CLiQ, and other participating platforms.</p>
+            <p>When you select a product and are redirected to a third-party platform, the purchase is made directly with that platform or its seller. The terms of the relevant ecommerce platform and seller will govern the purchase.</p>
 
-            <h3>4. User Conduct</h3>
-            <p>You agree to use PriceHop solely for personal, non-commercial price comparison purposes. You agree not to reverse engineer, scrape at scale, flood, or disrupt our edge services, APIs, or infrastructure.</p>
+            <h2>4. Product, Price, and Availability Information</h2>
+            <p>PriceHop attempts to provide accurate and useful product information. However, information displayed in the App may be obtained from third-party platforms, APIs, feeds, affiliate networks, or other permitted sources.</p>
+            <p>Information may include:</p>
+            <ul>
+                <li>Product names and descriptions</li>
+                <li>Prices and discounts</li>
+                <li>Product images</li>
+                <li>Ratings and reviews</li>
+                <li>Availability</li>
+                <li>Seller information</li>
+                <li>Estimated delivery times</li>
+                <li>Other product-related information</li>
+            </ul>
+            <p>This information may change at any time. PriceHop does not guarantee that displayed information will always be accurate, complete, current, or available.</p>
+            <p>In particular, the price, availability, seller, delivery date, shipping charges, taxes, discounts, coupons, and other conditions shown by the relevant ecommerce platform at the time of purchase will prevail. Users should verify the final details on the relevant ecommerce platform before making a purchase.</p>
 
-            <h3>5. Intellectual Property</h3>
-            <p>The PriceHop logo, branding, visual designs, and software interface are the proprietary intellectual property of PriceHop Technologies, Inc. Retailer trademarks and logos belong to their respective owners.</p>
+            <h2>5. Price Comparison</h2>
+            <p>PriceHop attempts to compare products that are the same or substantially similar across different platforms.</p>
+            <p>However, products may differ because of:</p>
+            <ul>
+                <li>Size</li>
+                <li>Colour</li>
+                <li>Model</li>
+                <li>Quantity</li>
+                <li>Variant</li>
+                <li>Seller</li>
+                <li>Warranty</li>
+                <li>Bundles</li>
+                <li>Shipping charges</li>
+                <li>Taxes</li>
+                <li>Platform-specific offers or membership benefits</li>
+            </ul>
+            <p>Therefore, the lowest price displayed by PriceHop may not always represent the lowest final amount payable by the user. Users are responsible for reviewing the complete purchase information before completing an order.</p>
 
-            <h3>6. Limitation of Liability</h3>
-            <p>PriceHop is provided on an "as is" and "as available" basis. PriceHop is not liable for transactions, returns, warranty disputes, or order fulfillments made with third-party retailers.</p>
+            <h2>6. Delivery Information</h2>
+            <p>PriceHop may compare estimated delivery times using information such as the PIN code provided by the user.</p>
+            <p>Delivery estimates may change based on product availability, seller location, warehouse location, order time, delivery capacity, holidays, and other factors controlled by the relevant ecommerce platform.</p>
+            <p>PriceHop does not guarantee any delivery date or delivery time. The relevant ecommerce platform or seller is responsible for the actual delivery of products purchased through its service.</p>
 
-            <h3>7. Modifications to Terms</h3>
-            <p>We reserve the right to update these terms at any time. Continued use of PriceHop after changes are posted constitutes your acceptance of the revised terms.</p>
+            <h2>7. Third-Party Platforms and Purchases</h2>
+            <p>PriceHop acts as a comparison and discovery service and does not control third-party ecommerce platforms.</p>
+            <p>Once you leave PriceHop and access a third-party platform, that platform's own terms, privacy policy, payment policies, return and refund policies, shipping policies, warranty policies, and other terms will apply.</p>
+            <p>PriceHop is not responsible for:</p>
+            <ul>
+                <li>The products sold by third parties</li>
+                <li>Product quality or authenticity</li>
+                <li>Seller conduct</li>
+                <li>Order fulfillment</li>
+                <li>Payments</li>
+                <li>Shipping</li>
+                <li>Delivery</li>
+                <li>Returns</li>
+                <li>Refunds</li>
+                <li>Cancellations</li>
+                <li>Warranties</li>
+                <li>Customer service provided by third parties</li>
+            </ul>
+            <p>Any purchase-related dispute should be directed to the relevant ecommerce platform or seller.</p>
 
-            <h3>8. Contact Us</h3>
-            <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:legal@pricehop.in" style="color: var(--dark-green); font-weight: 600;">legal@pricehop.in</a>.</p>
+            <h2>8. Affiliate Links</h2>
+            <p>Some links on PriceHop may be affiliate links. If you click an affiliate link and subsequently make a qualifying purchase, PriceHop may receive a commission from the relevant ecommerce platform or affiliate network.</p>
+            <p>Affiliate commissions help support the operation and development of PriceHop. The presence of an affiliate link does not constitute a guarantee or endorsement of the product, seller, or third-party platform.</p>
+
+            <h2>9. Personalized Recommendations</h2>
+            <p>PriceHop may provide personalized product recommendations based on your interactions with the App, including searches, viewed products, wishlist activity, categories browsed, Flashcard interactions, and products you like or dislike.</p>
+            <p>Recommendations are provided to improve product discovery and may not always accurately reflect your preferences or represent the best product or price available.</p>
+
+            <h2>10. User Accounts</h2>
+            <p>Certain features may require you to create an account. You agree to provide accurate and current information and to keep your account information updated.</p>
+            <p>You are responsible for maintaining the security of your account and authentication information. You must not use another person's account without authorization. If you believe that your account has been accessed without authorization, contact us promptly at <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a>.</p>
+
+            <h2>11. Acceptable Use</h2>
+            <p>You agree to use PriceHop only for lawful purposes. You must not:</p>
+            <ul>
+                <li>Use PriceHop for fraudulent or unlawful activities.</li>
+                <li>Attempt to gain unauthorized access to our systems.</li>
+                <li>Interfere with or disrupt the operation of the App.</li>
+                <li>Introduce viruses, malware, or other harmful code.</li>
+                <li>Use bots, automated systems, scrapers, or similar tools to access PriceHop without our permission.</li>
+                <li>Attempt to manipulate prices, rankings, recommendations, ratings, or other information.</li>
+                <li>Impersonate another person or organization.</li>
+                <li>Violate another person's intellectual property, privacy, or other rights.</li>
+                <li>Circumvent security measures or access restrictions.</li>
+                <li>Abuse promotional, affiliate, referral, or other features.</li>
+            </ul>
+            <p>We may restrict or terminate access if these Terms are violated.</p>
+
+            <h2>12. Community and User-Generated Content</h2>
+            <p>PriceHop may provide community features allowing users to submit reviews, comments, deals, discussions, recommendations, images, or other content. Users are responsible for the content they submit.</p>
+            <p>You must not submit content that is unlawful, fraudulent, defamatory, threatening, abusive, infringing, misleading, or containing sensitive personal data. PriceHop may remove, restrict, or moderate content that violates these Terms or applicable law.</p>
+
+            <h2>13. Reporting Content</h2>
+            <p>If you believe that content displayed on PriceHop is unlawful, fraudulent, defamatory, infringing, abusive, or otherwise violates these Terms, report it to: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a>.</p>
+
+            <h2>14. Intellectual Property</h2>
+            <p>The PriceHop name, logo, software, interface, design, original text, graphics, features, and other original materials are owned by or licensed to PriceHop and are protected by applicable intellectual property laws.</p>
+            <p>You may use PriceHop only for its intended personal and lawful purposes. You may not copy, reproduce, modify, distribute, sell, commercially exploit, reverse engineer, or create derivative works from PriceHop's proprietary materials except where permitted by applicable law.</p>
+            <p>Third-party trademarks, logos, product names, and brand names displayed through PriceHop remain the property of their respective owners.</p>
+
+            <h2>15. Service Availability and Changes</h2>
+            <p>We aim to keep PriceHop available and functioning properly, but we do not guarantee uninterrupted or error-free operation.</p>
+            <p>PriceHop may be temporarily unavailable because of maintenance, updates, technical issues, third-party service failures, network problems, security incidents, or circumstances beyond our reasonable control. We may modify, add, suspend, or discontinue features of PriceHop at any time.</p>
+
+            <h2>16. Disclaimer</h2>
+            <p>PriceHop is provided on an "as is" and "as available" basis to the maximum extent permitted by applicable law. We do not guarantee that product information will always be accurate, prices will always be lowest, products will always be available, or that the App will be free from errors.</p>
+
+            <h2>17. User Responsibility</h2>
+            <p>You are responsible for reviewing product information and the applicable terms of the third-party ecommerce platform before making a purchase. You should carefully review final prices, sellers, variants, shipping charges, delivery dates, and return policies before completing orders.</p>
+
+            <h2>18. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by applicable law, PriceHop and its developers will not be responsible for losses arising from incorrect third-party information, price changes, product defects, delivery delays, third-party platform failures, or temporary service unavailability.</p>
+
+            <h2>19. Indemnification</h2>
+            <p>To the extent permitted by applicable law, you agree to indemnify and hold harmless PriceHop and its developers against claims, losses, liabilities, damages, costs, and expenses arising from your violation of these Terms or applicable law.</p>
+
+            <h2>20. Suspension or Termination</h2>
+            <p>We may suspend or terminate your access to PriceHop if you violate these Terms, engage in fraudulent or unlawful activity, or create a security risk. You may stop using PriceHop at any time and may request account deletion in accordance with our Privacy Policy.</p>
+
+            <h2>21. Privacy</h2>
+            <p>Your use of PriceHop is also governed by our Privacy Policy, which forms part of these Terms.</p>
+
+            <h2>22. Force Majeure</h2>
+            <p>PriceHop will not be responsible for delays or failures caused by circumstances beyond our reasonable control, including natural disasters, technical failures, internet outages, or government actions.</p>
+
+            <h2>23. Changes to These Terms</h2>
+            <p>We may update these Terms from time to time. The updated Terms will become effective on the date specified in the updated Terms. Your continued use of PriceHop constitutes acceptance of the updated Terms.</p>
+
+            <h2>24. Governing Law and Jurisdiction</h2>
+            <p>These Terms are governed by the laws of India. Any dispute arising out of or relating to these Terms or your use of PriceHop shall be subject to the jurisdiction of the competent courts in India.</p>
+
+            <h2>25. Severability</h2>
+            <p>If any provision of these Terms is found to be invalid or unenforceable, that provision will be interpreted to the maximum extent permitted by law, and the remaining provisions will continue in effect.</p>
+
+            <h2>26. Contact Us</h2>
+            <p>For questions, complaints, or requests regarding these Terms or PriceHop:</p>
+            <div class="legal-contact-box">
+                <p><strong>PriceHop</strong></p>
+                <p><strong>Developers:</strong> Milan Sojan and Josh Jacob Sunil</p>
+                <p><strong>Email:</strong> <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+                <p><strong>Website:</strong> <a href="https://pricehop.in" target="_blank" style="color: var(--dark-green); font-weight: 600;">pricehop.in</a></p>
+            </div>
         </div>
     </main>
 
@@ -197,8 +368,8 @@
             <div class="footer-bottom">
                 <p class="copyright">© 2026 PriceHop Technologies, Inc. All rights reserved.</p>
                 <div class="social-links">
-                    <a href="privacy.html">Privacy</a>
-                    <a href="terms.html" style="color: var(--dark-green); font-weight: 600;">Terms</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html" style="color: var(--dark-green); font-weight: 600;">Terms & Conditions</a>
                     <a href="index.html">Home</a>
                 </div>
             </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Privacy Policy — PriceHop</title>
-    <meta name="description" content="PriceHop Privacy Policy - Learn how we collect, use, and safeguard your data.">
+    <meta name="description" content="Privacy Policy for PriceHop - Learn how we collect, use, store, share, and protect your information.">
     <meta name="theme-color" content="#0B3B24">
     
     <!-- Favicon -->
@@ -49,13 +49,15 @@
             gap: 12px;
             margin-top: 24px;
             align-items: center;
+            max-width: 440px;
         }
         .legal-tab-btn {
+            flex: 1 1 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 9px 20px;
+            padding: 10px 18px;
             border-radius: var(--radius-full);
             font-size: 0.88rem;
             font-weight: 600;
@@ -64,10 +66,12 @@
             text-decoration: none;
             transition: var(--transition-smooth);
             box-sizing: border-box;
+            white-space: nowrap;
         }
         .legal-tab-btn.active {
             background: var(--dark-green);
             color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(11, 59, 36, 0.2);
         }
         .legal-tab-btn:not(.active) {
             background: var(--bg-secondary);
@@ -82,30 +86,39 @@
             background: var(--bg-card);
             border: 1px solid var(--border-card);
             border-radius: var(--radius-xl);
-            padding: 40px 36px;
+            padding: 44px 40px;
             box-shadow: 0 4px 20px rgba(11, 59, 36, 0.04);
             line-height: 1.75;
             color: var(--text-secondary);
         }
-        .legal-content-card h3 {
-            font-size: 1.25rem;
+        .legal-content-card h2 {
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin: 28px 0 12px;
+            margin: 32px 0 12px;
             letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
         }
-        .legal-content-card h3:first-child {
+        .legal-content-card h2:first-child {
             margin-top: 0;
         }
+        .legal-content-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+            letter-spacing: -0.01em;
+        }
         .legal-content-card p {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 0.96rem;
         }
         .legal-content-card ul {
-            margin: 12px 0 20px 20px;
+            margin: 10px 0 18px 22px;
         }
         .legal-content-card li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 0.95rem;
         }
         .back-nav-link {
@@ -116,11 +129,30 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 600;
+            line-height: 1.1;
             margin-bottom: 16px;
             transition: var(--transition-smooth);
         }
         .back-nav-link:hover {
             transform: translateX(-3px);
+        }
+        .legal-contact-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px 22px;
+            margin: 16px 0;
+        }
+        @media (max-width: 600px) {
+            .legal-content-card {
+                padding: 28px 20px;
+            }
+            .legal-header-card {
+                padding: 28px 20px;
+            }
+            .legal-tabs {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -156,46 +188,325 @@
         <div class="legal-header-card">
             <span class="section-tag">LEGAL & PRIVACY</span>
             <h1 class="legal-title">Privacy Policy</h1>
-            <p class="legal-date">Last Updated: October 2026</p>
+            <p class="legal-date">Last Updated: August 28, 2026</p>
 
             <div class="legal-tabs">
                 <a href="privacy.html" class="legal-tab-btn active">Privacy Policy</a>
-                <a href="terms.html" class="legal-tab-btn">Terms of Service</a>
+                <a href="terms.html" class="legal-tab-btn">Terms & Conditions</a>
             </div>
         </div>
 
         <div class="legal-content-card" id="privacy-content">
-            <h3>1. Introduction</h3>
-            <p>Welcome to PriceHop ("we", "our", or "us"). We are committed to protecting your privacy and ensuring transparency in how we collect, use, and safeguard your personal information when you use our mobile application and related web services.</p>
+            <h2>1. Introduction</h2>
+            <p>Welcome to PriceHop.</p>
+            <p>PriceHop is a product discovery and price comparison application that helps users compare products, prices, ratings, availability, and delivery information across participating third-party ecommerce platforms.</p>
+            <p>This Privacy Policy explains how PriceHop collects, uses, stores, shares, and protects information when you use our mobile application, website, and related services ("PriceHop", "the App", "we", "us", or "our").</p>
+            <p>By using PriceHop, you acknowledge the practices described in this Privacy Policy.</p>
+            <div class="legal-contact-box">
+                <p><strong>Developed & Operated by:</strong> Milan Sojan and Josh Jacob Sunil</p>
+                <p><strong>For privacy-related questions or requests, contact:</strong><br>
+                Email: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+            </div>
 
-            <h3>2. Information We Collect</h3>
-            <p>We only collect information necessary to provide you with fast, accurate price comparisons and automated price drop alerts:</p>
+            <h2>2. Information We Collect</h2>
+            <p>We collect only the information reasonably necessary to provide, maintain, personalize, and improve PriceHop.</p>
+            <p>The information we may collect includes the following:</p>
+
+            <h3>2.1 Account Information</h3>
+            <p>Depending on the sign-in method you choose, we may collect:</p>
             <ul>
-                <li><strong>Account & Contact Information:</strong> Email address when you join our early access waitlist or create an account.</li>
-                <li><strong>Saved Deals & Alert Preferences:</strong> Items you bookmark, target price triggers you set, and notification preferences.</li>
-                <li><strong>Usage & Device Diagnostics:</strong> Anonymized app performance metrics, device model, operating system version, and general error logs to ensure smooth functionality.</li>
+                <li>Phone number used for SMS/OTP authentication</li>
+                <li>Name</li>
+                <li>Email address</li>
+                <li>Account identifiers</li>
+                <li>Authentication information provided through supported sign-in providers</li>
+            </ul>
+            <p>Email may be optional depending on the features you use. We do not collect or store your ecommerce platform passwords or payment credentials.</p>
+
+            <h3>2.2 Shopping and App Activity</h3>
+            <p>When you use PriceHop, we may collect information about your interactions with the App, including:</p>
+            <ul>
+                <li>Products searched for</li>
+                <li>Products viewed</li>
+                <li>Products compared</li>
+                <li>Products added to your wishlist</li>
+                <li>Categories browsed</li>
+                <li>Products interacted with through our Flashcards feature</li>
+                <li>Products you indicate that you like or dislike</li>
+                <li>Preferences and recommendation interactions</li>
+                <li>Deals or offers viewed</li>
+                <li>App features used</li>
+                <li>Links or ecommerce platforms selected through PriceHop</li>
+            </ul>
+            <p>We use this information to provide relevant product comparisons and personalize your experience.</p>
+
+            <h3>2.3 Flashcards and Personalized Recommendations</h3>
+            <p>PriceHop may use your interactions with our Flashcards feature to understand your shopping preferences.</p>
+            <p>For example, if you swipe right or otherwise indicate that you like a product, or swipe left to indicate that you do not like a product, this interaction may be used to improve the products and recommendations shown to you.</p>
+            <p>We may also consider your searches, viewed products, wishlist activity, categories, and other interactions to provide more relevant recommendations.</p>
+            <p>These recommendation systems are designed to improve your shopping experience and do not determine your eligibility for financial, employment, insurance, healthcare, or other high-impact decisions.</p>
+
+            <h3>2.4 Location / Delivery Information</h3>
+            <p>PriceHop may ask you to provide a PIN code or similar location information to compare estimated delivery availability or delivery speed across participating ecommerce platforms.</p>
+            <p>We do not require your precise GPS location for this purpose. If you manually provide a PIN code, we may associate it with your account or shopping activity in order to provide location-specific delivery information and recommendations.</p>
+
+            <h3>2.5 Device and Technical Information</h3>
+            <p>We may automatically receive certain technical information when you use PriceHop, depending on the permissions and third-party services enabled in the App. This may include:</p>
+            <ul>
+                <li>Device type and model</li>
+                <li>Operating system and version</li>
+                <li>App version</li>
+                <li>IP address</li>
+                <li>Device or app identifiers</li>
+                <li>Crash and diagnostic information</li>
+                <li>Network information</li>
+                <li>General information about how the App is used</li>
+            </ul>
+            <p>This information may be used for security, analytics, troubleshooting, performance monitoring, and improving the App.</p>
+
+            <h3>2.6 Push Notifications</h3>
+            <p>If you enable push notifications, PriceHop may use a device or application notification identifier to send notifications such as:</p>
+            <ul>
+                <li>Price-drop alerts</li>
+                <li>Wishlist updates</li>
+                <li>Important service notifications</li>
+                <li>Product or deal notifications</li>
+                <li>Other notifications you have chosen to receive</li>
+            </ul>
+            <p>You can disable push notifications through your device or App settings, subject to the functionality provided by your device and operating system.</p>
+
+            <h3>2.7 Information You Provide to Us</h3>
+            <p>We may collect information you voluntarily provide when you:</p>
+            <ul>
+                <li>Contact customer support</li>
+                <li>Submit feedback</li>
+                <li>Report an issue</li>
+                <li>Participate in surveys or testing</li>
+                <li>Submit content through features that allow user contributions</li>
+                <li>Communicate with us by email or other supported channels</li>
             </ul>
 
-            <h3>3. How We Use Your Information</h3>
-            <p>We use your information strictly to:</p>
+            <h2>3. How We Use Your Information</h2>
+            <p>We may use the information we collect for the following purposes:</p>
+            <h3>Providing PriceHop's Services</h3>
             <ul>
-                <li>Deliver instant price drop notifications for items on your watchlist.</li>
-                <li>Personalize deals and discovery feeds according to your preferences.</li>
-                <li>Improve system reliability, latency, and matching precision.</li>
-                <li>Communicate critical product updates and early access invitations.</li>
+                <li>Create and maintain your account</li>
+                <li>Provide product search and comparison functionality</li>
+                <li>Display product prices and availability</li>
+                <li>Maintain your wishlist</li>
+                <li>Provide personalized recommendations</li>
+                <li>Compare product ratings and reviews</li>
+                <li>Provide delivery estimates or comparisons based on your PIN code</li>
+                <li>Redirect you to participating ecommerce platforms when you select a product</li>
+            </ul>
+            <h3>Personalization</h3>
+            <ul>
+                <li>Understand your shopping preferences</li>
+                <li>Personalize product recommendations</li>
+                <li>Improve Flashcard recommendations</li>
+                <li>Show products, deals, and categories that may be more relevant to you</li>
+            </ul>
+            <h3>Notifications</h3>
+            <ul>
+                <li>Send price-drop alerts</li>
+                <li>Send wishlist-related notifications</li>
+                <li>Send important account or service notifications</li>
+                <li>Send promotional or deal-related notifications where permitted and where you have chosen to receive them</li>
+            </ul>
+            <h3>Analytics and Improvement</h3>
+            <ul>
+                <li>Understand how users interact with PriceHop</li>
+                <li>Identify bugs and technical problems</li>
+                <li>Monitor application performance</li>
+                <li>Improve search, comparison, recommendation, and other features</li>
+                <li>Develop new products and services</li>
+                <li>Conduct internal research and analysis</li>
+            </ul>
+            <h3>Security and Fraud Prevention</h3>
+            <ul>
+                <li>Protect accounts and systems</li>
+                <li>Detect and prevent misuse, fraud, abuse, or unauthorized activity</li>
+                <li>Maintain the security and reliability of PriceHop</li>
+            </ul>
+            <h3>Legal and Regulatory Purposes</h3>
+            <ul>
+                <li>Comply with applicable laws and legal obligations</li>
+                <li>Respond to lawful requests from government authorities</li>
+                <li>Establish, exercise, or defend legal claims where necessary</li>
             </ul>
 
-            <h3>4. Data Security & Storage</h3>
-            <p>We utilize encrypted transmission protocols (HTTPS/TLS) and secure database storage. We never sell, rent, or trade your personal data to third parties for commercial advertising.</p>
+            <h2>4. Product Information and Third-Party Ecommerce Platforms</h2>
+            <p>PriceHop is primarily a product discovery and price comparison service.</p>
+            <p>PriceHop does not directly sell, manufacture, ship, or fulfill the products displayed through the App unless expressly stated otherwise.</p>
+            <p>Product information displayed through PriceHop may include:</p>
+            <ul>
+                <li>Product names</li>
+                <li>Prices</li>
+                <li>Discounts</li>
+                <li>Product images</li>
+                <li>Availability</li>
+                <li>Ratings</li>
+                <li>Reviews or review information</li>
+                <li>Estimated delivery information</li>
+                <li>Seller or platform information</li>
+                <li>Other product-related information</li>
+            </ul>
+            <p>This information may be obtained from participating ecommerce platforms, partners, APIs, feeds, affiliate networks, or other permitted sources.</p>
+            <p>Prices, availability, ratings, reviews, discounts, and delivery estimates may change at any time. PriceHop does not guarantee that information displayed in the App will always reflect the latest information available on the relevant ecommerce platform.</p>
+            <p>Users should verify the final price, availability, delivery date, seller, terms, and other details on the relevant ecommerce platform before completing a purchase.</p>
 
-            <h3>5. Third-Party Retailer Links</h3>
-            <p>When you tap on a deal or comparison link, you will be redirected to the respective retailer's official website or app. Their independent privacy policies and terms govern transactions completed on third-party stores.</p>
+            <h2>5. Redirects to Third-Party Ecommerce Platforms</h2>
+            <p>When you select a product or shopping option, PriceHop may redirect you to the relevant third-party ecommerce platform.</p>
+            <p>These platforms may include, among others, Amazon, Flipkart, Myntra, Nykaa, Tira, AJIO, Snapdeal, Reliance Digital, Tata CLiQ, or other platforms that may be supported by PriceHop.</p>
+            <p>Once you leave PriceHop and interact with a third-party ecommerce platform, your interaction is governed by that platform's own privacy policy, terms, cookies, tracking technologies, and other policies.</p>
+            <p>PriceHop does not control how third-party ecommerce platforms collect, use, store, or process information after you leave our App. We recommend reviewing the privacy policy of the relevant third-party platform before providing personal or payment information to it.</p>
 
-            <h3>6. Your Rights & Choices</h3>
-            <p>You may request access to, correction of, or deletion of your personal data at any time. You can also opt out of promotional emails or push notifications directly from your device settings.</p>
+            <h2>6. Affiliate Links and Affiliate Tracking</h2>
+            <p>Some links displayed through PriceHop may be affiliate links.</p>
+            <p>If you click an affiliate link and subsequently make a qualifying purchase on a participating ecommerce platform, PriceHop may receive a commission or other compensation from that platform or affiliate network.</p>
+            <p>Affiliate tracking may involve cookies, pixels, attribution parameters, or other technologies operated by the relevant third party. For example, participating affiliate programs may include Amazon Associates, Flipkart Affiliate, or other affiliate networks.</p>
+            <p>PriceHop does not control the cookies or tracking technologies used by third-party ecommerce platforms or affiliate networks after you leave PriceHop. The use of such technologies is governed by the relevant third party's privacy and cookie policies.</p>
 
-            <h3>7. Contact Us</h3>
-            <p>If you have any questions or feedback regarding this Privacy Policy, please reach out to our team at <a href="mailto:privacy@pricehop.in" style="color: var(--dark-green); font-weight: 600;">privacy@pricehop.in</a>.</p>
+            <h2>7. Ratings, Reviews, and Other Third-Party Content</h2>
+            <p>PriceHop may display product ratings, reviews, product information, or other content originating from third-party ecommerce platforms or other permitted sources.</p>
+            <p>Such information may be aggregated or presented to help users compare products. PriceHop does not necessarily create or independently verify all third-party ratings, reviews, or product information. The availability, accuracy, completeness, and content of third-party information may change without notice.</p>
+
+            <h2>8. Our Community Features</h2>
+            <p>PriceHop may introduce community features that allow users to share product reviews, deals, opinions, discussions, recommendations, comments, or other content.</p>
+            <p>If you use such features, information you voluntarily submit may be visible to other users or the public, depending on the feature. You should not post passwords, financial information, phone numbers, addresses, or other sensitive personal information in publicly accessible content.</p>
+            <p>Where permitted, PriceHop may moderate, remove, restrict, or review content that violates applicable laws, our terms, or community rules. If your account is deleted, we will handle associated user-generated content in accordance with our deletion practices and applicable legal requirements.</p>
+
+            <h2>9. Third-Party Service Providers</h2>
+            <p>PriceHop may use third-party service providers to operate and improve the App. Depending on the services currently enabled, these may include providers for:</p>
+            <ul>
+                <li>Database and cloud hosting</li>
+                <li>Authentication</li>
+                <li>Analytics</li>
+                <li>Crash reporting</li>
+                <li>Push notifications</li>
+                <li>Affiliate tracking</li>
+                <li>Security</li>
+                <li>Customer support</li>
+                <li>Other technical infrastructure</li>
+            </ul>
+            <p>Our current or intended service providers may include:</p>
+            <ul>
+                <li><strong>Supabase:</strong> We may use Supabase for database, authentication, hosting, or related infrastructure. Information stored through Supabase may include account information, wishlist information, preferences, PIN code, and other data necessary for PriceHop's functionality.</li>
+                <li><strong>Firebase:</strong> We may use Firebase services for analytics, crash reporting, push notifications, or other application services. The specific information collected depends on the Firebase services and SDKs enabled in the App.</li>
+                <li><strong>Google Sign-In:</strong> If you choose to sign in using Google, Google may provide information such as your name, email address, and account identifier to PriceHop in accordance with the permissions and authentication flow you approve.</li>
+                <li><strong>Affiliate Networks:</strong> PriceHop may work with affiliate programs and networks to attribute qualifying purchases and calculate commissions.</li>
+            </ul>
+            <p>Third-party providers may process information on our behalf to provide their services. We do not sell your personal information to third parties.</p>
+
+            <h2>10. Sharing of Information</h2>
+            <p>We may share information with third parties only where reasonably necessary for the purposes described in this Privacy Policy, including:</p>
+            <ul>
+                <li>Service providers that operate our infrastructure</li>
+                <li>Analytics and crash-reporting providers</li>
+                <li>Authentication providers</li>
+                <li>Push-notification providers</li>
+                <li>Affiliate networks and participating ecommerce platforms where necessary for attribution or functionality</li>
+                <li>Professional advisers where necessary</li>
+                <li>Government authorities or law-enforcement agencies where required by applicable law</li>
+                <li>Parties involved in a merger, acquisition, restructuring, financing, or sale of some or all of our assets, subject to applicable law</li>
+            </ul>
+            <p>We do not sell your personal information as a standalone product or database. Where third-party service providers process information on our behalf, we seek to require appropriate safeguards consistent with applicable requirements.</p>
+
+            <h2>11. Data Security</h2>
+            <p>We take reasonable technical and organizational measures designed to protect personal information against unauthorized access, loss, misuse, alteration, disclosure, or destruction.</p>
+            <p>Depending on the nature of the information and service involved, security measures may include:</p>
+            <ul>
+                <li>Encryption of information during transmission</li>
+                <li>Access controls</li>
+                <li>Authentication and authorization mechanisms</li>
+                <li>Secure cloud infrastructure</li>
+                <li>Monitoring and logging</li>
+                <li>Security updates and maintenance</li>
+                <li>Measures designed to prevent unauthorized access</li>
+            </ul>
+            <p>However, no electronic transmission or storage system can be guaranteed to be completely secure. You are also responsible for protecting your account credentials and device.</p>
+
+            <h2>12. Data Retention</h2>
+            <p>We retain personal information only for as long as reasonably necessary to:</p>
+            <ul>
+                <li>Provide our services</li>
+                <li>Maintain your account</li>
+                <li>Provide personalized features</li>
+                <li>Maintain business and security records</li>
+                <li>Resolve disputes</li>
+                <li>Prevent fraud or abuse</li>
+                <li>Comply with legal, regulatory, tax, accounting, or other obligations</li>
+            </ul>
+            <p>When personal information is no longer reasonably required for these purposes, we will take reasonable steps to delete it, anonymize it, or otherwise dispose of it securely, subject to applicable legal requirements.</p>
+            <p>Some information may need to be retained for a longer period where required by law or necessary for legitimate security, fraud-prevention, dispute-resolution, or legal purposes.</p>
+
+            <h2>13. Your Privacy Rights and Choices</h2>
+            <p>Depending on applicable law, you may have rights regarding your personal information. These may include the ability to:</p>
+            <ul>
+                <li><strong>Access:</strong> Request information about the personal information we process about you.</li>
+                <li><strong>Correction:</strong> Request correction or updating of inaccurate or incomplete information.</li>
+                <li><strong>Deletion:</strong> Request deletion of your account and associated personal information, subject to information that we are legally required or permitted to retain.</li>
+                <li><strong>Withdrawal of Consent:</strong> Where processing is based on consent, you may withdraw that consent, subject to applicable law and technical limitations.</li>
+                <li><strong>Manage Notifications:</strong> You can disable or manage push notifications through the App or your device settings.</li>
+                <li><strong>Manage Preferences:</strong> You may update information such as your name, email address, or PIN code through available account settings.</li>
+            </ul>
+            <p>To exercise a privacy right or ask a question, contact: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+            <p>We may need to verify your identity before completing certain requests in order to protect your account and personal information.</p>
+
+            <h2>14. Account Deletion</h2>
+            <p>You may request deletion of your PriceHop account and associated personal information. Where available, you can initiate deletion through:</p>
+            <p><strong>PriceHop App → Settings → Delete Account</strong></p>
+            <p>You may also contact us at: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+            <p>When an account deletion request is received, we will take reasonable steps to delete the personal information associated with the account, subject to applicable legal, security, fraud-prevention, dispute-resolution, and other legitimate retention requirements.</p>
+            <p>If certain information must be retained, we will retain only what is reasonably necessary and handle it in accordance with applicable law. Account deletion does not automatically delete information held independently by third-party ecommerce platforms, affiliate networks, Google, or other third-party services. You may need to contact those services separately.</p>
+
+            <h2>15. Children's Privacy</h2>
+            <p>PriceHop is not intended to knowingly collect personal information from children without the permissions or safeguards required by applicable law.</p>
+            <p>We do not knowingly request or intentionally collect personal information from children for purposes that are prohibited by applicable law. Where applicable law requires parental or guardian consent for processing a child's personal information, we will take the required measures before processing such information.</p>
+            <p>If you believe that a child has provided personal information to us in violation of applicable requirements, please contact us at: <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a>. We will take reasonable steps to investigate and delete such information where appropriate and legally permissible.</p>
+
+            <h2>16. Information We Do Not Intentionally Collect</h2>
+            <p>Unless specifically required for a feature and with appropriate permission, PriceHop does not intentionally collect:</p>
+            <ul>
+                <li>Precise GPS location</li>
+                <li>Credit card or debit card information</li>
+                <li>Banking credentials</li>
+                <li>Ecommerce account passwords</li>
+                <li>Contact lists</li>
+                <li>Microphone recordings</li>
+                <li>Camera recordings</li>
+            </ul>
+            <p>PriceHop does not require access to your contacts, microphone, or camera for its core price-comparison functionality. If a future feature requires additional permissions, we will request the relevant permission where required and update our privacy disclosures accordingly.</p>
+
+            <h2>17. Photos and User-Submitted Images</h2>
+            <p>If PriceHop provides features allowing you to upload screenshots, images, or other content, we may process the files you voluntarily submit for the purpose for which they were provided.</p>
+            <p>You should not upload images containing sensitive personal information unless necessary for the feature. If you delete content or your account, such content will be handled in accordance with our deletion practices and applicable law.</p>
+
+            <h2>18. Tracking and Analytics</h2>
+            <p>PriceHop may use analytics, crash-reporting, attribution, and similar technologies to understand how the App is used and to improve its performance.</p>
+            <p>Depending on the platform and services enabled, these technologies may collect information such as app interactions, device information, app version, diagnostic information, approximate usage information, and advertising or application identifiers where applicable.</p>
+            <p>Where a platform requires user permission for tracking or personalized advertising, PriceHop will request or respect the applicable platform-level permissions. On iOS, where Apple's App Tracking Transparency framework applies, PriceHop will request permission before performing tracking covered by that framework. You may manage available tracking and advertising permissions through your device settings.</p>
+
+            <h2>19. International Data Processing</h2>
+            <p>Some of our service providers may process or store information in countries other than the country in which you reside. Where information is transferred or processed internationally, we will take reasonable measures appropriate to the circumstances and applicable law to protect your information.</p>
+
+            <h2>20. Third-Party Links</h2>
+            <p>PriceHop may contain links to websites, applications, or services operated by third parties. These third parties are independent from PriceHop and have their own privacy policies and terms. PriceHop is not responsible for the privacy practices, security, content, or policies of third-party services. We encourage you to review the relevant third party's privacy policy before providing personal information.</p>
+
+            <h2>21. Business Transfers</h2>
+            <p>If PriceHop or substantially all of its assets are involved in a merger, acquisition, restructuring, financing, sale, or other business transaction, personal information may be transferred as part of that transaction where permitted by applicable law. Where required, we will provide appropriate notice regarding material changes to the handling of personal information.</p>
+
+            <h2>22. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time to reflect changes in our products and features, data practices, third-party services, applicable laws and regulations, security practices, and business operations.</p>
+            <p>When we make material changes, we may provide notice through the App, website, email, or another appropriate method where required. The "Last Updated" date at the beginning of this Privacy Policy indicates when it was most recently revised. We encourage you to review this Privacy Policy periodically.</p>
+
+            <h2>23. Contact Us</h2>
+            <p>If you have questions, concerns, requests, or complaints regarding this Privacy Policy or PriceHop's handling of personal information, please contact us:</p>
+            <div class="legal-contact-box">
+                <p><strong>PriceHop</strong></p>
+                <p><strong>Developers:</strong> Milan Sojan and Josh Jacob Sunil</p>
+                <p><strong>Email:</strong> <a href="mailto:support@pricehop.in" style="color: var(--dark-green); font-weight: 600;">support@pricehop.in</a></p>
+            </div>
         </div>
     </main>
 
@@ -205,8 +516,8 @@
             <div class="footer-bottom">
                 <p class="copyright">© 2026 PriceHop Technologies, Inc. All rights reserved.</p>
                 <div class="social-links">
-                    <a href="privacy.html" style="color: var(--dark-green); font-weight: 600;">Privacy</a>
-                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html" style="color: var(--dark-green); font-weight: 600;">Privacy Policy</a>
+                    <a href="terms.html">Terms & Conditions</a>
                     <a href="index.html">Home</a>
                 </div>
             </div>
