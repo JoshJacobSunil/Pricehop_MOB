@@ -48,14 +48,22 @@
             display: flex;
             gap: 12px;
             margin-top: 24px;
+            align-items: center;
         }
         .legal-tab-btn {
-            padding: 8px 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 9px 20px;
             border-radius: var(--radius-full);
             font-size: 0.88rem;
             font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
             text-decoration: none;
             transition: var(--transition-smooth);
+            box-sizing: border-box;
         }
         .legal-tab-btn.active {
             background: var(--dark-green);
