@@ -58,7 +58,7 @@ function initSimulator() {
         {
             badge: "STEP 4 OF 4",
             title: "One-Tap Deal Hop",
-            desc: "Direct deep-linking to store checkout with auto coupon codes."
+            desc: "Direct deep linking to store checkout."
         }
     ];
 
