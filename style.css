@@ -839,7 +839,7 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     -webkit-overflow-scrolling: touch;
     padding: 24px 8px 32px 8px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(16, 185, 129, 0.25) transparent;
+    scrollbar-color: var(--dark-green) transparent;
 }
 
 .bento-carousel-track::-webkit-scrollbar {
@@ -847,13 +847,17 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 }
 
 .bento-carousel-track::-webkit-scrollbar-track {
-    background: rgba(11, 59, 36, 0.04);
+    background: rgba(11, 59, 36, 0.06);
     border-radius: var(--radius-full);
 }
 
 .bento-carousel-track::-webkit-scrollbar-thumb {
-    background: rgba(16, 185, 129, 0.25);
+    background: var(--dark-green);
     border-radius: var(--radius-full);
+}
+
+.bento-carousel-track::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-green-hover);
 }
 
 .bento-card {

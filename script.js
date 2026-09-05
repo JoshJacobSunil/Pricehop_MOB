@@ -188,6 +188,7 @@ function initQRModal() {
     const openBtn = document.getElementById('open-qr-btn');
     const closeBtn = document.getElementById('close-qr-btn');
     const modal = document.getElementById('qr-modal');
+    const footerPlayStoreBtn = document.getElementById('footer-play-store-link');
 
     if (!modal) return;
 
@@ -202,6 +203,12 @@ function initQRModal() {
     }
 
     if (openBtn) openBtn.addEventListener('click', openModal);
+    if (footerPlayStoreBtn) {
+        footerPlayStoreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+    }
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e) => {
