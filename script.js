@@ -363,12 +363,17 @@ function initBentoScrollAnimation() {
             }
         });
 
+        bentoCards.forEach((card, index) => {
+            card.classList.toggle('card-center', index === activeIndex);
+        });
+
         dots.forEach((dot, index) => {
             dot.classList.toggle('active', index === activeIndex);
         });
     }
 
     track.addEventListener('scroll', updateActiveCard, { passive: true });
+    window.addEventListener('resize', updateActiveCard, { passive: true });
 
     // Click dot to navigate
     dots.forEach((dot, index) => {

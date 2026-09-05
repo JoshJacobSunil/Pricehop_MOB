@@ -834,10 +834,10 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     display: flex;
     gap: 24px;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding: 12px 4px 20px 4px;
+    padding: 24px 8px 32px 8px;
     scrollbar-width: thin;
     scrollbar-color: rgba(16, 185, 129, 0.25) transparent;
 }
@@ -860,29 +860,34 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     position: relative;
     flex: 0 0 calc(33.333% - 16px);
     min-width: 320px;
-    scroll-snap-align: start;
+    scroll-snap-align: center;
     background: var(--bg-card);
     border: 1px solid var(--border-card);
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(11, 59, 36, 0.05);
-    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(0.96);
+    opacity: 0.9;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
     display: flex;
     flex-direction: column;
+    z-index: 1;
 }
 
-.bento-card:hover,
-.bento-card.scroll-active {
-    border-color: rgba(11, 59, 36, 0.4);
-    transform: translateY(-3px) scale(1.015);
-    box-shadow: 0 12px 35px rgba(11, 59, 36, 0.12);
+.bento-card.card-center,
+.bento-card:hover {
+    border-color: rgba(16, 185, 129, 0.5);
+    transform: translateY(-8px) scale(1.035);
+    opacity: 1;
+    z-index: 5;
+    box-shadow: 0 22px 50px rgba(11, 59, 36, 0.18), 0 0 0 1px rgba(16, 185, 129, 0.3);
 }
 
 .bento-carousel-controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 6px;
     padding: 0 6px;
 }
 
@@ -932,6 +937,7 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 }
 
 .spotlight-card:hover::before,
+.spotlight-card.card-center::before,
 .spotlight-card.scroll-active::before {
     opacity: 1;
 }
@@ -944,6 +950,7 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: stretch;
 }
 
 .bento-badge {
@@ -972,43 +979,62 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 }
 
 .bento-graphic {
-    margin-top: 24px;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
+    flex: 1;
+    min-height: 220px;
+    text-align: center;
 }
 
 .bento-img {
     border-radius: var(--radius-md);
     box-shadow: 0 8px 24px rgba(11, 59, 36, 0.08);
     transition: transform 0.4s var(--ease-out);
+    display: block;
+    margin: 0 auto;
+    max-height: 220px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
 }
 
-.bento-card:hover .bento-img {
+.bento-card:hover .bento-img,
+.bento-card.card-center .bento-img {
     transform: scale(1.02);
 }
 
 .bento-cmp-img {
-    width: 100%;
-    max-width: 360px;
+    width: auto;
+    max-width: 100%;
+    max-height: 220px;
     height: auto;
     object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 
 .bento-alert-img {
-    width: 100%;
-    max-width: 360px;
+    width: auto;
+    max-width: 100%;
+    max-height: 220px;
     height: auto;
     object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 
 .bento-dis-img,
 .bento-shoe-img {
-    width: 100%;
-    max-width: 280px;
+    width: auto;
+    max-width: 100%;
+    max-height: 220px;
     height: auto;
     object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 
 /* Sparkline Chart Graphic */
@@ -1881,18 +1907,25 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     /* Bento Carousel Mobile Track */
     .bento-carousel-track {
         gap: 16px;
-        padding-left: 14px;
-        padding-right: 14px;
+        padding: 20px 20px 28px 20px;
         margin-left: -14px;
         margin-right: -14px;
         width: calc(100% + 28px);
     }
     
     .bento-carousel-track .bento-card {
-        flex: 0 0 85vw;
-        max-width: 330px;
-        min-width: 260px;
+        flex: 0 0 84vw;
+        max-width: 320px;
+        min-width: 250px;
         scroll-snap-align: center;
+        transform: scale(0.94);
+        opacity: 0.88;
+    }
+
+    .bento-carousel-track .bento-card.card-center,
+    .bento-carousel-track .bento-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        opacity: 1;
     }
 
     /* Navbar Mobile */
