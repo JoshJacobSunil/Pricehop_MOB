@@ -885,39 +885,57 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
 
 .bento-carousel-controls {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 6px;
-    padding: 0 6px;
-}
-
-.bento-scroll-hint {
-    font-size: 0.76rem;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 0;
+    width: 100%;
 }
 
 .bento-nav-dots {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-card);
+    box-shadow: 0 4px 14px rgba(11, 59, 36, 0.05);
 }
 
 .bento-dot {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
     border-radius: var(--radius-full);
-    background: rgba(11, 59, 36, 0.2);
+    background: rgba(11, 59, 36, 0.22);
     border: none;
     padding: 0;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-dot:hover {
+    background: rgba(11, 59, 36, 0.45);
+    transform: scale(1.15);
 }
 
 .bento-dot.active {
-    width: 22px;
+    width: 32px;
+    height: 12px;
     background: var(--dark-green);
+    border-radius: var(--radius-full);
+    box-shadow: 0 2px 8px rgba(11, 59, 36, 0.25);
+}
+
+.bento-scroll-hint {
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-align: center;
 }
 
 .spotlight-card {
