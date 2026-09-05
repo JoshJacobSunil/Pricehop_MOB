@@ -1090,14 +1090,6 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     position: absolute;
 }
 
-#sim-screen-1 {
-    transform: scale(0.885);
-}
-
-#sim-screen-1.active {
-    transform: scale(0.9);
-}
-
 .simulator-status-card {
     margin-top: 36px;
     background: var(--bg-card);
