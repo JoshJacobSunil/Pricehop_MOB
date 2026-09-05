@@ -838,26 +838,14 @@ button:focus, button:focus-visible, a:focus, a:focus-visible, .btn:focus, .btn:f
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding: 24px 8px 32px 8px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--dark-green) transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .bento-carousel-track::-webkit-scrollbar {
-    height: 6px;
-}
-
-.bento-carousel-track::-webkit-scrollbar-track {
-    background: rgba(11, 59, 36, 0.06);
-    border-radius: var(--radius-full);
-}
-
-.bento-carousel-track::-webkit-scrollbar-thumb {
-    background: var(--dark-green);
-    border-radius: var(--radius-full);
-}
-
-.bento-carousel-track::-webkit-scrollbar-thumb:hover {
-    background: var(--dark-green-hover);
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .bento-card {
